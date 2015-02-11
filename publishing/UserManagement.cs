@@ -42,7 +42,7 @@ namespace Publishing
                 userAuths = GetAuthorityList(ukey, conn);
                 conn.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return (new string[] {} );
             }
@@ -64,7 +64,7 @@ namespace Publishing
                 if (results.Length > 0)
                     foundOrg = true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
             return foundOrg;

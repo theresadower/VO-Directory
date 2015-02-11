@@ -673,7 +673,7 @@ namespace registry
                     sqlDA.Fill(resource);
                     table = CreateResourceVOTable(resource, option);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     table = new ivoa.altVOTable.VOTABLE();
                 }
@@ -714,7 +714,7 @@ namespace registry
                     odc[i] = (oai_dc.oai_dcType)registry.OAI_DC.CreateOAIDC(dr);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 odc = new oai_dc.oai_dcType[0];
             }

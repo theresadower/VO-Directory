@@ -20,6 +20,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Publishing", "..\publishing
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HarvesterService", "..\harvesterservice\HarvesterService.csproj", "{D48C8ED0-CFC7-497F-A56E-298A8E333B2A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{30481A94-6F00-453E-AF0D-FB9B6952A53F}"
+	ProjectSection(SolutionItems) = preProject
+		..\lib\DotNetOpenAuth.dll = ..\lib\DotNetOpenAuth.dll
+		..\lib\DotNetOpenAuth.xsd = ..\lib\DotNetOpenAuth.xsd
+		..\lib\nunit.framework.dll = ..\lib\nunit.framework.dll
+		..\lib\nunit.framework.xml = ..\lib\nunit.framework.xml
+		..\lib\System.Net.Http.dll = ..\lib\System.Net.Http.dll
+		..\lib\System.Net.Http.xml = ..\lib\System.Net.Http.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
