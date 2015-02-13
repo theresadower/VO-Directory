@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="Publishing.Global" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="registry.Global" Language="C#" %>

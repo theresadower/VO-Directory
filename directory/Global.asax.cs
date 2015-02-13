@@ -4,8 +4,10 @@ using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Web.SessionState;
+using log4net;
+using log4net.Config;
 
-namespace Publishing
+namespace registry
 {
     public class Global : System.Web.HttpApplication
     {
@@ -13,13 +15,14 @@ namespace Publishing
         void Application_Start(object sender, EventArgs e)
         {
             // Code that runs on application startup
-
+			string log4netpath = Server.MapPath ("log4net.xml");
+			XmlConfigurator.Configure(new System.IO.FileInfo(log4netpath));
         }
 
         void Application_End(object sender, EventArgs e)
         {
             //  Code that runs on application shutdown
-
+				
         }
 
         void Application_Error(object sender, EventArgs e)
