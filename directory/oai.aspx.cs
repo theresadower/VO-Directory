@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -12,6 +11,7 @@ using System.Text;
 using System.IO;
 using System.Net;
 using oai;
+using log4net;
 
 namespace nvo.oai
 {
@@ -26,6 +26,8 @@ namespace nvo.oai
 
 	public class oai : System.Web.UI.Page
 	{
+		private static readonly ILog log = LogManager.GetLogger(typeof(oai));
+
         private enum Verbs : int
         {
             GetRecord = 0,

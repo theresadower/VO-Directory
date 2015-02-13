@@ -6,13 +6,15 @@ using ivoa.net.ri1_0;
 using oai_dc;
 using oai;
 
+using log4net;
+
 namespace registry
 {
      class OAI_DC
     {
+		//private static readonly ILog log = LogManager.GetLogger(typeof(OAI_DC));
         public static oai_dc.oai_dcType CreateOAIDC(DataRow dr)
         {
-
             oai_dc.oai_dcType odt = new oai_dc.oai_dcType();
 
             //odt.ItemsElementName = new ItemsChoiceType[6];
@@ -28,7 +30,6 @@ namespace registry
             odt.Items = new elementType[4];
 
             int ind = 0;
-
             odt.Items[ind++] = new elementType();
             odt.Items[0].Value = (string)dr["res_title"];
             odt.Items[ind++] = new elementType();
@@ -40,7 +41,7 @@ namespace registry
             //odt.Items[ind++] = new elementType();
             //odt.Items[4].Value = (string)dr["subject"];
             //odt.Items[ind++] = new elementType();
-            odt.Items[3].Value = GetOAIDatestamp((DateTime)dr["updated"], oai.granularityType.YYYYMMDDThhmmssZ);
+			odt.Items[3].Value = GetOAIDatestamp(DateTime.Parse((string) dr["updated"]), oai.granularityType.YYYYMMDDThhmmssZ);
 
             return odt;
         }

@@ -11,6 +11,7 @@ using System.Configuration;
 using registry;
 using ivoa.net.vr1_0;
 using ivoa.net.ri1_0.server;
+using log4net;
 
 using ivoa.altVOTable;
 
@@ -28,6 +29,8 @@ namespace registry
 	{
 		public static string sConnect;
         private static logfile errLog;
+		private static readonly ILog log = LogManager.GetLogger (typeof(Registry));
+
         //private static logfile genericLog;
 
 		
@@ -714,8 +717,10 @@ namespace registry
                     odc[i] = (oai_dc.oai_dcType)registry.OAI_DC.CreateOAIDC(dr);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+				log.Error ("Error getting OAIDC records: " + e.Message);
+				log.Error (e.StackTrace);
                 odc = new oai_dc.oai_dcType[0];
             }
 
@@ -732,7 +737,7 @@ namespace registry
     //put this in its own file when i can touch csproj
 
     //This is quick and dirty and very inefficient for frequent writes, but it doesn't hog a file handle, keeping users
-    //from moving the file and suchlike. If usage increases, keep a file handle,
+    //from moving the file and suchlike. If usage increases, keep a  file handle,
     //use log4net, do something else, please.
     public class logfile
     {
