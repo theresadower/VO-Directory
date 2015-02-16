@@ -122,7 +122,7 @@ Application Content
     <table width="100%"  border="0" align="center" cellpadding="4" cellspacing="0">
   <tr align="center" valign="top">
     
-    <td width="16%" valign="top"><div align="center" class="style10"><a href="http://www.nsf.gov"><img src="http://www.us-vo.org/images/nsf_logo.gif" alt="NSF HOME" width="50" height="50" border="0"/></a><a href="http://www.nasa.gov"><img src="http://www.us-vo.org/images/nasa_logo_sm.gif" alt="NASA HOME" width="50" height="47" border="0"/></a></div></td>
+    <td width="16%" valign="top"><div align="center" class="style10"><a href="http://www.nsf.gov"><img src="images/nsf_logo.gif" alt="NSF HOME" width="50" height="50" border="0"/></a><a href="http://www.nasa.gov"><img src="images/nasa_logo_sm.gif" alt="NASA HOME" width="50" height="47" border="0"/></a></div></td>
     <td width="76%"><div align="center">
         <p class="style10"> Developed with the support of the <a href="http://www.nsf.gov">National Science Foundation</a> <br/>
 
