@@ -264,6 +264,11 @@ execute </xsl:text>
             <xsl:with-param name="seq" select="position()"/>
          </xsl:apply-templates>
       </xsl:for-each>
+      <xsl:for-each select="curation/contact">
+         <xsl:apply-templates select=".">
+            <xsl:with-param name="seq" select="position()"/>
+         </xsl:apply-templates>
+      </xsl:for-each>
 
       <!-- dates -->
       <xsl:text>
