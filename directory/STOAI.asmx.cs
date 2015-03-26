@@ -13,6 +13,7 @@ using System.Data.SqlClient;
 using oai;
 using oai_dc;
 using ivoa.net.ri1_0.server;
+using log4net;
 
 namespace registry
 {
@@ -27,6 +28,7 @@ namespace registry
 	[System.Web.Services.WebService(Namespace="http://www.openarchives.org/OAI/2.0/")]
 	public class STOAI : System.Web.Services.WebService
 	{
+		private static readonly ILog log = LogManager.GetLogger(typeof(STOAI));
         private static int resumptionTokenLimit = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["resumptionTokenLimit"]);
         private static string registryIdentity = (string)System.Configuration.ConfigurationManager.AppSettings["registryIdentity"];
         private static string registryName = (string)System.Configuration.ConfigurationManager.AppSettings["registryName"];
@@ -532,7 +534,7 @@ namespace registry
 			}
 			else if (metadataPrefix=="oai_dc")
 			{
-                if (incomingToken != null)
+				if (incomingToken != null)
                     return makeError(OAIPMHerrorcodeType.badResumptionToken, String.Empty);
 
                 oai_dc.oai_dcType[] odc = reg.QueryOAIDC(querystring);

@@ -13,9 +13,9 @@ namespace registry
 
         public static string getKeysStatement = " select top 1 pkey, ukey from resource where ivoid=@Identifier and [rstat] > 0 order by [updated], harvestedFromDate desc ";
 
- 		/*public static string createBasicResourceSelect(string predicate) 
+ 		public static string createBasicResourceSelect(string predicate) 
 		{
-			StringBuilder sb = new StringBuilder("SELECT TOP 1 ");
+			StringBuilder sb = new StringBuilder ("SELECT ");
             sb.Append(@"RESOURCE.res_type,
                       RESOURCE.created,
                       RESOURCE.updated,
@@ -39,8 +39,8 @@ namespace registry
             sb.Append(" order by [updated] DESC");
 
 			return sb.ToString();
-		}*/
-
+		}
+		/*
         public static string createBasicResourceSelect(string predicate) 
         {
             StringBuilder sb = new StringBuilder("SELECT ");
@@ -64,7 +64,7 @@ namespace registry
 
             return sb.ToString();
         }
-
+		*/
         public static string createInterfacesSelect(string identifier)
         {
             StringBuilder sb = new StringBuilder();
