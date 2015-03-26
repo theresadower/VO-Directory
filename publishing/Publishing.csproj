@@ -1,12 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>
-    </ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{820A4B7B-0FA3-44A5-B4D2-8C2DA6BD96B1}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
@@ -44,10 +41,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotNetOpenAuth, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\DotNetOpenAuth.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -60,6 +53,9 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="DotNetOpenAuth">
+      <HintPath>lib\DotNetOpenAuth.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="PasswordReset.html" />
@@ -220,9 +216,17 @@
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>
+    <MonoDevelop>
+      <Properties>
+        <XspParameters Port="8080" Address="127.0.0.1" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="True" />
+      </Properties>
+    </MonoDevelop>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(SolutionDir)xsl\insertvoresource.xsl" "$(ProjectDir)xsl\insertvoresource.xsl" /Y
+  <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">>cp "$(SolutionDir)xsl\InsertVOResource.xsl" "$(ProjectDir)xsl\InsertVOResource.xsl"; 
+cp "$(SolutionDir)xsl\InterfaceViewResults_one_resource.xsl" "$(ProjectDir)xsl\InterfaceViewResults_one_resource.xsl"; 
+cp "$(SolutionDir)xsl\RegistryResults_vot_one_resource.xsl" "$(ProjectDir)xsl\RegistryResults_vot_one_resource.xsl" </PostBuildEvent>
+<PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(SolutionDir)xsl\insertvoresource.xsl" "$(ProjectDir)xsl\insertvoresource.xsl" /Y
 xcopy "$(SolutionDir)xsl\InterfaceViewResults_one_resource.xsl" "$(ProjectDir)xsl\InterfaceViewResults_one_resource.xsl" /Y
 xcopy "$(SolutionDir)xsl\RegistryResults_vot_one_resource.xsl" "$(ProjectDir)xsl\RegistryResults_vot_one_resource.xsl" /Y</PostBuildEvent>
   </PropertyGroup>

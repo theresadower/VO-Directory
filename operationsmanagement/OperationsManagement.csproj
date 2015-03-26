@@ -1,12 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>
-    </ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{5D2AFF6A-2285-46F4-A5A3-00BCDC691349}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
@@ -62,13 +59,13 @@
     <Content Include="HarvestAdmin.asmx" />
     <Content Include="HarvestTable.aspx" />
     <Content Include="validationmanagement.aspx" />
-    <Content Include="Web.config">
+    <Content Include="..\operationsmanagement\Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Web.Debug.config">
+    <Content Include="..\operationsmanagement\Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Web.Release.config">
+    <Content Include="..\operationsmanagement\Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
   </ItemGroup>
@@ -89,7 +86,7 @@
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
+      <DependentUpon>..\..\operationsmanagement\Properties\Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="ResourceManagement.cs" />
     <Compile Include="validationmanagement.aspx.cs">
@@ -108,7 +105,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\Settings.settings">
+    <None Include="..\operationsmanagement\Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
@@ -138,9 +135,15 @@
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>
+    <MonoDevelop>
+      <Properties>
+        <XspParameters Port="8080" Address="127.0.0.1" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="True" />
+      </Properties>
+    </MonoDevelop>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(SolutionDir)Directory\xsl" "$(ProjectDir)xsl\" /s /i /y
+    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">cp -R "$(SolutionDir)xsl\" "$(ProjectDir)xsl\"; cp -R "$(ProjectDir)xsl\" "$(TargetDir)xsl\" </PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(SolutionDir)Directory\xsl" "$(ProjectDir)xsl\" /s /i /y
 xcopy "$(ProjectDir)xsl" "$(TargetDir)xsl\" /s /i /y</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
