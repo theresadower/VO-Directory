@@ -246,6 +246,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <None Include="log4net.xml" />
+    <Content Include="oaifail.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Compile Include="oaifail.aspx.cs">
+      <DependentUpon>oaifail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -1,1 +1,1 @@
-<%@ Page language="c#" Codebehind="oai.aspx.cs" AutoEventWireup="false" Inherits="nvo.oai.oai" %>
+<%@ Page language="c#" Codebehind="oaifail.aspx.cs" AutoEventWireup="false" Inherits="nvo.oai.oaifail" %>
