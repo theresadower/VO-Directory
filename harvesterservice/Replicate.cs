@@ -3,7 +3,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Data;
 using System.Text;
-
+using log4net;
 
 using Replicate.registry;
 using registry;
@@ -20,6 +20,7 @@ namespace Replicate
 
         private static string connStr = Properties.Settings.Default.SqlAdminConnection;
         private static string dbAdmin = Properties.Settings.Default.dbAdmin;
+		private static readonly ILog log = LogManager.GetLogger (typeof(Replicate));
 
 		/// <summary>
 		/// The main entry point for the application.
@@ -184,6 +185,7 @@ namespace Replicate
                     }
                     catch (Exception e)
                     {
+						log.Error ("Error harvesting from url " + url, e);
                         sb.Append(e);
                         stat = 1;
                     }

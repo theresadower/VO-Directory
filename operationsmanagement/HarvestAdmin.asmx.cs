@@ -8,7 +8,7 @@ using System.Web.Services;
 using System.Data.SqlClient;
 using System.Text;
 using System.Configuration;
-
+using log4net;
 
 using registry;
 using OperationsManagement;
@@ -29,6 +29,7 @@ namespace Replicate
 	{
 		public static string sConnect;
         internal static string PASS = (string)System.Configuration.ConfigurationManager.AppSettings["dbAdmin"];
+		private static readonly ILog log = LogManager.GetLogger (typeof(HarvestAdmin));
 
 
 		public HarvestAdmin()
@@ -138,12 +139,18 @@ namespace Replicate
             if( ivo_managed )
                 pars += "&set=ivo_managed";
             pars += "&metadataPrefix=ivo_vor&from=";
+			try{
+
 			//	oai dates .. 2004-04-22T21:09:50Z
-            oai.granularityType gran = h.GetTimeGranularity(url);
-            pars += STOAI.GetOAIDatestamp(from, gran);
-			
-			ret += h.harvest(url, registryID, pars);		
-			
+	            oai.granularityType gran = h.GetTimeGranularity(url);
+	            pars += STOAI.GetOAIDatestamp(from, gran);
+
+				ret += h.harvest(url, registryID, pars);		
+			}catch(Exception ex){
+				log.Error ("Error harvesting from url " + url, ex);
+				ret += ex + "\n";
+			}
+
 			return ret;
 		}
 
@@ -193,6 +200,7 @@ namespace Replicate
                 }
                 catch (Exception ce)
                 {
+					log.Error ("Error harvesting from url " + url, ce);
                     ret += ce + "\n";
                 }
             }

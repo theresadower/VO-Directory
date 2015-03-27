@@ -8,6 +8,7 @@ using System.Xml;
 using System.Configuration;
 using System.Collections;
 using System.Data;
+using log4net;
 
 using registry;
 
@@ -28,6 +29,7 @@ namespace Replicate
         private logfile errLog;
 
         private ArrayList knownbad = new ArrayList();
+		private static readonly ILog log = LogManager.GetLogger (typeof(Harvester));
 
         public Harvester()
         {
@@ -209,10 +211,16 @@ namespace Replicate
                         //err.code = OAIPMHerrorcodeType.noRecordsMatch;
                         return "No Records to Harvest";
                     }
-                    catch (Exception ex)
-                    {
-                        return "Error: " + ex.Message + "No Records to Harvest";
-                    }
+					catch (InvalidOperationException ex)
+					{
+						log.Error("Error during harvest of url " + url,ex);
+						// Catches errors parsing XML 
+						return "Error: " + ex.Message;
+					}
+					catch (Exception ex)
+					{
+						return "Error: " + ex.Message + "No Records to Harvest";
+					}
  
                     try
                     {
