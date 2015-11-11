@@ -373,13 +373,6 @@ namespace registry
             }
 			for (int ii = start; ii < end; ++ii)
 			{
-                //we MAY contain these, according to the OAI spec, and it's cheaper to calculate.
-                /*if (tokenCreated > DateTime.MinValue)
-                {
-                    if( ((DateTime)updateArr[ii]) > tokenCreated )
-                        return makeError(OAIPMHerrorcodeType.badResumptionToken, "Change in query data.");
-                }*/
-
 				itest++;
 				lisT.header[ii] = new headerType();	
 				
@@ -476,13 +469,10 @@ namespace registry
                 {
                     return makeError(OAIPMHerrorcodeType.noRecordsMatch, String.Empty);
                 }
+                //no error checking on incoming completeListSize: according to spec this is an estimate.
+                //Consistently use arr.count indexing and distrust incoming tokens.
 
-                if (incomingToken != null && Convert.ToInt32(incomingToken.completeListSize) != vod.Length)
-                {
-                    return makeError(OAIPMHerrorcodeType.badResumptionToken, "Change in query data.");
-                }
-
-				lisT.record = new recordType[vod.Length];
+                lisT.record = new recordType[vod.Length];
 				
                 end = Math.Min(start + resumptionTokenLimit, vod.Length);
                 if ((vod.Length > resumptionTokenLimit) && (end < vod.Length))
