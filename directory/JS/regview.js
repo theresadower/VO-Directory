@@ -270,7 +270,7 @@ function readdata(output, searchform, searchparam) {
 			// reset all sort/page info for new searches
 			this.clearPageInfo();
 			
-            var fullurl =  "/newdirectory/NVORegInt.asmx/VOTKeyword?andkeys=true&keywords=" +
+            var fullurl =  "/directory/NVORegInt.asmx/VOTKeyword?andkeys=true&keywords=" +
    		    encodeURIComponent(params);
             // Load XML
             //this.VOloader.makeRequest(params);
