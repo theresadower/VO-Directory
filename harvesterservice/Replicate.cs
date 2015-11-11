@@ -1,5 +1,6 @@
 using System;
 using System.Configuration;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
 using System.Text;
@@ -13,10 +14,7 @@ namespace Replicate
 	class Replicate
 	{
 		const int MLEN = 4000;
-
         //because we need to write to the log table, this is an admin connection
-        //public static string connStr = (string)System.Configuration.ConfigurationManager.AppSettings["SqlAdminConnection"];
-        //private static string dbAdmin = (string)System.Configuration.ConfigurationManager.AppSettings["dbAdmin"];
 
         private static string connStr = Properties.Settings.Default.SqlAdminConnection;
         private static string dbAdmin = Properties.Settings.Default.dbAdmin;
