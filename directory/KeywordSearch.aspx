@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"> 
 <head>
-<title>VAO Directory Keyword Search</title>
+<title>NAVO Directory Keyword Search</title>
 <link href="http://vao.stsci.edu/directory/web/usvo_template.css" type="text/css" rel="stylesheet"/>
 <style type="text/css">
    .section	{MARGIN-TOP: 2px; MARGIN-BOTTOM: 2px; BACKGROUND-COLOR:#DDDDDD;}
@@ -135,10 +135,7 @@ H3, H4 {
 </head>
 <body><table width="100%" border="0" cellpadding="0" cellspacing="0">
 <tr>
-    <td width="112" height="32" align="center" valign="top"><a
-href="http://www.us-vo.org" class="nvolink" target="_top"><img
-        src="./images/VAO_logo_100.png" border="0"/></a><span class="nvolink"><a
-href="http://www.usvao.org/" target="_top">Virtual Astronomical Observatory</a></span></td>
+    <td width="112" height="32" align="center" valign="top"></td>
     <td width="50" align="center" valign="middle"><img src="images/Directory50.png" alt="ICON" width="50" height="50"></td>
     <td valign="top"><table  width="100%" border="0" cellpadding="0" cellspacing="0">
       <tr>
@@ -146,7 +143,7 @@ href="http://www.usvao.org/" target="_top">Virtual Astronomical Observatory</a><
 <td width="678" height="39" align="center"
           valign="middle"
           background="images/stars.jpg"
-          bgcolor="#CFE5FC"  class="nvoapptitle" style="background-repeat: repeat-y;"><span class="nvoapptitle" style="background-repeat: repeat-y;">VAO Directory</span></td>
+          bgcolor="#CFE5FC"  class="nvoapptitle" style="background-repeat: repeat-y;"><span class="nvoapptitle" style="background-repeat: repeat-y;">NAVO Directory</span></td>
         <td bgcolor="white" width="2"></td>
       </tr>
       <tr>
@@ -158,12 +155,10 @@ href="http://www.usvao.org/" target="_top">Virtual Astronomical Observatory</a><
                 style="margin: 0pt;">
           <tr>
              <!-- the local links -->
-        <td class="navlink"><a href="http://www.usvao.org/">VAO Home</a></td>
         <td class="navlink"><a href="keywordsearch.aspx">Search</a></td>
-        <td class="navlink"><a href="http://vao.stsci.edu/publishing">Publish</a></td>
+        <td class="navlink"><a href="../publishing">Publish</a></td>
         <td class="navlink"><a href="riws.aspx">Developers</a></td>
         <td class="navlink"><a href="helpnew.aspx">Help</a></td>
-        <td class="helplink"><a href="http://www.us-vo.org/feedback/">Contact Us</a></td>
            </tr>
          </table>
          </td>
@@ -192,15 +187,7 @@ href="http://www.usvao.org/" target="_top">Virtual Astronomical Observatory</a><
 <table width="100%" border="0">
     <tr><td width="112"></td><td width="50"></td><td>
 
-    <center><table width="85%" border="1"><tr><td class="notice"><p></p>NOTICE: For our long-standing users who have come to this page through our old website at
-    http://nvo.stsci.edu/vor10, please note that as part of our project's administrative switch to VAO, and as part of a major
-    hardware and software upgrade, all pages under the nvo.stsci.edu domain have been deprecated, and will not remain active indefinitely. 
-    </p><br /><p>
-    Please point your browsers to the same pages under <a href="http://vao.stsci.edu/directory">http://vao.stsci.edu/directory</a> for VAO registry search pages and services.
-    We have made considerable efforts toward backward-compatibility. If you are using the new site and continue experiencing any issues, please contact the <a href="http://www.us-vo.org/feedback/">VAO help desk</a>.</p></td></tr></table></center>
-    <br /><br />
-    
-        <h3>Find Astronomical Data Resources</h3></td></tr>
+         <h3>Find Astronomical Data Resources</h3></td></tr>
             <tr><td width="112"></td><td width="50"></td><td>
             <br /><p>
                 Enter terms in the text box that describe the type of data you are looking for.&nbsp;
@@ -233,7 +220,7 @@ href="http://www.usvao.org/" target="_top">Virtual Astronomical Observatory</a><
 		            <a onclick="return insertTerm(this);">far ultraviolet</a>
 	            </div>
                 <div>
-		            Use <a href="http://vao.stsci.edu/portal/Mashup/Clients/Portal/DataDiscovery.html"> the VAO Data Discovery Tool </a> to search and view data for a particular object or position.
+		            Use <a href="http://vao.stsci.edu/portal/Mashup/Clients/Portal/DataDiscovery.html"> the Data Discovery Tool </a> to search and view data for a particular object or position.
 	            </div>
             </form>
             
@@ -265,19 +252,18 @@ Results will appear here.
     <table width="100%"  border="0" align="center" cellpadding="4" cellspacing="0">
   <tr align="center" valign="top">
     
-    <td width="16%" valign="top"><div align="center" class="style10"><a href="http://www.nsf.gov"><img src="http://vao.stsci.edu/directory/images/nsf_logo.gif" alt="NSF HOME" width="50" height="50" border="0"/></a><a href="http://www.nasa.gov"><img src="http://vao.stsci.edu/directory/images/nasa_logo_sm.gif" alt="NASA HOME" width="50" height="47" border="0"/></a></div></td>
+    <td width="16%" valign="top"><div align="center" class="style10"></td>
     <td width="76%"><div align="center">
         <p class="style10"> Developed with the support of the <a href="http://www.nsf.gov">National Science Foundation</a> <br/>
 
           under Cooperative Agreement AST0122449 with the Johns Hopkins University <br/>
-          The VAO is a member of the <a href="http://www.ivoa.net">International Virtual Observatory Alliance</a></p>
-        <p class="style10">This VAO Application is hosted by the <a href="http://www.stsci.edu">Space Telescope Science Institute</a></p>
+          The NAVO project is a member of the <a href="http://www.ivoa.net">International Virtual Observatory Alliance</a></p>
+        <p class="style10">This Application is hosted by the <a href="http://www.stsci.edu">Space Telescope Science Institute</a></p>
     </div></td>
     <td width="8%"><div align="center"><span class="tiny">Member<br/>
     </span><a href="http://www.ivoa.net"><img src="images/ivoa_small.jpg" alt="ivoa logo" width="68" height="39" border="0" align="top"/></a></div></td>
 
-    <td width="8%"><span class="nvolink"><span class="tiny"><a href="http://www.usvao.org/contact-connect/">Contact Us</a></span><br/>
-    <img src="http://vao.stsci.edu/directory/images/bee_hammer.gif" alt="Contact Us" width="50" border="0"/></span></td>
+    <td width="8%"><span class="nvolink"><span class="tiny"><a href="http://www.usvao.org/contact-connect/">Contact Us</a></span></span></td>
   </tr>
 </table>
 </body> </html>

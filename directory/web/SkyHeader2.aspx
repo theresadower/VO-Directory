@@ -4,7 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml"> 
 <head>
-<title>VAO Directory</title>
+<title>NAVO Directory</title>
 <link href="http://www.us-vo.org/app_templates/usvo_template.css" type="text/css" rel="stylesheet"/>
 <style type="text/css">
     a:visited { color: #6ba5d7; }
@@ -51,10 +51,7 @@
 <body>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 <tr>
-    <td width="112" height="32" align="center" valign="top"><a
-href="http://www.usvao.org" class="nvolink" target="_top"><img
-        src="./images/VAO_logo_100.png" border="0"/></a><span class="nvolink"><a
-href="http://www.usvao.org/" target="_top">Virtual Astronomical Observatory</a></span></td>
+    <td width="112" height="32" align="center" valign="top"></span></td>
     <td width="50" align="center" valign="middle"><img src="images/Directory50.png" alt="ICON" width="50" height="50"></td>
     <td valign="top"><table  width="100%" border="0" cellpadding="0" cellspacing="0">
       <tr>
@@ -62,7 +59,7 @@ href="http://www.usvao.org/" target="_top">Virtual Astronomical Observatory</a><
 <td width="678" height="39" align="center"
           valign="middle"
           background="images/stars.jpg"
-          bgcolor="#CFE5FC"  class="nvoapptitle" style="background-repeat: repeat-y;"><span class="nvoapptitle" style="background-repeat: repeat-y;">VAO Directory</span></td>
+          bgcolor="#CFE5FC"  class="nvoapptitle" style="background-repeat: repeat-y;"><span class="nvoapptitle" style="background-repeat: repeat-y;">NAVO Directory</span></td>
         <td bgcolor="white" width="2"></td>
       </tr>
       <tr>
@@ -74,9 +71,8 @@ href="http://www.usvao.org/" target="_top">Virtual Astronomical Observatory</a><
                 style="margin: 0pt;">
           <tr>
              <!-- the local links -->
-        <td class="navlink"><a href="http://www.usvao.org/">VAO Home</a></td>
-        <td class="navlink"><a href="keywordsearch.aspx">Search</a></td>
-        <td class="navlink"><a href="http://vao.stsci.edu/publishing">Publish</a></td>
+         <td class="navlink"><a href="keywordsearch.aspx">Search</a></td>
+        <td class="navlink"><a href="../publishing">Publish</a></td>
         <td class="navlink"><a href="riws.aspx">Developers</a></td>
         <td class="navlink"><a href="helpnew.aspx">Help</a></td>
         <td class="helplink"><a href="http://www.us-vo.org/feedback/">Contact Us</a></td>

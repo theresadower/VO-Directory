@@ -1,4 +1,4 @@
-The VAO registry project is licensed under a BSD 3-clause license.
+The NAVO registry project is licensed under a BSD 3-clause license.
 
 The software package contains both server-side and client-side web projects. Client-side libraries include the externally developed Sarissa and ExtJS Javascript libraries, each of which is distributed as a copy with their own compatible licenses.
 

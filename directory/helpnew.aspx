@@ -1,7 +1,7 @@
 <%@ Page language="c#" AutoEventWireup="false" %>
 <%@ Import Namespace="System.Web" %>
 <%
-	string Title = "STScI/JHU VO VAO Directory Help Page";
+	string Title = "STScI NAVO Directory Help Page";
 	string author ="Gretchen Greene";
 	string email ="greene@stsci.edu";
 	string cvsRevision = "$Revision: 1.1 $";
@@ -48,15 +48,15 @@ Server.Execute("web/SkyHeader2.aspx" + "?" + Parameters);
 <br /><br /><br />
 
 <h3 id="overview">Overview</h3>
-The VAO Directory is an interface for finding data collections and catalogs by 
+The NAVO Directory is an interface for finding data collections and catalogs by 
 searching their descriptions. The Directory search interface queries an underlying 'registry', or 
-database of descriptive metadata about collections and catalogs. The underlying VAO Directory has access to
+database of descriptive metadata about collections and catalogs. The underlying Directory has access to
 the metadata of every registry in the IVOA as well as locally managed information.  
 The web portal has been developed to provide direct search access for the scientific, student, 
 or casual user, and programmatic search capabilities are also available for interoperability with other research tools. 
 A publishing interface is also offered for the local management of information about a user's own
 data collections and catalogs; registering the resource's descriptive metadata with this interface allows the catalogs
- to be immediately searched by the directory and other tools within The VAO Portal.
+ to be immediately searched by the directory and other tools within the NAVO Portal.
 
 <br /><br /><br /><H3 class="Section1" id="faq">Search FAQ</H3>
 
@@ -100,7 +100,7 @@ column of the results you wish to save. Resources on multiple pages of results c
 then save your selected results, use "Save Selected as CSV" or "Save Selected as VOTable". </li>
 
 <br /><br /><H3 class="Section1" id="register">Registering a Resource in the Directory </H3>
-You can <A href="http://vao.stci.edu/directory/publishing">publish</A> your resources locally to the VAO registry at STScI (the underlying database) and your data 
+You can <A href="http://vao.stci.edu/directory/publishing">publish</A> your resources locally to the VO registry at STScI (the underlying database) and your data 
 will be automatically circulated to the other VO  repositories and immediately available for searching via the Directory.<br /><br />
 <li>
 	<A href="http://us-vo.org/pubs/files/PublishHowTo.html">Overview of publishing to 
