@@ -306,6 +306,7 @@ execute </xsl:text>
       <xsl:call-template name="loadDetail">
          <xsl:with-param name="utype">vor:resource.managingOrg</xsl:with-param>
          <xsl:with-param name="val" select="managingOrg"/>
+        <xsl:with-param name="detail_xpath">/managingOrg</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
 
@@ -1184,9 +1185,15 @@ execute </xsl:text>
       <xsl:param name="subtype" select="local-name(.)"/>
       <xsl:param name="utype" select="concat($basetype,$subtype)"/>
 
+     <xsl:variable name="xpath">
+       <xsl:call-template name="mode_detailPath">
+       </xsl:call-template>
+     </xsl:variable>
+
       <xsl:call-template name="loadDetail">
          <xsl:with-param name="utype" select="$utype"/>
          <xsl:with-param name="val" select="."/>
+         <xsl:with-param name="detail_xpath" select="$xpath"/>
       </xsl:call-template>
    </xsl:template>
 
@@ -1195,9 +1202,15 @@ execute </xsl:text>
       <xsl:param name="subtype" select="local-name(.)"/>
       <xsl:param name="utype" select="concat($basetype,$subtype)"/>
 
+     <xsl:variable name="xpath">
+       <xsl:call-template name="mode_detailPath">
+       </xsl:call-template>
+     </xsl:variable>
+
       <xsl:call-template name="loadDetail">
          <xsl:with-param name="utype" select="$utype"/>
          <xsl:with-param name="val" select="."/>
+        <xsl:with-param name="detail_xpath" select="$xpath"/>
       </xsl:call-template>
    </xsl:template>
 
@@ -1251,6 +1264,7 @@ execute </xsl:text>
          <xsl:with-param 
               name="utype">vor:capability.maxImageSize</xsl:with-param>
          <xsl:with-param name="val" select="$val"/>
+        <xsl:with-param name="detail_xpath">/capability/maxImageSize</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
 
@@ -1270,6 +1284,7 @@ execute </xsl:text>
       <xsl:call-template name="loadDetail">
          <xsl:with-param name="utype">vor:capability.language</xsl:with-param>
          <xsl:with-param name="val" select="normalize-space($val)"/>
+        <xsl:with-param name="detail_xpath">/capability/language</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
 
@@ -1401,6 +1416,7 @@ execute </xsl:text>
          <xsl:with-param 
               name="utype">vor:capability.paramHTTP.testQuery</xsl:with-param>
          <xsl:with-param name="val" select="testQuery"/>
+        <xsl:with-param name="detail_xpath">/capability/testQuery</xsl:with-param>
       </xsl:call-template>
    </xsl:template>
 
@@ -1581,7 +1597,7 @@ execute </xsl:text>
       res_title, 
       res_description, 
       content_level, content_type, reference_url, 
-      source_format, source_value, version, 
+      source_value, source_format, version, 
       rev, rstat, harvestedFromDate, harvestedFromID, 
       harvestedFrom, tag, validationLevel
    ) VALUES ( 
@@ -1686,7 +1702,7 @@ execute </xsl:text>
             <xsl:when test="@xsi:type">
                <xsl:value-of select="@xsi:type"/>
             </xsl:when>
-            <xsl:otherwise>Capability</xsl:otherwise>
+            <xsl:otherwise>capability</xsl:otherwise>
          </xsl:choose>
       </xsl:param>
 
@@ -2008,6 +2024,7 @@ INSERT INTO </xsl:text><xsl:value-of select="$rr"/><xsl:text>.intf_param (
       <xsl:param name="incap" select="true()"/>
       <xsl:param name="utype"/>
       <xsl:param name="val"/>
+      <xsl:param name="detail_xpath"/>
 
       <xsl:variable name="ckey">
          <xsl:choose>
@@ -2030,7 +2047,8 @@ INSERT INTO </xsl:text><xsl:value-of select="$rr"/><xsl:text>.intf_param (
          <xsl:text>.res_detail (
         rkey, ivoid, ckey, cap_index, 
         detail_utype, 
-        detail_value
+        detail_value, 
+        detail_xpath
       ) VALUES (
         @rkey, @ivoid, </xsl:text>
 
@@ -2044,6 +2062,10 @@ INSERT INTO </xsl:text><xsl:value-of select="$rr"/><xsl:text>.intf_param (
         </xsl:text>
         <xsl:call-template name="mkstrval">
            <xsl:with-param name="valnodes" select="$val"/>
+        </xsl:call-template><xsl:text>, 
+        </xsl:text> 
+        <xsl:call-template name="mkstrval">
+           <xsl:with-param name="valnodes" select="$detail_xpath"/>
         </xsl:call-template>  <xsl:text>
       );
 </xsl:text>
@@ -2131,7 +2153,19 @@ execute </xsl:text>
   -  utility and data extraction templates
   -  ################################################################ -->
 
-   <!-- 
+  <xsl:template name="mode_detailPath">
+    <xsl:for-each select="ancestor-or-self::*">
+      <!--start at level below resource-->
+      <xsl:if test="not(contains(name(), 'Resource'))">
+        <xsl:value-of select="concat('/',name())"/>
+        <!--<xsl:if test="(preceding-sibling::*|following-sibling::*)[name()=name(current())]">
+        <xsl:value-of select="concat('[',count(preceding-sibling::*[name()=name(current())])+1,']')"/>
+      </xsl:if>-->
+      </xsl:if>
+    </xsl:for-each>
+  </xsl:template>
+
+  <!-- 
      - announce the type of Resource description being loaded 
      -->
    <xsl:template match="*[identifier]" mode="announce">
