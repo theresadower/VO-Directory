@@ -19,29 +19,12 @@ namespace registry
     public class RegistryDBQuery : System.Web.Services.WebService
 	{
 		public static string sConnect;
-        internal static string PASS = (string)System.Configuration.ConfigurationManager.AppSettings["dbAdmin"];
-
 
 		public RegistryDBQuery()
 		{
 			//CODEGEN: This call is required by the ASP.NET Web Services Designer
 			InitializeComponent();
-            try
-            {
-                if ((string)Properties.Settings.Default.SqlAdminConnection != null)
-                    sConnect = (string)Properties.Settings.Default.SqlAdminConnection;
-                else
-                    sConnect = Properties.Settings.Default.SqlConnection;
-
-                if (System.Configuration.ConfigurationManager.AppSettings["dbAdmin"] == null)
-                    PASS = registry.Properties.Settings.Default.dbAdmin;
-
-                Console.Out.WriteLine(" Database is "  + sConnect.Substring(0,sConnect.IndexOf("User")) + "\n");
-            }
-            catch (Exception) { }
-
-			if (sConnect == null)
-				throw new Exception ("Registry: SqlConnection not found in configuration settings");		
+            sConnect = null;
 		}
 
 		public RegistryDBQuery(string connectionString)
@@ -90,14 +73,20 @@ namespace registry
 		{
             string cmd = SQLHelper.createBasicResourceSelect(predicate);
             cmd = EnsureSafeSQLStatement(cmd);
+            string PASS = Properties.Settings.Default.dbAdmin;
             return DSQuery(cmd, PASS);
 		}
 
 		[WebMethod (Description="Input SQL Query. This can query the entire registry database. Requires passphrase.")]
 		public DataSet DSQuery(string sqlStmnt, string password)
 		{
+            string PASS = Properties.Settings.Default.dbAdmin;
 			if (password.CompareTo(PASS) !=0) 
-				throw new Exception("Invalid password"); 
+				throw new Exception("Invalid password");
+
+            if (sConnect == null) 
+                sConnect = Properties.Settings.Default.SqlConnection;
+
 			SqlConnection conn = null;
 			DataSet ds = null;
 			try
@@ -127,6 +116,7 @@ namespace registry
         {
             string cmd = SQLHelper.createInterfacesSelect(identifier);
             cmd = EnsureSafeSQLStatement(cmd);
+            string PASS = Properties.Settings.Default.dbAdmin;
             DataSet ds = DSQuery(cmd, PASS);
 
             System.IO.StringWriter sw = new System.IO.StringWriter();
