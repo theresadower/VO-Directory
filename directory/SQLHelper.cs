@@ -12,6 +12,7 @@ namespace registry
         private static string dbAdmin = (string)System.Configuration.ConfigurationManager.AppSettings["dbAdmin"];
 
         public static string getKeysStatement = " select top 1 pkey, ukey from resource where ivoid=@Identifier and [rstat] > 0 order by [updated], harvestedFromDate desc ";
+        public static string getTableExistsStatement = "SELECT count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'@TableName'";
 
  		public static string createBasicResourceSelect(string predicate) 
 		{
@@ -389,6 +390,31 @@ namespace registry
             sb.Append(')');
 
             return sb.ToString();
+        }
+
+        public static SqlCommand GetTableExistsCommand(SqlConnection conn)
+        {
+            SqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = getTableExistsStatement;
+            cmd.Parameters.Add("@TableName", SqlDbType.VarChar, 500);
+            cmd.Prepare();  // Calling Prepare after having setup commandtext and params.
+            return cmd;
+        }
+
+        public static bool TestTAPTables(SqlConnection conn)
+        {
+            bool hasTAPTables = false;
+            SqlCommand getTAPCacheTable = SQLHelper.GetTableExistsCommand(conn);
+            getTAPCacheTable.Parameters[0].Value = "rr.resource";
+            using (SqlDataReader rdr = getTAPCacheTable.ExecuteReader(CommandBehavior.SingleResult))
+            {
+                while (rdr.Read())
+                {
+                    if (!rdr.IsDBNull(0))
+                        hasTAPTables = true;
+                }
+            }
+            return hasTAPTables;
         }
 
         public static SqlCommand getKeysLookupCmd(SqlConnection conn)
