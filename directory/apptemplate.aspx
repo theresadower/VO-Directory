@@ -53,7 +53,7 @@ href="http://www.usvao.org/" target="_top">Virtual Astronomical Observatory</a><
 <td width="678" height="39" align="center"
           valign="middle"
           background="images/stars.jpg"
-          bgcolor="#CFE5FC"  class="nvoapptitle" style="background-repeat: repeat-y;"><span class="nvoapptitle" style="background-repeat: repeat-y;">VAO Directory</span></td>
+          bgcolor="#CFE5FC"  class="nvoapptitle" style="background-repeat: repeat-y;"><span class="nvoapptitle" style="background-repeat: repeat-y;">NAVO Directory</span></td>
         <td bgcolor="white" width="2"></td>
       </tr>
       <tr>
@@ -65,8 +65,7 @@ href="http://www.usvao.org/" target="_top">Virtual Astronomical Observatory</a><
                 style="margin: 0pt;">
           <tr>
              <!-- the local links -->
-        <td class="navlink"><a href="http://www.us-vo.org/portalhome/">VAO Home</a></td>
-        <td class="navlink"><a href="keywordsearch.aspx">Search</a></td>
+         <td class="navlink"><a href="keywordsearch.aspx">Search</a></td>
         <td class="navlink"><a href="publishdown.aspx">Publish</a></td>
         <td class="navlink"><a href="riws.aspx">Developers</a></td>
         <td class="navlink"><a href="helpnew.aspx">Help</a></td>
@@ -127,8 +126,8 @@ Application Content
         <p class="style10"> Developed with the support of the <a href="http://www.nsf.gov">National Science Foundation</a> <br/>
 
           under Cooperative Agreement AST0122449 with the Johns Hopkins University <br/>
-          The VAO is a member of the <a href="http://www.ivoa.net">International Virtual Observatory Alliance</a></p>
-        <p class="style10">This VAO Application is hosted by the <a href="http://www.stsci.edu">Space Telescope Science Institute</a></p>
+          The NAVO project is a member of the <a href="http://www.ivoa.net">International Virtual Observatory Alliance</a></p>
+        <p class="style10">This application is hosted by the <a href="http://www.stsci.edu">Space Telescope Science Institute</a></p>
     </div></td>
     <td width="8%"><div align="center"><span class="tiny">Member<br/>
     </span><a href="http://www.ivoa.net"><img src="images/ivoa_small.jpg" alt="ivoa logo" width="68" height="39" border="0" align="top"/></a></div></td>
