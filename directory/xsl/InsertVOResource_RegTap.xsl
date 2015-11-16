@@ -653,7 +653,7 @@ execute </xsl:text>
       <xsl:text>INSERT INTO </xsl:text>
       <xsl:value-of select="$rr"/>
       <xsl:text>.res_subject (
-        ivoid, subject
+        ivoid, res_subject
       ) VALUES (
         @rrivoid, </xsl:text>
       <xsl:call-template name="mkstrval">
