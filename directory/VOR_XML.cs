@@ -30,6 +30,7 @@ namespace registry
         public VOR_XML()
 		{
             if (sConnect == null)
+                
                 sConnect = registry.Properties.Settings.Default.SqlAdminConnection;
             if (appDir == null)
                 appDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + "\\";
@@ -349,7 +350,6 @@ namespace registry
 
             //The following columns MUST be lowercased during ingestion: 
             //ivoid, res_type, content_level, content_type, source_format, waveband. )
-            //todo: there are more outside of the resource table.
             XmlDocument tapdoc = new XmlDocument();
             tapdoc.LoadXml(theXML);
 
@@ -429,6 +429,8 @@ namespace registry
 
             //relationship: ivoid, relationship_type, related_id. 
             targetNodes = tapdoc.SelectNodes("/ri:Resource/content/relationship/relatedResource", ns);
+            foreach (XmlNode node in targetNodes) node.InnerXml = node.InnerXml.ToLower();
+            targetNodes = tapdoc.SelectNodes("/ri:Resource/content/relationship/relatedResource/@ivo-id", ns);
             foreach (XmlNode node in targetNodes) node.InnerXml = node.InnerXml.ToLower();
             targetNodes = tapdoc.SelectNodes("/ri:Resource/content/relationship/relationshipType", ns);
             foreach (XmlNode node in targetNodes) node.InnerXml = node.InnerXml.ToLower();

@@ -1512,9 +1512,6 @@ execute </xsl:text>
     <xsl:param name="urluse">full</xsl:param>
     <xsl:param name="type">
       <xsl:choose>
-        <xsl:when test="contains(@xsi:type,':')">
-          <xsl:value-of select="substring-after(@xsi:type,':')"/>
-        </xsl:when>
         <xsl:when test="@xsi:type">
           <xsl:value-of select="@xsi:type"/>
         </xsl:when>
