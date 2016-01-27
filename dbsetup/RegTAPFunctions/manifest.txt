@@ -1,0 +1,27 @@
+NOTE: the following 4 sql scripts have the following line hardcoded, this will
+need to be changed as needed. GroupConcatInstallation.sql also requires 'clr
+enabled' and likely sysadm privilege to install. See
+https://groupconcat.codeplex.com for full documentation.
+
+USE VORegistry_regtap_schema
+
+GroupConcatInstallation.sql -- installs groupConcat function, this is only one
+really needed for TAP
+GroupConcatUninstallation.sql -- uninstalls groupConcat function
+Test.1.BuildTestData.sql -- builds test data tables
+Test.2.DemoFunctions.sql -- demo functions
+
+-- functions, etc, execute in the order see below.
+create_split.sql -- split function to create a table of values from a
+delimited string, used by ivo_hashlist_has
+create_ivo_hashlist_has.sql
+create_ivo_hasword.sql
+create_ivo_nocasematch.sql
+create_synonym_ivo_string_agg.sql -- create synonym for GROUP_CONCAT_D to
+preserve original function name
+grant_permissions.sql -- grant execute permissions on functions/synonyms to
+nvowebaccess
+
+-- sample call to ivo_string_agg
+sampleCallTo_ivo_string_agg.sql
+
