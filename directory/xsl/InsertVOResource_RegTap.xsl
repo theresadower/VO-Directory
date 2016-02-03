@@ -88,8 +88,7 @@ declare @rrtableseq smallint;
 
     <!-- remove any existing resource with the same identifier as this one -->
     <xsl:text>
--- if this IVOID already exists,  remove the old one from TAP cache before inserting
-execute </xsl:text>
+-- if this IVOID already exists,  remove the old one from TAP cache before inserting execute </xsl:text>
     <xsl:value-of select="$rr"/>
     <xsl:text>.deletedeprecatedresourcefromtapcache '</xsl:text>
     <xsl:value-of select="normalize-space(/*/identifier)"/>
@@ -150,7 +149,7 @@ execute </xsl:text>
   </xsl:template>
 
   <xsl:template match="*[substring-after(@xsi:type,':')='standard']">
-    <xsl:apply-templates select="." mode="type_Registry"/>
+    <xsl:apply-templates select="." mode="type_Standard"/>
   </xsl:template>
   <xsl:template match="*[substring-after(@xsi:type,':')='standardkeyenumeration']">
     <xsl:apply-templates select="." mode="type_Registry"/>
@@ -218,6 +217,11 @@ execute </xsl:text>
 </xsl:text>
     <xsl:apply-templates select="validationLevel" />
 
+    <!-- accessURLs outside of capabilities: dataCollections and documents -->
+    <xsl:apply-templates select="accessURL" mode="loadResDetail"/>
+
+    <!--<xsl:apply-templates select="endorsedVersion" mode="loadResDetail"/>-->
+  
   </xsl:template>
 
   <!--
@@ -226,14 +230,50 @@ execute </xsl:text>
   <xsl:template match="*" mode="type_Authority">
     <!-- handle the core resource metadata -->
     <xsl:apply-templates select="." mode="type_Resource"/>
-  </xsl:template>
 
+    <xsl:text>
+-- Authority-specific metadata 
+</xsl:text>
+
+  <xsl:call-template name="loadDetail">
+    <xsl:with-param name="val" select="managingOrg"/>
+    <xsl:with-param name="detail_xpath">/managingOrg</xsl:with-param>
+  </xsl:call-template>
+  </xsl:template>
+  
   <!--
      -  handle the Organization resource
      -->
   <xsl:template match="*" mode="type_Organisation">
+    
     <!-- handle the core resource metadata -->
     <xsl:apply-templates select="." mode="type_Resource"/>
+    
+    <!--organisation-specific details-->
+    <xsl:variable name="facility">
+      <xsl:call-template name="mkstrval">
+        <xsl:with-param name="valnodes" select="facility"/>
+        <xsl:with-param name="asarray" select="true()"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="instrument">
+      <xsl:call-template name="mkstrval">
+        <xsl:with-param name="valnodes" select="instrument"/>
+        <xsl:with-param name="asarray" select="true()"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="facility">
+      <xsl:call-template name="loadDetail">
+        <xsl:with-param name="val" select="$facility"/>
+        <xsl:with-param name="detail_xpath">/facility</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:if test="instrument">
+      <xsl:call-template name="loadDetail">
+        <xsl:with-param name="val" select="$instrument"/>
+        <xsl:with-param name="detail_xpath">/instrument</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>    
   </xsl:template>
 
   <!--
@@ -262,6 +302,48 @@ execute </xsl:text>
         <xsl:with-param name="asarray" select="true()"/>
       </xsl:call-template>
     </xsl:variable>
+    <xsl:variable name="facility">
+      <xsl:call-template name="mkstrval">
+        <xsl:with-param name="valnodes" select="facility"/>
+        <xsl:with-param name="asarray" select="true()"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="instrument">
+      <xsl:call-template name="mkstrval">
+        <xsl:with-param name="valnodes" select="instrument"/>
+        <xsl:with-param name="asarray" select="true()"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="format">
+      <xsl:call-template name="loadDetail">
+         <xsl:with-param name="val" select="$format"/>
+        <xsl:with-param name="detail_xpath">/format</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:if test="facility">
+      <xsl:call-template name="loadDetail">
+         <xsl:with-param name="val" select="$facility"/>
+        <xsl:with-param name="detail_xpath">/facility</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:if test="instrument">
+      <xsl:call-template name="loadDetail">
+        <xsl:with-param name="val" select="$instrument"/>
+        <xsl:with-param name="detail_xpath">/instrument</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:if test="coverage/footprint">
+     <xsl:call-template name="loadDetail">
+        <xsl:with-param name="val" select="coverage/footprint"/>
+        <xsl:with-param name="detail_xpath">/coverage/footprint</xsl:with-param>
+      </xsl:call-template>
+        <xsl:if test="coverage/footprint/@ivo-id">
+           <xsl:call-template name="loadDetail">
+              <xsl:with-param name="val" select="coverage/footprint/@ivo-id"/>
+              <xsl:with-param name="detail_xpath">/coverage/footprint/@ivo-id</xsl:with-param>
+            </xsl:call-template>
+         </xsl:if>
+      </xsl:if>
 
     <xsl:text>UPDATE </xsl:text>
     <xsl:value-of select="$rr"/>
@@ -271,7 +353,7 @@ execute </xsl:text>
     <xsl:text>,
        source_format=</xsl:text>
     <xsl:value-of select="$format"/>
-
+   
     <xsl:if test="coverage/waveband">
       <xsl:text>,
        waveband=</xsl:text>
@@ -293,6 +375,7 @@ execute </xsl:text>
 </xsl:text>
 
     <xsl:apply-templates select="tableset"/>
+    <xsl:apply-templates select="accessURL" mode="loadResDetail"/>
 
     <!-- catalog is for v1.0 compatibility -->
     <xsl:for-each select="catalog">
@@ -352,6 +435,44 @@ execute </xsl:text>
 
     <!-- add the DataService specific stuff -->
 
+    <xsl:variable name="facility">
+      <xsl:call-template name="mkstrval">
+        <xsl:with-param name="valnodes" select="facility"/>
+        <xsl:with-param name="asarray" select="true()"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="instrument">
+      <xsl:call-template name="mkstrval">
+        <xsl:with-param name="valnodes" select="instrument"/>
+        <xsl:with-param name="asarray" select="true()"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="facility">
+      <xsl:call-template name="loadDetail">
+        <xsl:with-param name="val" select="$facility"/>
+        <xsl:with-param name="detail_xpath">/facility</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:if test="instrument">
+      <xsl:call-template name="loadDetail">
+        <xsl:with-param name="val" select="$instrument"/>
+        <xsl:with-param name="detail_xpath">/instrument</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+   
+    <xsl:if test="coverage/footprint">
+     <xsl:call-template name="loadDetail">
+        <xsl:with-param name="val" select="coverage/footprint"/>
+        <xsl:with-param name="detail_xpath">/coverage/footprint</xsl:with-param>
+      </xsl:call-template>
+        <xsl:if test="coverage/footprint/@ivo-id">
+           <xsl:call-template name="loadDetail">
+              <xsl:with-param name="val" select="coverage/footprint/@ivo-id"/>
+              <xsl:with-param name="detail_xpath">/coverage/footprint/@ivo-id</xsl:with-param>
+            </xsl:call-template>
+         </xsl:if>
+      </xsl:if>
+        
     <xsl:if test="coverage/waveband">
       <xsl:text>UPDATE </xsl:text>
       <xsl:value-of select="$rr"/>
@@ -386,6 +507,30 @@ execute </xsl:text>
     <xsl:apply-templates select="." mode="type_Service"/>
 
     <!-- add the DataService specific stuff -->
+    <xsl:variable name="facility">
+      <xsl:call-template name="mkstrval">
+        <xsl:with-param name="valnodes" select="facility"/>
+        <xsl:with-param name="asarray" select="true()"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="instrument">
+      <xsl:call-template name="mkstrval">
+        <xsl:with-param name="valnodes" select="instrument"/>
+        <xsl:with-param name="asarray" select="true()"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="facility">
+      <xsl:call-template name="loadDetail">
+        <xsl:with-param name="val" select="$facility"/>
+        <xsl:with-param name="detail_xpath">/facility</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:if test="instrument">
+      <xsl:call-template name="loadDetail">
+         <xsl:with-param name="val" select="$instrument"/>
+        <xsl:with-param name="detail_xpath">/instrument</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
 
     <!-- load the tables -->
     <xsl:if test="table">
@@ -431,7 +576,11 @@ execute </xsl:text>
 
     <xsl:text>-- Add Standards-specific metadata
 </xsl:text>
-    <xsl:apply-templates select="key" mode="loadResDetail">
+
+    <xsl:apply-templates select="endorsedVersion" mode="loadResDetail"/>
+      
+    <!-- not required, currently no examples. Apply later as needed. -->
+    <!--<xsl:apply-templates select="key" mode="loadResDetail">
       <xsl:with-param name="val">
         <xsl:value-of select="name"/>
         <xsl:if test="description">
@@ -439,51 +588,27 @@ execute </xsl:text>
           <xsl:value-of select="description"/>
         </xsl:if>
       </xsl:with-param>
-    </xsl:apply-templates>
-  </xsl:template>
+    </xsl:apply-templates>-->
+   
+    <!--<xsl:apply-templates select="." mode="type_StandardKeyEnumeration"/>-->
 
-  <!--
-     -  handle the Standard resource
-     -->
-  <xsl:template match="*" mode="type_Standard">
-    <!-- handle the core resource metadata -->
-    <xsl:apply-templates select="." mode="type_StandardKeyEnumeration"/>
-
-    <xsl:apply-templates select="endorsedVersion" mode="loadResDetail"/>
-    <xsl:apply-templates select="schema" mode="loadResDetail">
+     <xsl:apply-templates select="schema/@namespace" mode="loadResDetail">
       <xsl:with-param name="val">
-        <xsl:value-of select="location"/>
-        <xsl:if test="description">
-          <xsl:text> </xsl:text>
-          <xsl:value-of select="description"/>
-        </xsl:if>
+        <xsl:value-of select="schema/@namespace"/>
       </xsl:with-param>
-    </xsl:apply-templates>
-    <xsl:apply-templates select="schema" mode="loadResDetail">
-      <xsl:with-param name="val">
-        <xsl:value-of select="location"/>
-        <xsl:if test="description">
-          <xsl:text> : </xsl:text>
-          <xsl:value-of select="description"/>
-        </xsl:if>
+      <xsl:with-param name="attributePath">
+        <xsl:value-of select="'/schema/@namespace'"/>
       </xsl:with-param>
     </xsl:apply-templates>
     <xsl:apply-templates select="deprecated" mode="loadResDetail"/>
 
-  </xsl:template>
-
-  <!--
-     -  handle the Standard resource
-     -->
-  <xsl:template match="*" mode="type_Standard">
-    <!-- handle the core resource metadata -->
-    <xsl:apply-templates select="." mode="type_Standard"/>
-
-    <xsl:for-each select="interface">
+    <!-- not required, currently no examples. Apply later as needed. -->
+    <!--<xsl:for-each select="interface">
       <xsl:apply-templates select=".">
         <xsl:with-param name="seq" select="position()"/>
       </xsl:apply-templates>
-    </xsl:for-each>
+    </xsl:for-each>-->
+  
   </xsl:template>
 
 
@@ -963,8 +1088,15 @@ execute </xsl:text>
     <xsl:apply-templates select="dataModel" mode="loadCapDetail"/>
     <xsl:apply-templates select="dataModel/@ivo-id" mode="loadCapDetail">
       <xsl:with-param name="subtype">dataModel.ivoid</xsl:with-param>
+      <xsl:with-param name="attributePath" select="'/capability/dataModel/@ivo-id'"/>  
     </xsl:apply-templates>
-    <xsl:apply-templates select="language"/>
+    <xsl:apply-templates select="language/name" mode="loadCapDetail">
+      <xsl:with-param name="subtype">language.name</xsl:with-param>
+    </xsl:apply-templates>
+    <xsl:apply-templates select="language/version/@ivo-id" mode="loadCapDetail">
+        <xsl:with-param name="attributePath" select="'/capability/language/version/@ivo-id'"/>  
+    </xsl:apply-templates>
+
     <xsl:apply-templates select="uploadMethod/@ivo-id" mode="loadCapDetail">
       <xsl:with-param name="subtype">uploadMethod.ivoid</xsl:with-param>
     </xsl:apply-templates>
@@ -973,6 +1105,7 @@ execute </xsl:text>
     </xsl:apply-templates>
     <xsl:apply-templates select="outputFormat/@ivo-id" mode="loadCapDetail">
       <xsl:with-param name="subtype">outputFormat.ivoid</xsl:with-param>
+      <xsl:with-param name="attributePath" select="'/capability/outputFormat/@ivo-id'"/>  
     </xsl:apply-templates>
     <xsl:apply-templates select="retentionPeriod/hard" mode="loadCapDetail">
       <xsl:with-param name="subtype">retentionPeriod.hard</xsl:with-param>
@@ -1006,14 +1139,20 @@ execute </xsl:text>
     <xsl:param name="basetype">vor:resource.</xsl:param>
     <xsl:param name="subtype" select="local-name(.)"/>
     <xsl:param name="utype" select="concat($basetype,$subtype)"/>
+    <xsl:param name="attributePath" select="'none'"/>
 
     <xsl:variable name="xpath">
-      <xsl:call-template name="mode_detailPath">
-      </xsl:call-template>
+      <xsl:choose>
+        <xsl:when test="$attributePath = 'none'">
+          <xsl:call-template name="mode_detailPath"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$attributePath"/>      
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:variable>
 
     <xsl:call-template name="loadDetail">
-      <xsl:with-param name="utype" select="$utype"/>
       <xsl:with-param name="val" select="."/>
       <xsl:with-param name="detail_xpath" select="$xpath"></xsl:with-param>
     </xsl:call-template>
@@ -1022,15 +1161,20 @@ execute </xsl:text>
   <xsl:template match="capability//*|capability//@*" mode="loadCapDetail">
     <xsl:param name="basetype">vor:capability.</xsl:param>
     <xsl:param name="subtype" select="local-name(.)"/>
-    <xsl:param name="utype" select="concat($basetype,$subtype)"/>
+    <xsl:param name="attributePath" select="'none'"/>
 
     <xsl:variable name="xpath">
-      <xsl:call-template name="mode_detailPath">
-      </xsl:call-template>
+      <xsl:choose>
+        <xsl:when test="$attributePath = 'none'">
+          <xsl:call-template name="mode_detailPath"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$attributePath"/>      
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:variable>
 
     <xsl:call-template name="loadDetail">
-      <xsl:with-param name="utype" select="$utype"/>
       <xsl:with-param name="val" select="."/>
       <xsl:with-param name="detail_xpath" select="$xpath"></xsl:with-param>
     </xsl:call-template>
@@ -1048,7 +1192,7 @@ execute </xsl:text>
   </xsl:template>
 
   <xsl:template match="maxRecords">
-    <xsl:apply-templates select="." mode="loadCapDetails"/>
+    <xsl:apply-templates select="." mode="loadCapDetail"/>
   </xsl:template>
 
   <xsl:template match="capability/maxImageSize[lat or long]">
@@ -1093,28 +1237,6 @@ execute </xsl:text>
            name="utype">vor:capability.maxImageSize</xsl:with-param>
       <xsl:with-param name="val" select="$val"/>
       <xsl:with-param name="detail_xpath">/capability/maxImageSize</xsl:with-param>
-    </xsl:call-template>
-  </xsl:template>
-
-  <!--
-     -  provide special loading of language description
-     -->
-  <xsl:template match="language">
-    <xsl:variable name="val">
-      <xsl:value-of select="name"/>
-      <xsl:text> </xsl:text>
-      <xsl:value-of select="version"/>
-      <xsl:text> </xsl:text>
-      <xsl:for-each select="languageFeatures/@type">
-        <xsl:value-of select="."/>
-        <xsl:text> </xsl:text>
-      </xsl:for-each>
-    </xsl:variable>
-
-    <xsl:call-template name="loadDetail">
-      <xsl:with-param name="utype">vor:capability.language</xsl:with-param>
-      <xsl:with-param name="val" select="normalize-space($val)"/>
-      <xsl:with-param name="detail_xpath">/capability/language</xsl:with-param>
     </xsl:call-template>
   </xsl:template>
 
