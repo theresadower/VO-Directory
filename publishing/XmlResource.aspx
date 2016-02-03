@@ -4,7 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>VAO Publishing: Create or Edit a Resource in Raw XML Format</title>
+    <title>VO Publishing: Create or Edit a Resource in Raw XML Format</title>
 </head>
 <body>
     <form id="form1" runat="server">

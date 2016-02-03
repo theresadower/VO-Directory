@@ -136,7 +136,7 @@ H3, H4 {
 <body><table width="100%" border="0" cellpadding="0" cellspacing="0">
 <tr>
     <td width="112" height="32" align="center" valign="top"><a
-href="http://www.us-vo.org" class="nvolink" target="_top"></td>
+href="http://www.usvao.org" class="nvolink" target="_top"></td>
     <td width="50" align="center" valign="middle"><img src="images/Directory50.png" alt="ICON" width="50" height="50"></td>
     <td valign="top"><table  width="100%" border="0" cellpadding="0" cellspacing="0">
       <tr>
@@ -160,7 +160,6 @@ href="http://www.us-vo.org" class="nvolink" target="_top"></td>
         <td class="navlink"><a href="http://vao.stsci.edu/publishing">Publish</a></td>
         <td class="navlink"><a href="riws.aspx">Developers</a></td>
         <td class="navlink"><a href="helpnew.aspx">Help</a></td>
-        <td class="helplink"><a href="http://www.us-vo.org/feedback/">Contact Us</a></td>
            </tr>
          </table>
          </td>
@@ -265,7 +264,7 @@ Results will appear here.
     <td width="8%"><div align="center"><span class="tiny">Member<br/>
     </span><a href="http://www.ivoa.net"><img src="images/ivoa_small.jpg" alt="ivoa logo" width="68" height="39" border="0" align="top"/></a></div></td>
 
-    <td width="8%"><span class="nvolink"><span class="tiny"><a href="http://www.usvao.org/contact-connect/">Contact Us</a></span>
+    <td width="8%"><span class="nvolink"><span class="tiny"><a href="https://hea-www.cfa.harvard.edu/USVOA/support-community/">Contact Us</a></span>
     </span></td>
   </tr>
 </table>

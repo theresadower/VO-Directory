@@ -6,7 +6,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <link type="text/css" rel="stylesheet" href="styles/layout.css" title="default" media="all"/>
-    <title>VAO Publishing Login</title>
+    <title>Registry Publishing Login</title>
     
     <script type="text/javascript" src="scripts/InitializeJavaScript.js"></script>
     <script type="text/javascript" src="scripts/namespace.js"></script>
@@ -24,7 +24,6 @@
 <div id="main-wrapper">
   <div align="right"></div>
 
-<div id="logo"><a href="http://www.usvao.org/" title="Home" target="_blank"><img src="images/VAO_logo_100.png" alt="VAO" height="50" width="100"/></a></div>
 <div id="logo"><a href="http://vao.stsci.edu/directory" title="Directory Search" target="_blank"><img src="images/Directory50.png" alt="Directory Search" height="50" width="50" /></a></div>
 <div id="nav-wrapper">
   <div id="navigation">
@@ -35,10 +34,10 @@
 <div class="clear"></div>
 
 <div id="content-area"> 
-            <div id="helpcontent"><h1>VAO Registry Publishing Interface - Login</h1><br />
-            <p>Using the VAO registry publishing interface, you can publish new and modify existing VO resources, representing data services, catalogs, archive institutions,
-            and many other astronomical data concepts. This system manages resources hosted at the VAO registry at
-            Space Telescope Science Institute. Resources in this VAO registry are accessible by search tools and VO client software througout
+            <div id="helpcontent"><h1>VO Registry Publishing Interface - Login</h1><br />
+            <p>Using the VO registry publishing interface, you can publish new and modify existing VO resources, representing data services, catalogs, archive institutions,
+            and many other astronomical data concepts. This system manages resources hosted at the VO registry at
+            Space Telescope Science Institute. Resources in this registry are accessible by search tools and VO client software througout
             the IVOA. For more information, check the <a href="help.html" target="_blank">publishing help page</a> or the main <a href="http://usvao.org" target="_blank">VAO web page.</a> </p>
             <br />
 </div>

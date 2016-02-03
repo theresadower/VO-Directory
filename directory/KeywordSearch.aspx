@@ -209,7 +209,7 @@ H3, H4 {
                 <input name="query_string" id="sterm" size="50" maxlength="500" value="" type="text"/>
 	            <br/>
 	            <input type="submit" class="submit" name=".submit" value="Search" />
-	            <input type="reset" class="reset" name=".reset" value="Reset" onclick="return rd.clearState();" />
+	            <input type="reset" class="reset" name=".reset" value="Reset" onclick="return rd.clearState();" />&nbsp;&nbsp;<a href="advancedsearch.aspx">Advanced</a>
 	            <div class="searchnote">
 		            Examples: 
 		            <a onclick="return insertTerm(this);">quasar</a>, 
@@ -263,7 +263,7 @@ Results will appear here.
     <td width="8%"><div align="center"><span class="tiny">Member<br/>
     </span><a href="http://www.ivoa.net"><img src="images/ivoa_small.jpg" alt="ivoa logo" width="68" height="39" border="0" align="top"/></a></div></td>
 
-    <td width="8%"><span class="nvolink"><span class="tiny"><a href="http://www.usvao.org/contact-connect/">Contact Us</a></span></span></td>
+    <td width="8%"><span class="nvolink"><span class="tiny"><a href="https://hea-www.cfa.harvard.edu/USVOA/support-community/">Contact Us</a></span></span></td>
   </tr>
 </table>
 </body> </html>

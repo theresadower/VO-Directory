@@ -43,7 +43,7 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 <tr>
     <td width="112" height="32" align="center" valign="top"><a
-href="http://www.us-vo.org" class="nvolink" target="_top"><img
+href="http://www.usvao.org" class="nvolink" target="_top"><img
         src="./images/VAO_logo_100.png" border="0"/></a><span class="nvolink"><a
 href="http://www.usvao.org/" target="_top">Virtual Astronomical Observatory</a></span></td>
     <td width="50" align="center" valign="middle"><img src="images/registry50.png" alt="ICON" width="50" height="50"></td>
@@ -53,7 +53,7 @@ href="http://www.usvao.org/" target="_top">Virtual Astronomical Observatory</a><
 <td width="678" height="39" align="center"
           valign="middle"
           background="images/stars.jpg"
-          bgcolor="#CFE5FC"  class="nvoapptitle" style="background-repeat: repeat-y;"><span class="nvoapptitle" style="background-repeat: repeat-y;">NAVO Directory</span></td>
+          bgcolor="#CFE5FC"  class="nvoapptitle" style="background-repeat: repeat-y;"><span class="nvoapptitle" style="background-repeat: repeat-y;">VAO Directory</span></td>
         <td bgcolor="white" width="2"></td>
       </tr>
       <tr>
@@ -65,11 +65,11 @@ href="http://www.usvao.org/" target="_top">Virtual Astronomical Observatory</a><
                 style="margin: 0pt;">
           <tr>
              <!-- the local links -->
-         <td class="navlink"><a href="keywordsearch.aspx">Search</a></td>
+        <td class="navlink"><a href="https://hea-www.cfa.harvard.edu/USVOA/about-the-usvoa/">About NAVO</a></td>
+        <td class="navlink"><a href="keywordsearch.aspx">Search</a></td>
         <td class="navlink"><a href="publishdown.aspx">Publish</a></td>
         <td class="navlink"><a href="riws.aspx">Developers</a></td>
         <td class="navlink"><a href="helpnew.aspx">Help</a></td>
-        <td class="helplink"><a href="http://www.usvao.org/contact-connect/">Contact Us</a></td>
            </tr>
          </table>
          </td>
@@ -126,14 +126,11 @@ Application Content
         <p class="style10"> Developed with the support of the <a href="http://www.nsf.gov">National Science Foundation</a> <br/>
 
           under Cooperative Agreement AST0122449 with the Johns Hopkins University <br/>
-          The NAVO project is a member of the <a href="http://www.ivoa.net">International Virtual Observatory Alliance</a></p>
-        <p class="style10">This application is hosted by the <a href="http://www.stsci.edu">Space Telescope Science Institute</a></p>
+          The VAO is a member of the <a href="http://www.ivoa.net">International Virtual Observatory Alliance</a></p>
+        <p class="style10">This VAO Application is hosted by the <a href="http://www.stsci.edu">Space Telescope Science Institute</a></p>
     </div></td>
     <td width="8%"><div align="center"><span class="tiny">Member<br/>
     </span><a href="http://www.ivoa.net"><img src="images/ivoa_small.jpg" alt="ivoa logo" width="68" height="39" border="0" align="top"/></a></div></td>
-
-    <td width="8%"><span class="nvolink"><span class="tiny"><a href="http://www.usvao.org/contact-connect/">Contact Us</a></span><br/>
-    <img src="http://www.us-vo.org/images/bee_hammer.gif" alt="Contact Us" width="50" border="0"/></span></td>
   </tr>
 </table></body> 
 </html>
