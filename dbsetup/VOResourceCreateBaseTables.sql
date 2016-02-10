@@ -1,24 +1,13 @@
---create schema rr;
-
-USE [VOResourceTest]
+USE [VORegTAP]
 GO
 
 /****** Object:  Table [dbo].[ResourceVOTableCache]    Script Date: 03/07/2013 11:39:42 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-SET ANSI_PADDING ON
-GO
 CREATE TABLE [dbo].[ResourceVOTableCache](
 	[pkey] [bigint] IDENTITY(1,1) NOT NULL,
 	[rkey] [bigint] NOT NULL,
 	[ResourceAsRow] [varchar](max) NULL,
 	[InterfaceAsRow] [varchar](max) NULL
 ) ON [PRIMARY]
-GO
-SET ANSI_PADDING OFF
-GO
 
 --------
 
@@ -70,8 +59,8 @@ create table dbo.resource (
    primary key (pkey),
    foreign key (authkey) references dbo.authority (pkey)
 );
-create index dbo.resource_ivoid_x on dbo.resource (ivoid);
-create index dbo.resource_rstat_x on dbo.resource (rstat);
+create index resource_ivoid_x on dbo.resource (ivoid);
+create index resource_rstat_x on dbo.resource (rstat);
 
 create table dbo.res_role (
    rkey bigint not null,
@@ -88,7 +77,7 @@ create table dbo.res_role (
    foreign key (rkey) references dbo.resource (pkey)
    --foreign key (ivoid) references dbo.resource (ivoid) -- without ivoid as a primary key, disallowed in sql server.
 );
-create index dbo.res_role_ivoid_x on dbo.res_role (ivoid);
+create index res_role_ivoid_x on dbo.res_role (ivoid);
 
 create table dbo.subject (
    rkey bigint not null,
@@ -98,7 +87,7 @@ create table dbo.subject (
    foreign key (rkey) references dbo.resource (pkey),
    --foreign key (ivoid) references dbo.resource (ivoid)
 );
-create index dbo.subject_ivoid_x on dbo.subject (ivoid);
+create index subject_ivoid_x on dbo.subject (ivoid);
 
 create table dbo.capability (
    pkey bigint IDENTITY (1,1) not null,
@@ -115,8 +104,8 @@ create table dbo.capability (
    foreign key (rkey) references dbo.resource (pkey),
    --foreign key (ivoid) references dbo.resource (ivoid)
 );
-create index dbo.capability_ivoid_x on dbo.capability (ivoid);
-create index dbo.capability_cap_x on dbo.capability (cap_index);
+create index capability_ivoid_x on dbo.capability (ivoid);
+create index capability_cap_x on dbo.capability (cap_index);
 
 create table dbo.res_schema (
    pkey bigint IDENTITY (1,1) not null,
@@ -133,7 +122,7 @@ create table dbo.res_schema (
    foreign key (rkey) references dbo.resource (pkey),
    --foreign key (ivoid) references dbo.resource (ivoid)
 );
-create index dbo.res_schema_ivoid_x on dbo.res_schema (ivoid);
+create index res_schema_ivoid_x on dbo.res_schema (ivoid);
 
 create table dbo.res_table (
    pkey bigint IDENTITY (1,1) not null,
@@ -154,7 +143,7 @@ create table dbo.res_table (
    foreign key (rkey) references dbo.resource (pkey),
    --foreign key (ivoid) references dbo.resource (ivoid)
 );
-create index dbo.res_table_ivoid_x on dbo.res_table (ivoid);
+create index res_table_ivoid_x on dbo.res_table (ivoid);
 
 create table dbo.table_column (
    rkey bigint not null,
@@ -184,7 +173,7 @@ create table dbo.table_column (
    foreign key (rkey) references dbo.resource (pkey),
    --foreign key (ivoid) references dbo.resource (ivoid)
 );
-create index dbo.table_column_ivoid_x on dbo.table_column (ivoid);
+create index table_column_ivoid_x on dbo.table_column (ivoid);
 
 create table dbo.interface (
    pkey bigint IDENTITY (1,1) not null,
@@ -209,9 +198,9 @@ create table dbo.interface (
    foreign key (ckey) references dbo.capability (pkey),
    --foreign key (ivoid) references dbo.resource (ivoid)
 );
-create index dbo.interface_ivoid_x on dbo.interface (ivoid);
-create index dbo.interface_cap_x on dbo.interface (cap_index);
-create index dbo.interface_intf_x on dbo.interface (intf_index);
+create index interface_ivoid_x on dbo.interface (ivoid);
+create index interface_cap_x on dbo.interface (cap_index);
+create index interface_intf_x on dbo.interface (intf_index);
 
 create table dbo.intf_param (
    rkey bigint not null,
@@ -239,9 +228,9 @@ create table dbo.intf_param (
    foreign key (ikey) references dbo.interface (pkey),
    --foreign key (ivoid) references dbo.resource (ivoid),
 );
-create index dbo.intf_param_ivoid_x on dbo.intf_param (ivoid);
-create index dbo.intf_param_cap_x on dbo.intf_param (cap_index);
-create index dbo.intf_param_intf_x on dbo.intf_param (intf_index);
+create index intf_param_ivoid_x on dbo.intf_param (ivoid);
+create index intf_param_cap_x on dbo.intf_param (cap_index);
+create index intf_param_intf_x on dbo.intf_param (intf_index);
 
 create table dbo.relationship (
    rkey bigint not null,
@@ -253,7 +242,7 @@ create table dbo.relationship (
    foreign key (rkey) references dbo.resource (pkey),
    --foreign key (ivoid) references dbo.resource (ivoid)
 );
-create index dbo.relationship_ivoid_x on dbo.relationship (ivoid);
+create index relationship_ivoid_x on dbo.relationship (ivoid);
 
 create table dbo.validation (
    rkey bigint not null,
@@ -267,8 +256,8 @@ create table dbo.validation (
    foreign key (rkey) references dbo.resource (pkey),
    --foreign key (ivoid) references dbo.resource (ivoid)
 );
-create index dbo.validation_ivoid_x on dbo.validation (ivoid);
-create index dbo.validation_cap_x on dbo.validation (cap_index);
+create index validation_ivoid_x on dbo.validation (ivoid);
+create index validation_cap_x on dbo.validation (cap_index);
 
 create table dbo.date (
    rkey bigint not null,
@@ -279,7 +268,7 @@ create table dbo.date (
    foreign key (rkey) references dbo.resource (pkey),
    --foreign key (ivoid) references dbo.resource (ivoid)
 );
-create index dbo.date_ivoid_x on dbo.date (ivoid);
+create index date_ivoid_x on dbo.date (ivoid);
 
 create table dbo.res_detail (
    rkey bigint not null,
@@ -292,8 +281,8 @@ create table dbo.res_detail (
    foreign key (rkey) references dbo.resource (pkey),
    --foreign key (ivoid) references dbo.resource (ivoid)   
 );
-create index dbo.res_detail_ivoid_x on dbo.res_detail (ivoid);
-create index dbo.res_detail_cap_x on dbo.res_detail (cap_index);
+create index res_detail_ivoid_x on dbo.res_detail (ivoid);
+create index res_detail_cap_x on dbo.res_detail (cap_index);
 GO
 
 

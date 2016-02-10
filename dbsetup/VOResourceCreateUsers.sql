@@ -1,4 +1,4 @@
-USE [voresourcetest]
+USE [VORegTAP]
 GO
 /****** Object:  User [nvowebaccess]    Script Date: 04/19/2013 16:45:01 ******/
 CREATE USER [nvowebaccess] FOR LOGIN [nvowebaccess] WITH DEFAULT_SCHEMA=[dbo]
