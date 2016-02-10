@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EB871F3A-82DF-47B8-AED2-B6EF5F176EFA}"
 	ProjectSection(SolutionItems) = preProject
@@ -30,6 +30,38 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{30481A94-6F0
 		..\lib\System.Net.Http.dll = ..\lib\System.Net.Http.dll
 		..\lib\System.Net.Http.xml = ..\lib\System.Net.Http.xml
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dbsetup", "dbsetup", "{CDD6A808-BD5C-4DB3-9EB3-C487BB790700}"
+	ProjectSection(SolutionItems) = preProject
+		..\dbsetup\checkVOResource.xsl = ..\dbsetup\checkVOResource.xsl
+		createschema.sql = createschema.sql
+		..\dbsetup\InsertVOResource.xsl = ..\dbsetup\InsertVOResource.xsl
+		..\dbsetup\VODataServiceUpgrade.xsl = ..\dbsetup\VODataServiceUpgrade.xsl
+		..\dbsetup\VOResourceCreate_harvestertables.sql = ..\dbsetup\VOResourceCreate_harvestertables.sql
+		..\dbsetup\VOResourceCreate_usertables.sql = ..\dbsetup\VOResourceCreate_usertables.sql
+		..\dbsetup\VOResourceCreateBaseTables.sql = ..\dbsetup\VOResourceCreateBaseTables.sql
+		..\dbsetup\VOResourceCreateUsers.sql = ..\dbsetup\VOResourceCreateUsers.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RegTAPFunctions", "RegTAPFunctions", "{F27275A9-A9D3-47D4-A007-1142A4803E8C}"
+	ProjectSection(SolutionItems) = preProject
+		..\dbsetup\RegTAPFunctions\create_ivo_hashlist_has.sql = ..\dbsetup\RegTAPFunctions\create_ivo_hashlist_has.sql
+		..\dbsetup\RegTAPFunctions\create_ivo_hasword.sql = ..\dbsetup\RegTAPFunctions\create_ivo_hasword.sql
+		..\dbsetup\RegTAPFunctions\create_ivo_nocasematch.sql = ..\dbsetup\RegTAPFunctions\create_ivo_nocasematch.sql
+		..\dbsetup\RegTAPFunctions\create_split.sql = ..\dbsetup\RegTAPFunctions\create_split.sql
+		..\dbsetup\RegTAPFunctions\create_synonym_ivo_string_agg.sql = ..\dbsetup\RegTAPFunctions\create_synonym_ivo_string_agg.sql
+		..\dbsetup\RegTAPFunctions\grant_permissions.sql = ..\dbsetup\RegTAPFunctions\grant_permissions.sql
+		..\dbsetup\RegTAPFunctions\GroupConcatInstallation.sql = ..\dbsetup\RegTAPFunctions\GroupConcatInstallation.sql
+		..\dbsetup\RegTAPFunctions\GroupConcatUninstallation.sql = ..\dbsetup\RegTAPFunctions\GroupConcatUninstallation.sql
+		..\dbsetup\RegTAPFunctions\manifest.txt = ..\dbsetup\RegTAPFunctions\manifest.txt
+		..\dbsetup\RegTAPFunctions\sampleCallTo_ivo_string_agg.sql = ..\dbsetup\RegTAPFunctions\sampleCallTo_ivo_string_agg.sql
+		..\dbsetup\RegTAPFunctions\Test.1.BuildTestData.sql = ..\dbsetup\RegTAPFunctions\Test.1.BuildTestData.sql
+		..\dbsetup\RegTAPFunctions\Test.2.DemoFunctions.sql = ..\dbsetup\RegTAPFunctions\Test.2.DemoFunctions.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserMigrationTool", "UserMigrationTool", "{062F0F85-29FB-4F03-8CA8-2EA9525AC7EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserMigrationTool", "..\dbsetup\UserMigrationTool\UserMigrationTool.csproj", "{45D33FE2-FB67-4996-A2DF-E06099CFEE2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,8 +123,25 @@ Global
 		{D48C8ED0-CFC7-497F-A56E-298A8E333B2A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D48C8ED0-CFC7-497F-A56E-298A8E333B2A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D48C8ED0-CFC7-497F-A56E-298A8E333B2A}.Release|x86.ActiveCfg = Release|Any CPU
+		{45D33FE2-FB67-4996-A2DF-E06099CFEE2F}.Debug|.NET.ActiveCfg = Debug|x86
+		{45D33FE2-FB67-4996-A2DF-E06099CFEE2F}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{45D33FE2-FB67-4996-A2DF-E06099CFEE2F}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{45D33FE2-FB67-4996-A2DF-E06099CFEE2F}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{45D33FE2-FB67-4996-A2DF-E06099CFEE2F}.Debug|x86.ActiveCfg = Debug|x86
+		{45D33FE2-FB67-4996-A2DF-E06099CFEE2F}.Debug|x86.Build.0 = Debug|x86
+		{45D33FE2-FB67-4996-A2DF-E06099CFEE2F}.Release|.NET.ActiveCfg = Release|x86
+		{45D33FE2-FB67-4996-A2DF-E06099CFEE2F}.Release|Any CPU.ActiveCfg = Release|x86
+		{45D33FE2-FB67-4996-A2DF-E06099CFEE2F}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{45D33FE2-FB67-4996-A2DF-E06099CFEE2F}.Release|Mixed Platforms.Build.0 = Release|x86
+		{45D33FE2-FB67-4996-A2DF-E06099CFEE2F}.Release|x86.ActiveCfg = Release|x86
+		{45D33FE2-FB67-4996-A2DF-E06099CFEE2F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F27275A9-A9D3-47D4-A007-1142A4803E8C} = {CDD6A808-BD5C-4DB3-9EB3-C487BB790700}
+		{062F0F85-29FB-4F03-8CA8-2EA9525AC7EF} = {CDD6A808-BD5C-4DB3-9EB3-C487BB790700}
+		{45D33FE2-FB67-4996-A2DF-E06099CFEE2F} = {062F0F85-29FB-4F03-8CA8-2EA9525AC7EF}
 	EndGlobalSection
 EndGlobal
