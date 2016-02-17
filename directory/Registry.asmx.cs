@@ -583,18 +583,19 @@ namespace registry
                 CreateResourceColumns(ds, option, ref vot);
 
                 vot.RESOURCE[0].TABLE[0].DATA = new Data();
-                TableData data = new TableData();
 
-                data.TR = new Tr[ds.Tables[0].Rows.Count];
-                for (int i = 0; i < data.TR.Length; ++i)
+                ArrayList trs = new ArrayList();
+                 int sourceCount = ds.Tables[0].Rows.Count;
+                bool badRow;
+                for (int i = 0; i < sourceCount; ++i)
                 {
-                    data.TR[i] = new Tr();
+                    badRow = false;
 
                     string rawtr = (string)ds.Tables[0].Rows[i][0];
                     int start = 0;
                     int columnindex = 0;
                     ArrayList TDs = new ArrayList();
-                    while (start > -1)
+                    while (start > -1 && badRow == false)
                     {
                         start = rawtr.IndexOf("<TD", start);
                         if (start > -1)
@@ -603,36 +604,60 @@ namespace registry
                             Td td = new Td();
                             if (rawtr[start] != '/')
                             {
-                                string val = rawtr.Substring(start, rawtr.IndexOf("</TD>", start) - start);
-
-                                // We want to clean up accessURLs that don't end in ? or &
-                                // ((Field)table.Items[19]).ID = ((Field)table.Items[19]).name = "accessURL";
-                                if (columnindex == 19)
+                                int endIndex = rawtr.IndexOf("</TD>", start);
+                                if (endIndex > start)
                                 {
-                                    if ( val.Length > 0 && (!val.Trim().EndsWith("?") && !val.Trim().EndsWith("&amp;")))
-                                    {
-                                        if (val.IndexOf('?') >= 0)
-                                            val = val + "&amp;";
-                                        else
-                                            val = val + '?';
-                                    }
-                                }
+                                    string val = rawtr.Substring(start, endIndex - start);
 
-                                td.Value = val;
+                                    // We want to clean up accessURLs that don't end in ? or &
+                                    // ((Field)table.Items[19]).ID = ((Field)table.Items[19]).name = "accessURL";
+                                    if (columnindex == 19)
+                                    {
+                                        if (val.Length > 0 && (!val.Trim().EndsWith("?") && !val.Trim().EndsWith("&amp;")))
+                                        {
+                                            if (val.IndexOf('?') >= 0)
+                                                val = val + "&amp;";
+                                            else
+                                                val = val + '?';
+                                        }
+                                    }
+
+                                    td.Value = val;
+                                }
+                                else //generally from a description too long to import.
+                                {
+                                    td.Value = string.Empty;
+                                    errLog.Log("Cannot un-cache row: " + rawtr);
+                                    badRow = true;
+                                }
                             }
                             TDs.Add(td);
                         }
-                        data.TR[i].TD = (Td[])TDs.ToArray(typeof(Td));
                         ++columnindex;
+                    }
+                    //generally, again, bad rows are from a description too long to import.
+                    if (!badRow) 
+                    {
+                        Tr tr = new Tr();
+                        tr.TD = (Td[])TDs.ToArray(typeof(Td));
+                        trs.Add(tr);
                     }
                 }
 
-                vot.RESOURCE[0].TABLE[0].DATA.Item = data;
+                TableData destinationData = new TableData();
+                destinationData.TR = new Tr[ds.Tables[0].Rows.Count];
+                for (int i = 0; i < trs.Count; ++i)
+                {
+                    destinationData.TR[i] = (Tr)trs[i];
+                }
+
+                vot.RESOURCE[0].TABLE[0].DATA.Item = destinationData;
             }
 
-            catch (Exception)
+            catch (Exception ex)
             {
                 vot = new VOTABLE();
+                errLog.Log(ex.ToString());
             }
             return vot;
         }
