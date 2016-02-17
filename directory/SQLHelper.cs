@@ -500,7 +500,7 @@ namespace registry
             cmdtext += " INSERT INTO ResourceVOTableCache (rkey, ResourceAsRow) VALUES (" +
                         resourceKey + ", @row); \n";
 
-            cmd.Parameters.Add("@row", SqlDbType.VarChar, 10000);
+            cmd.Parameters.Add("@row", SqlDbType.VarChar, -1);
             cmd.Parameters["@row"].Value = tbl;
 
             for (int i = 0; i < interfaces.Length; ++i)
