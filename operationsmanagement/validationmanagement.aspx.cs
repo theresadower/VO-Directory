@@ -58,7 +58,7 @@ namespace OperationsManagement
                 }
                 if (status.IsValid)
                     status += GenerateDynamicFormData();
-            }
+             }
 
             if (!status.IsValid)
             {
@@ -229,6 +229,7 @@ namespace OperationsManagement
             try
             {
                 SaveValidationInformation();
+
                 string docAsSubmitted = ((XmlDocument)Session["docResource"]).InnerXml;
                 if (docAsSubmitted == (string)Session["docAsLoaded"])
                     status.MarkInvalid("No changes to save.");

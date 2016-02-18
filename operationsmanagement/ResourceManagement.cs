@@ -26,7 +26,8 @@ namespace OperationsManagement
         private static string strCheckAuthorities = "select [rstat] from resource where res_type like '%Authority' and ivoid like '$1%'";
         private static string strGetActiveXmlResource = "select xml from resource where ivoid = '$1' and [rstat] = 1";
         private static string strGetXmlResource = "select top 1 xml from resource where ivoid = '$1' and ([rstat] > 0) order by [harvestedfromdate] desc";
- 
+        private static string strGetHarvestInfo = "select top 1 harvestedFrom, harvestedFromID from resource where ivoid = '$1' and [rstat] = 1";
+
         public static validationStatus CheckForCapabilities(ref XmlDocument doc)
         {
             validationStatus status = new validationStatus();
@@ -291,7 +292,20 @@ namespace OperationsManagement
 
         public static validationStatus IngestXmlResource(XmlDocument doc, bool isNewResource, string specifiedIdentifier, long ukey = 0)
         {
-            validationStatus status = TestIdentifier(doc, isNewResource, specifiedIdentifier);
+            string harvestedFrom = string.Empty;
+            string harvestedFromID = string.Empty;
+            validationStatus status = new validationStatus();
+
+            //Do not overwrite harvesting information for old resources.
+            //This is an issue on xml form updates and saving validation levels.
+            if (!isNewResource)
+            {
+                status += GetResourceHarvestingInfo(specifiedIdentifier, ref harvestedFrom, ref harvestedFromID);
+                if (!status.IsValid)
+                    return status;
+            }
+
+            status += TestIdentifier(doc, isNewResource, specifiedIdentifier);
             if (status.IsValid)
                 status = UpdateTimeInformation(ref doc, isNewResource);
             if (status.IsValid)
@@ -301,7 +315,7 @@ namespace OperationsManagement
                 System.IO.StringWriter sw = new System.IO.StringWriter();
 	            XmlTextWriter xw = new XmlTextWriter(sw);
 	            doc.WriteTo(xw);
-                int iStatus = loader.LoadVORXML(sw.ToString(), ukey, string.Empty, string.Empty, sb);
+                int iStatus = loader.LoadVORXML(sw.ToString(), ukey, harvestedFrom, harvestedFromID, sb);
                 if (iStatus != 0) { status.MarkInvalid(sb.ToString()); }
             }
             return status;
@@ -439,7 +453,7 @@ namespace OperationsManagement
         }
 
         //update resource @status.
-        public static validationStatus UpdateStatusInformation(ref XmlDocument doc, string newStatus)
+        private static validationStatus UpdateStatusInformation(ref XmlDocument doc, string newStatus)
         {
             validationStatus status = new validationStatus();
             try
@@ -486,6 +500,35 @@ namespace OperationsManagement
                 status.MarkInvalid(ex.Message);
             }
 
+            return status;
+        }
+
+        //Note this should only be called on existing records. New records will have null harvesting information.
+        public static validationStatus GetResourceHarvestingInfo(string identifier, ref string  harvestedFrom, ref string harvestedFromID)
+        {
+            validationStatus status = new validationStatus();
+            harvestedFrom = null;
+            harvestedFromID = null;
+
+            DataSet ds = new DataSet();
+            try
+            {
+                ds = QueryRegistry(strGetHarvestInfo.Replace("$1", identifier));
+
+                DataRow data = ds.Tables[0].Rows[0];
+                if ((data[0]) is System.DBNull)
+                    harvestedFrom = string.Empty;
+                else
+                    harvestedFrom = (string)data[0];
+                if ((data[1]) is System.DBNull)
+                    harvestedFromID = string.Empty;
+                else
+                    harvestedFromID = (string)data[1];
+            }
+            catch (Exception ex)
+            {
+                status.MarkInvalid("Error reading provenance information for resource " + identifier + ": " + ex.Message);
+            }
             return status;
         }
 
@@ -585,7 +628,7 @@ namespace OperationsManagement
             }
         }
 
-        public static string SetAllValidationLevels(int capacity)
+        private static string SetAllValidationLevels(int capacity)
         {
             validationStatus status = new validationStatus();
             try
@@ -609,7 +652,7 @@ namespace OperationsManagement
             return "error(s): " + status.GetConcatenatedErrors(". ");
         }
 
-        public static validationStatus SetValidationLevels(string identifier)
+        private static validationStatus SetValidationLevels(string identifier)
         {
             validationStatus status = new validationStatus();
             XmlDocument doc = new XmlDocument();
@@ -655,6 +698,10 @@ namespace OperationsManagement
             }
             if (status.IsValid && bChanged)
             {
+                string harvestedFrom = String.Empty;
+                string harvestedFromID = String.Empty;
+                status += GetResourceHarvestingInfo(identifier, ref harvestedFrom, ref harvestedFromID);
+
                 IngestXmlResource(doc, false, identifier);
             }
 
