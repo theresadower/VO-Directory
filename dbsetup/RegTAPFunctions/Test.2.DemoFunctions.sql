@@ -23,7 +23,7 @@ SET NOCOUNT ON ;
 GO
 
 -- !! MODIFY TO SUIT YOUR TEST ENVIRONMENT !!
-USE VORegistry_regtap_schema
+USE databasename
 GO
 
 -------------------------------------------------------------------------------------------------------------------------------
