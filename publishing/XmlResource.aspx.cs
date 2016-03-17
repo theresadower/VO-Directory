@@ -46,7 +46,7 @@ namespace Publishing
                 {
                     string text = string.Empty;
                     LabelErrorMessage.Text = strQueryIdentifier;
-                    validationStatus status = ResourceManagement.GetExistingResource(strQueryIdentifier, ref text);
+                    validationStatus status = ResourceManagement.GetExistingResource(strQueryIdentifier, ref text, false);
                     if (status.IsValid)
                     {
                         TextBoxResource.Enabled = true;
