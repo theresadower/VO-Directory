@@ -12,7 +12,7 @@ namespace OperationsManagement
     public partial class ValidationManagement : System.Web.UI.Page
     {
         string strQueryIdentifier = string.Empty;
-        string strViewResourceURL = "http://vao.stsci.edu/directory/getRecord.aspx?id=";
+        string strViewResourceURL = "getRecord.aspx?id=";
 
         private static DropDownList CreateStatusDropDown(string id, string currentValue)
         {

@@ -632,6 +632,10 @@ namespace registry
 
         public static string TranslateOldSchemaQuery(string oldQuery)
         {
+            //check for bad SOAP requests and empty queries before bothering.
+            if (oldQuery.Length == 0)
+                return oldQuery;
+
             System.Collections.ArrayList tokenList = SplitPreservingQuotes(oldQuery);
             StringBuilder substitutedString = new StringBuilder();
             System.Collections.ArrayList newJoins = new System.Collections.ArrayList();

@@ -71,8 +71,8 @@ namespace registry.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Initial Catalog=VORegistry_regtap_schema; Data Source=TWMASTDB4; User Id=nvowebac" +
-            "cess; Password=nvowebaccess")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Initial Catalog=VORegTAP; Data Source=TWMASTDB4; User Id=nvowebaccess; Password=n" +
+            "vowebaccess")]
         public string SqlConnection {
             get {
                 return ((string)(this["SqlConnection"]));
@@ -82,8 +82,8 @@ namespace registry.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Initial Catalog=VORegistry_regtap_schema; Data Source=TWMASTDB4; User Id=nvo; Pas" +
-            "sword=!rEGISTRY@stsCi!42")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Initial Catalog=VORegTAP; Data Source=TWMASTDB4; User Id=nvo; Password=!rEGISTRY@" +
+            "stsCi!42")]
         public string SqlAdminConnection {
             get {
                 return ((string)(this["SqlAdminConnection"]));

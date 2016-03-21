@@ -88,7 +88,7 @@ declare @rrtableseq smallint;
 
     <!-- remove any existing resource with the same identifier as this one -->
     <xsl:text>
--- if this IVOID already exists,  remove the old one from TAP cache before inserting execute </xsl:text>
+    execute </xsl:text>
     <xsl:value-of select="$rr"/>
     <xsl:text>.deletedeprecatedresourcefromtapcache '</xsl:text>
     <xsl:value-of select="normalize-space(/*/identifier)"/>

@@ -146,16 +146,15 @@ declare @tableseq smallint;
       <!-- deprecate a resource with the same identifier as this one -->
       <xsl:choose>
         <xsl:when test="$existingrkey!=''">
-          <xsl:text>-- Replacing exising record: change the status of the old one before inserting 
-execute </xsl:text>
-         <xsl:value-of select="$rr"/>
-         <xsl:text>.deprecateresource '</xsl:text>
-         <xsl:value-of select="normalize-space(/*/identifier)"/>
-         <xsl:text>', </xsl:text>
-         <xsl:value-of select="$existingrkey"/>
-         <xsl:text>, @rev OUTPUT;
-
-</xsl:text>
+          <xsl:text>
+execute     </xsl:text>
+          <xsl:value-of select="$rr"/>
+          <xsl:text>.deprecateresource '</xsl:text>
+          <xsl:value-of select="normalize-space(/*/identifier)"/>
+          <xsl:text>', </xsl:text>
+          <xsl:value-of select="$existingrkey"/>
+          <xsl:text>, @rev OUTPUT;
+           </xsl:text>
         </xsl:when>
         <xsl:otherwise>
           <xsl:text>-- if this IVOID already exists, deprecate it.
