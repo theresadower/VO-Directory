@@ -23,6 +23,7 @@ bld/
 # Protected settings files
 *.settings
 *.config
+*.settings.designer.cs
 
 # Roslyn cache directories
 *.ide/
