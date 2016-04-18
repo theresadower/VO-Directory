@@ -82,7 +82,12 @@ namespace registry
             odt.Items[ind++] = new elementType();
             odt.Items[3].Value = (string)dr["publisher"];
             odt.Items[ind++] = new elementType();
-            odt.Items[4].Value = (string)dr["subject"];
+
+            if (dr["subject"] == null)
+                odt.Items[4].Value = string.Empty;
+            else
+                odt.Items[4].Value = (string)dr["subject"];
+
             odt.Items[ind++] = new elementType();
 			odt.Items[5].Value = GetOAIDatestamp(((DateTime) dr["updated"]), oai.granularityType.YYYYMMDDThhmmssZ);
 
