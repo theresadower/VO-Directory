@@ -98,9 +98,9 @@ namespace registry
 				ds= new DataSet();
 				sqlDA.Fill(ds);
 			}
-			catch (Exception) 
+			catch (Exception ex) 
 			{
-				throw new Exception("SQL is :"+sqlStmnt);
+				throw new Exception("Query exception: " + ex.Message + ". SQL is :"+sqlStmnt);
 			}
 
 			finally 

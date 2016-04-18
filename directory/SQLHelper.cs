@@ -14,7 +14,7 @@ namespace registry
         public static string getKeysStatement = " select top 1 pkey, ukey from resource where ivoid=@Identifier and [rstat] > 0 order by [updated], harvestedFromDate desc ";
         public static string getTableExistsStatement = "SELECT count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'@TableName'";
 
- 		public static string createBasicResourceSelect(string predicate) 
+  		public static string createBasicResourceSelect(string predicate) 
 		{
 			StringBuilder sb = new StringBuilder ("SELECT ");
             sb.Append(@"RESOURCE.res_type,
@@ -31,41 +31,28 @@ namespace registry
                       harvestedFromDate,
                       tag,
                       xml,
-                      res_role.role_name as publisher,
-                      [subject] ");
-			sb.Append(@" FROM RESOURCE INNER JOIN RES_ROLE ON RES_ROLE.RKEY = RESOURCE.PKEY 
-                         INNER JOIN [SUBJECT] ON SUBJECT.RKEY = RESOURCE.PKEY 
+                      role_name as publisher,
+                      subject ");
+			sb.Append(@" FROM RESOURCE 
+					  LEFT OUTER JOIN
+						(select res_role.role_name as role_name, res_role.base_utype as base_utype, rkey
+						 from res_role)
+					   AS publist
+					   ON publist.RKEY = RESOURCE.PKEY 
+                       LEFT OUTER JOIN 
+							(select RESOURCE.pkey as skey,
+							 dbo.ivo_string_agg([subject],',') AS subject
+							 FROM RESOURCE INNER JOIN [SUBJECT] ON SUBJECT.RKEY = RESOURCE.PKEY 
+							 WHERE  ([rstat] > 0) group by resource.pkey) 
+					   AS subjectlist
+                       ON skey = resource.pkey
                          WHERE  ([rstat] > 0) and base_utype like '%publisher%' AND ") ;
 			sb.Append( predicate );
             sb.Append(" order by [updated] DESC");
 
 			return sb.ToString();
 		}
-		/*
-        public static string createBasicResourceSelect(string predicate) 
-        {
-            StringBuilder sb = new StringBuilder("SELECT ");
-            sb.Append(@"RESOURCE.res_type,
-                      RESOURCE.created,
-                      RESOURCE.updated,
-                      RESOURCE.res_title,
-                      RESOURCE.short_name,
-                      RESOURCE.ivoid,
-                      RESOURCE.res_description,
-                      RESOURCE.reference_url,
-                      RESOURCE.waveband,
-                      RESOURCE.rstat,
-                      harvestedFromID,
-                      harvestedFromDate,
-                      tag,
-                      xml");
-            sb.Append(@" FROM RESOURCE WHERE  [rstat] > 0 AND (") ;
-            sb.Append( predicate );
-            sb.Append(") order by [updated] DESC");
 
-            return sb.ToString();
-        }
-		*/
         public static string createInterfacesSelect(string identifier)
         {
             StringBuilder sb = new StringBuilder();
