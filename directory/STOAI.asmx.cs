@@ -269,10 +269,21 @@ namespace registry
 		public OAIPMHtype ListIdentifiers(string metadataPrefix, string from, string until, string set, string resumptionToken)
 		{
             //resumption tokens -- if we have one, what subset of this list do we return?
-            resumptionTokenType incomingToken = null;
+            ResumptionToken incomingToken = null;
             resumptionTokenType outgoingToken = new resumptionTokenType();
+            ResumptionToken internalToken = new ResumptionToken();
             int start = 0;
             int end = 0;
+            DateTime? fromDate = null;
+            DateTime? untilDate = null;
+            if (from != null)
+            {
+                fromDate = DateTime.Parse(from,);
+            }
+            if (until != null)
+            {
+                untilDate = DateTime.Parse(until,);
+            }
 
             //do we already have a token?
             DateTime tokenCreated = DateTime.MinValue;
@@ -281,20 +292,19 @@ namespace registry
                 incomingToken = nvo.oai.oai.RetrieveValidResumptionToken(resumptionToken);
                 if (incomingToken != null)
                 {
-                    start = Convert.ToInt32(incomingToken.cursor);
-                    string[] tokenParams = incomingToken.Value.Split('!');
-                    set = tokenParams[0];
-                    from = tokenParams[1];
-                    until = tokenParams[2];
-                    metadataPrefix = tokenParams[3];
-
-                    if( incomingToken.expirationDateSpecified )
-                        tokenCreated = incomingToken.expirationDate.AddHours(-6).ToLocalTime();
+                    start = incomingToken.cursor;
+                    set = incomingToken.set;
+                    fromDate = incomingToken.from;
+                    untilDate = incomingToken.until;
+                    metadataPrefix = incomingToken.metadataPrefix;
+                    // What does this mean????
+                    //if( incomingToken.expirationDateSpecified )
+                    tokenCreated = incomingToken.expirationDate.AddHours(-6).ToLocalTime();
                 }
             }
 
-            if (from.Length == 0)
-                from = "1990-01-01";
+            if (fromDate == null)
+                fromDate = new DateTime("1990-01-01");
 
 			ArrayList arr = new ArrayList();
 			ArrayList dateArr = new ArrayList();
@@ -369,7 +379,11 @@ namespace registry
 
             if ( (arr.Count > resumptionTokenLimit) && ( end < arr.Count) )
             {
-                outgoingToken = GenerateResumptionToken(from, until, set, metadataPrefix, start);
+                string tokenValue = GenerateResumptionTokenValue(from, until, set, metadataPrefix, start);
+                DateTime expirationDate = System.DateTime.Now.AddHours(6).ToUniversalTime();
+                internalToken = new ResumptionToken(tokenValue, expirationDate, from, until, set, metadataPrefix, start);
+                outgoingToken = GenerateResumptionTokenOutput(internalToken);
+
             }
 			for (int ii = start; ii < end; ++ii)
 			{
@@ -398,7 +412,8 @@ namespace registry
             {
                 resumptionTokenType nextToken = new resumptionTokenType(outgoingToken);
                 nextToken.cursor = Convert.ToString(Convert.ToInt32(outgoingToken.cursor) + resumptionTokenLimit);
-                nvo.oai.oai.SaveResumptionToken(nextToken);
+                ResumptionTokenUtil.saveResumptionToken(internalToken);
+                //nvo.oai.oai.SaveResumptionToken(nextToken);
             }
 
             lisT.resumptionToken = outgoingToken;
@@ -414,10 +429,21 @@ namespace registry
 		public OAIPMHtype ListRecords(string from, string metadataPrefix, string until, string set, string resumptionToken)
 		{
             //resumption tokens -- if we have one, what subset of this list do we return?
-            resumptionTokenType incomingToken = null;
+            ResumptionToken incomingToken = null;
             resumptionTokenType outgoingToken = new resumptionTokenType();
+            ResumptionToken internalToken = new ResumptionToken();
             int start = 0;
             int end = 0;
+            DateTime? fromDate = null;
+            DateTime? untilDate = null;
+            if (from != null)
+            {
+                fromDate = DateTime.Parse(from,);
+            }
+            if (until != null)
+            {
+                untilDate = DateTime.Parse(until,);
+            }
 
             //do we already have a token?
             if (resumptionToken != null && resumptionToken.Length > 0)
@@ -425,17 +451,16 @@ namespace registry
                 incomingToken = nvo.oai.oai.RetrieveValidResumptionToken(resumptionToken);
                 if (incomingToken != null)
                 {
-                    start = Convert.ToInt32(incomingToken.cursor);
-                    string[] tokenParams = incomingToken.Value.Split('!');
-                    set = tokenParams[0];
-                    from = tokenParams[1];
-                    until = tokenParams[2];
-                    metadataPrefix = tokenParams[3];
+                    start = incomingToken.cursor;
+                    set = incomingToken.set;
+                    fromDate = incomingToken.from;
+                    untilDate = incomingToken.until;
+                    metadataPrefix = incomingToken.metadataPrefix;
                 }
             }
             
-            if (from.Length == 0 ) 
-                from = "1990-01-01";
+            if (fromDate == null)
+                fromDate = new DateTime("1990-01-01");
 
 			OAIPMHtype oaiT  = new OAIPMHtype();
 
@@ -477,7 +502,10 @@ namespace registry
                 end = Math.Min(start + resumptionTokenLimit, vod.Length);
                 if ((vod.Length > resumptionTokenLimit) && (end < vod.Length))
                 {
-                    outgoingToken = GenerateResumptionToken(from, until, set, metadataPrefix, start);
+                    string tokenValue = GenerateResumptionTokenValue(from, until, set, metadataPrefix, start);
+                    DateTime expirationDate = System.DateTime.Now.AddHours(6).ToUniversalTime();
+                    internalToken = new ResumptionToken(tokenValue, expirationDate, fromDate, untilDate, set, metadataPrefix, start, completeListSize);
+                    outgoingToken = GenerateResumptionTokenOutput(internalToken);
                 }
 
                 //revamped to use XML docs only, no serialization/deserialization.
@@ -518,7 +546,8 @@ namespace registry
                 {
                     resumptionTokenType nextToken = new resumptionTokenType(outgoingToken);
                     nextToken.cursor = Convert.ToString(Convert.ToInt32(outgoingToken.cursor) + resumptionTokenLimit);
-                    nvo.oai.oai.SaveResumptionToken(nextToken);
+                    ResumptionTokenUtil.saveResumptionToken(internalToken);
+                    //nvo.oai.oai.SaveResumptionToken(nextToken);
                 }
                 lisT.resumptionToken = outgoingToken;
 			}
@@ -739,24 +768,25 @@ namespace registry
             catch (Exception) { return String.Empty;  }
         }
 
-        resumptionTokenType GenerateResumptionToken(String from, String until, String set, String prefix, int cursor)
+        string GenerateResumptionTokenValue(string from, string until, string set, string metadataPrefix, int start)
         {
-            resumptionTokenType token = new resumptionTokenType();
+            resumptionTokenType outtoken = new resumptionTokenType();
 
             //set!from!until!metadataPrefix!counter
             StringBuilder tokenName = new StringBuilder();
             if (set != null)
                 tokenName.Append(set);
             tokenName.Append('!');
+            // need to format date
             if (from != null && from.CompareTo("1990-01-01") != 0)
                 tokenName.Append(from);
             tokenName.Append('!');
             if (until != null)
                 tokenName.Append(until);
             tokenName.Append('!');
-            tokenName.Append(prefix);
+            tokenName.Append(metadataPrefix);
             tokenName.Append('!');
-
+            /*
             lock (counterLock)
             {
                 tokenName.Append(tokenCounter);
@@ -765,14 +795,22 @@ namespace registry
                 else
                     tokenCounter = 1;
             }
+            */
+            return tokenName.ToString();
+
+        }
+
+        resumptionTokenType GenerateResumptionTokenOutput(ResumptionToken token)
+        {
+            resumptionTokenType outtoken = new resumptionTokenType();
 
 
-            token.Value = tokenName.ToString();
-            token.cursor = cursor.ToString();
-            token.expirationDate = System.DateTime.Now.AddHours(6).ToUniversalTime();
-            token.expirationDateSpecified = true;
+            outtoken.Value = token.tokenValue;
+            outtoken.cursor = token.cursor.ToString();
+            outtoken.expirationDate = token.expirationDate;
+            outtoken.expirationDateSpecified = true;
 
-            return token;
+            return outtoken;
         }
 	}
 }
