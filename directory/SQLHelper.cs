@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Data.SqlClient;
 using System.Data;
+using System.Collections;
 
 namespace registry
 {

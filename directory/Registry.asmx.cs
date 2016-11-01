@@ -117,10 +117,10 @@ namespace registry
         }
 
         [WebMethod(Description = "Returns VOResources with status=1: Input WHERE predicate for SQL Query, bool include deleted, bool include inactive")]
-        public System.Xml.XmlDocument[] QueryRIResourceXMLDocAllResources(string predicate, bool withDeleted, bool withInactive)
+        public System.Xml.XmlDocument[] QueryRIResourceXMLDocAllResources(string predicate, bool withDeleted, bool withInactive, ArrayList queryParams = null)
         {
             string cmd = SQLHelper.createXMLResourceSelect(predicate, withDeleted, withInactive);
-            return SQLQueryRI10ResourceXMLDoc(cmd);
+            return SQLQueryRI10ResourceXMLDoc(cmd, queryParams);
         }
 
         [WebMethod(Description = "Returns VOResources with status=1 and 3: Input WHERE predicate for SQL Query")]
@@ -355,18 +355,26 @@ namespace registry
             return tempString;
         }
 
-        public System.Xml.XmlDocument[] SQLQueryRI10ResourceXMLDoc(string cmd)
+        public System.Xml.XmlDocument[] SQLQueryRI10ResourceXMLDoc(string cmd, ArrayList queryParams = null)
         {
-            SqlConnection conn = null;
             System.Xml.XmlDocument[] docs = null;
             cmd = SQLHelper.TranslateOldSchemaQuery(cmd);
 
-            try
+            using (SqlConnection conn = new SqlConnection(sConnect))
             {
-                conn = new SqlConnection(sConnect);
                 conn.Open();
+                SqlCommand command = new SqlCommand();
+                command.Connection = conn;
+                command.CommandText = cmd;
+                if(queryParams != null){
+                    foreach(SqlParameter s in queryParams){
+                        command.Parameters.Add(s);
+                    }
+                }
+                command.Prepare();
 
-                SqlDataAdapter sqlDA = new SqlDataAdapter(cmd, conn);
+                SqlDataAdapter sqlDA = new SqlDataAdapter();
+                sqlDA.SelectCommand = command;
                 DataSet ds = new DataSet();
 
                 try
@@ -419,10 +427,6 @@ namespace registry
                         docs[i] = null;
                     }
                 }
-            }
-            finally
-            {
-                conn.Close();
             }
 
             //try {

@@ -44,7 +44,7 @@ namespace nvo.oai
         private static ArrayList requiredArgs = new ArrayList();
         private static ArrayList optArgs = new ArrayList();
 
-        private static Hashtable resumptionTokens = new Hashtable();
+        //private static Hashtable resumptionTokens = new Hashtable();
 
 		private void Page_Load(object sender, System.EventArgs e)
         {
@@ -355,7 +355,7 @@ namespace nvo.oai
             }
             if (resumptionToken != null)
             {
-                resumptionTokenType token = RetrieveValidResumptionToken(resumptionToken);
+                ResumptionInformation token = RetrieveValidResumptionToken(resumptionToken, false);
                 if ( token == null )
                 {
                     errors.Add(OAIPMHerrorcodeType.badResumptionToken);
@@ -386,10 +386,10 @@ namespace nvo.oai
             #endregion
         }
 
-        public static ResumptionToken RetrieveValidResumptionToken(String value)
+        public static ResumptionInformation RetrieveValidResumptionToken(String value, bool removeToken)
         {
 
-            return ResumptionTokenUtil.getResumptionToken(value);
+            return ResumptionInformationUtil.getResumptionInformation(value, removeToken);
         }
         /*
         public static resumptionTokenType RetrieveValidResumptionToken(String value)
@@ -409,6 +409,7 @@ namespace nvo.oai
             return token;
         }
         */
+        /*
         public static void SaveResumptionToken( resumptionTokenType token )
         {
             //Todo -- eventually we ought to have a cleanup thread for this and temp files.
@@ -425,7 +426,7 @@ namespace nvo.oai
 
             resumptionTokens.Add(token.Value, token);
         }
-
+        */
         //Appends empty params to query string before sending off to web service.
         //the web service will require all optional parameters because function
         //overloading for web services is non-compliant and unpleasant.
