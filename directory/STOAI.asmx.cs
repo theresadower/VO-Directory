@@ -35,12 +35,13 @@ namespace registry
         private static string registryName = (string)System.Configuration.ConfigurationManager.AppSettings["registryName"];
         private static string registryEmail = (string)System.Configuration.ConfigurationManager.AppSettings["registryEmail"];
 
+        // Accepted UTC formats for OAI-PMH protocol
+        public static string ISO8601DateWithTime = "yyyy-MM-ddThh:mm:ssZ";
+        public static string ISO8601Date = "yyyy-MM-dd";
+        static string[] dateFormats = {ISO8601Date,ISO8601DateWithTime};                               
 
         private static string rqtValue = string.Empty;
         private static string managedSet = "ivo_managed";
-
-        private static long tokenCounter = 1;
-        private static Object counterLock = new Object();
 
         public static string earliestDatestamp = "2000-01-01T00:00:00Z";
 
@@ -279,11 +280,11 @@ namespace registry
             DateTime? untilDate = null;
             if (from != null && !from.Equals(""))
             {
-                fromDate = DateTime.Parse(from);
+                fromDate = DateTime.ParseExact(from, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None);
             }
             if (until != null && !until.Equals(""))
             {
-                untilDate = DateTime.Parse(until);
+                untilDate = DateTime.ParseExact(until, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None);
             }
 
             //do we already have a token?
@@ -364,11 +365,11 @@ namespace registry
 			rqT.verb = verbType.ListIdentifiers;
 			rqT.verbSpecified = true;
 			rqT.Value = rqtValue;
-            rqT.from = fromDate.GetValueOrDefault().ToString("yyyy-MM-dd");
+            rqT.from = fromDate.GetValueOrDefault().ToString(ISO8601Date);
             if (metadataPrefix != null && metadataPrefix.Length > 0)
                 rqT.metadataPrefix = metadataPrefix;
             if (untilDate != null)
-                rqT.until = untilDate.GetValueOrDefault().ToString("yyyy-MM-dd");
+                rqT.until = untilDate.GetValueOrDefault().ToString(ISO8601Date);
             if (set != null && set == managedSet) //only one we're using
                 rqT.set = set;
             oaiT.request = rqT;	
@@ -448,7 +449,8 @@ namespace registry
             {
                 try
                 {
-                    fromDate = DateTime.Parse(from);
+                    fromDate = DateTime.ParseExact(from, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None);
+
                 }
                 catch(FormatException ex)
                 {
@@ -459,7 +461,8 @@ namespace registry
             {
                 try
                 {
-                    untilDate = DateTime.Parse(until);
+                    untilDate = DateTime.ParseExact(until, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None);
+
                 }
                 catch (FormatException ex)
                 {
@@ -491,11 +494,11 @@ namespace registry
 			rqT.verb = verbType.ListRecords;
 			rqT.verbSpecified = true;
             rqT.Value = rqtValue;
-            rqT.from = fromDate.Value.ToString("yyyy-MM-dd");
+            rqT.from = fromDate.Value.ToString(ISO8601Date);
             if( metadataPrefix != null && metadataPrefix.Length > 0 )
                 rqT.metadataPrefix = metadataPrefix;
             if (untilDate != null)
-                rqT.until = untilDate.Value.ToString("yyyy-MM-dd");
+                rqT.until = untilDate.Value.ToString(ISO8601Date);
             if (set != null && set == managedSet) //the only one we're using.
                 rqT.set = set;
 			oaiT.request = rqT;
@@ -781,6 +784,8 @@ namespace registry
             else return inp;
         }
 
+        // Should use c# DateTime conversion functions for this
+        
         public static String GetOAIDatestamp(DateTime date, oai.granularityType granularity)
         {
             string datestring = date.Year.ToString() + "-" + buf2(date.Month) + "-" + buf2(date.Day);
@@ -789,7 +794,7 @@ namespace registry
 
             return datestring;
         }
-
+        
         public static string ConvertOAIDateToSQL(string oai)
         {
             try
@@ -806,12 +811,12 @@ namespace registry
 
         string GenerateResumptionTokenValue(DateTime? fromDate, DateTime? untilDate, string set, string metadataPrefix, int? start)
         {
-            resumptionTokenType outtoken = new resumptionTokenType();
+            StringBuilder tokenName = new StringBuilder();
+            /*
 
             // We are using the format set!from!until!metadataPrefix!counter
             // but we no longer parse this token to get the values. Instead they are stored
             // in a database.
-            StringBuilder tokenName = new StringBuilder();
             if (set != null)
                 tokenName.Append(set);
             tokenName.Append('!');
@@ -824,16 +829,13 @@ namespace registry
             tokenName.Append('!');
             tokenName.Append(metadataPrefix);
             tokenName.Append('!');
-            /*
-            lock (counterLock)
-            {
-                tokenName.Append(tokenCounter);
-                if (tokenCounter < Int64.MaxValue)
-                    ++tokenCounter;
-                else
-                    tokenCounter = 1;
-            }
-            */
+             */
+            // Generate a "random" string to make the token unique
+            Guid g = Guid.NewGuid();
+            string gStr = Convert.ToBase64String(g.ToByteArray());
+            gStr = gStr.Replace("=", "");
+            gStr = gStr.Replace("+", "");
+            tokenName.Append(gStr.Substring(0,10));
             return tokenName.ToString();
 
         }

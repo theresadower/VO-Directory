@@ -130,6 +130,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="OAI-PMHHelper.cs" />
     <Compile Include="ResumptionInformation.cs" />
     <Compile Include="ResumptionInformationUtil.cs" />
     <Compile Include="ConeSearch-v1_0_VOResource-v1_0_VORegistry-v1_0_VOStandard-v0_1_VODataService-v1_0_SSA-v0_1_SkyNode-v0_2_SIA-v1_0_stc_v1_30_xlink_RegistryInterface.cs" />
