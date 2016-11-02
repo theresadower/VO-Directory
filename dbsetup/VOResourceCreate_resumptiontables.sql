@@ -1,4 +1,4 @@
-USE [VORegDev]
+USE [VORegTAP]
 GO
 
 /****** Object:  Table [dbo].[ResumptionInformation]    Script Date: 11/2/2016 11:19:37 AM ******/

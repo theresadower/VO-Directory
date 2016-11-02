@@ -38,6 +38,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dbsetup", "dbsetup", "{CDD6
 		..\dbsetup\InsertVOResource.xsl = ..\dbsetup\InsertVOResource.xsl
 		..\dbsetup\VODataServiceUpgrade.xsl = ..\dbsetup\VODataServiceUpgrade.xsl
 		..\dbsetup\VOResourceCreate_harvestertables.sql = ..\dbsetup\VOResourceCreate_harvestertables.sql
+		..\dbsetup\VOResourceCreate_resumptiontables.sql = ..\dbsetup\VOResourceCreate_resumptiontables.sql
 		..\dbsetup\VOResourceCreate_usertables.sql = ..\dbsetup\VOResourceCreate_usertables.sql
 		..\dbsetup\VOResourceCreateBaseTables.sql = ..\dbsetup\VOResourceCreateBaseTables.sql
 		..\dbsetup\VOResourceCreateUsers.sql = ..\dbsetup\VOResourceCreateUsers.sql
