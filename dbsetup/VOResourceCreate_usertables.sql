@@ -1,4 +1,4 @@
-﻿USE [VOResourceSchemaTest]
+﻿USE [VORegTAP]
 GO
 
 /*** Database creation script vor voresource 1.1. 04/03/2013

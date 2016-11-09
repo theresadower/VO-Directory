@@ -10,6 +10,7 @@ using System.Data.SqlClient;
 
 //in order to use the same ingest scheme as harvesting.
 using System.Net;
+using oai;
 
 namespace OperationsManagement
 {
@@ -389,7 +390,7 @@ namespace OperationsManagement
 
             return new validationStatus("Resource XML document does not contain an identifier element");
         }
-
+        
         public static validationStatus IsValidIdentifier(string id, bool isNew)
         {
             validationStatus status = new validationStatus();

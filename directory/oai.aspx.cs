@@ -12,6 +12,7 @@ using System.IO;
 using System.Net;
 using oai;
 using log4net;
+using registry;
 
 namespace nvo.oai
 {
@@ -43,7 +44,7 @@ namespace nvo.oai
         private static ArrayList requiredArgs = new ArrayList();
         private static ArrayList optArgs = new ArrayList();
 
-        private static Hashtable resumptionTokens = new Hashtable();
+        //private static Hashtable resumptionTokens = new Hashtable();
 
 		private void Page_Load(object sender, System.EventArgs e)
         {
@@ -354,7 +355,7 @@ namespace nvo.oai
             }
             if (resumptionToken != null)
             {
-                resumptionTokenType token = RetrieveValidResumptionToken(resumptionToken);
+                ResumptionInformation token = RetrieveValidResumptionToken(resumptionToken, false);
                 if ( token == null )
                 {
                     errors.Add(OAIPMHerrorcodeType.badResumptionToken);
@@ -385,8 +386,15 @@ namespace nvo.oai
             #endregion
         }
 
+        public static ResumptionInformation RetrieveValidResumptionToken(String value, bool removeToken)
+        {
+
+            return ResumptionInformationUtil.getResumptionInformation(value, removeToken);
+        }
+        /*
         public static resumptionTokenType RetrieveValidResumptionToken(String value)
         {
+
             resumptionTokenType token = (resumptionTokenType)resumptionTokens[value];
 
             //check date validity, etc.
@@ -400,7 +408,8 @@ namespace nvo.oai
             }
             return token;
         }
-
+        */
+        /*
         public static void SaveResumptionToken( resumptionTokenType token )
         {
             //Todo -- eventually we ought to have a cleanup thread for this and temp files.
@@ -417,7 +426,7 @@ namespace nvo.oai
 
             resumptionTokens.Add(token.Value, token);
         }
-
+        */
         //Appends empty params to query string before sending off to web service.
         //the web service will require all optional parameters because function
         //overloading for web services is non-compliant and unpleasant.
@@ -458,8 +467,12 @@ namespace nvo.oai
 		// This allows schemaLocation output to be handled for OAI
 		void filterXML(string partURL)
 		{
-			string fullURL = Request.Url.GetLeftPart(System.UriPartial.Authority)+Request.ApplicationPath + "/"+ partURL;
+            string fullURL = Request.Url.GetLeftPart(System.UriPartial.Authority) + Request.ApplicationPath + "/" + partURL;
 
+            //fullURL = "http://" + System.Environment.MachineName + ".stsci.edu:8087" + Request.ApplicationPath + "/" + partURL;
+            //Uri relativeUri = new System.Uri(
+          //fullURL,
+          //System.UriKind.Relative);
 			HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(fullURL); 
 			// Sends the HttpWebRequest and waits for the response. 
 			HttpWebResponse resp = null;

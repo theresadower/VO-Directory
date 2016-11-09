@@ -39,7 +39,7 @@ namespace Replicate
                if (setting != null ) 
                     delay = Convert.ToInt32(setting);
                else
-                    delay = Properties.Settings.Default.repeatDelay;
+                    delay = Convert.ToInt32(Properties.Settings.Default.repeatDelay);
             }
             catch (Exception) { }
             try
@@ -48,7 +48,7 @@ namespace Replicate
                 if (setting != null)
                     repeat = Convert.ToBoolean(setting);
                 else
-                    repeat = Properties.Settings.Default.repeat;
+                    repeat = Convert.ToBoolean(Properties.Settings.Default.repeat);
             }
             catch (Exception) { }
 
@@ -58,7 +58,7 @@ namespace Replicate
                 if (setting != null)
                     harvest = Convert.ToBoolean(setting);
                 else
-                    harvest = Properties.Settings.Default.harvest;
+                    harvest = Convert.ToBoolean(Properties.Settings.Default.harvest);
 			} 
 			catch (Exception e) 
 			{
@@ -70,7 +70,7 @@ namespace Replicate
                 if (setting != null)
                     replicate = Convert.ToBoolean(setting);
                 else
-                    replicate = Properties.Settings.Default.replicate;
+                    replicate = Convert.ToBoolean(Properties.Settings.Default.replicate);
 			} 
 			catch (Exception e) 
 			{

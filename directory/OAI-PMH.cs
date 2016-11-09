@@ -31,6 +31,7 @@ namespace oai {
 		[System.Xml.Serialization.XmlAttribute()]
 		public string schemaLocation = "http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd";
         /// <remarks/>
+        /// 
         public System.DateTime responseDate = System.DateTime.Now;
         
         /// <remarks/>
