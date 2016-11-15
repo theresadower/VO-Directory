@@ -2249,7 +2249,7 @@ window.onload=init;
 <td class="morebut"></td>
 <td class="moretitle"><xsl:value-of select="$name"/>
 <span style="visibility: hidden">XX</span>
-  <xsl:if test="not($name = 'Simple Spectral Access')">
+  <xsl:if test="not($name = 'Simple Spectral Access') and not($name = 'Simple Image Access (version 2.0)')">
 <font size="-1"><a href="{$SimpleQueryURL}{normalize-space(../identifier)}&amp;type=cone"><i>Search Me</i></a></font>
   </xsl:if>
 </td></tr>
