@@ -22,11 +22,23 @@
 
    </xsl:template>
 
+  <xsl:template match="capability[@standardID='ivo://ivoa.net/std/SIA#query-2.0']">
+
+    <xsl:apply-templates select="." mode="simpleCapability">
+      <xsl:with-param name="name">Simple Image Access (version 2.0)</xsl:with-param>
+      <xsl:with-param name="desc">
+        This is a standard IVOA service used to search for images from
+        this resource that overlap with a specified region of the sky.
+      </xsl:with-param>
+    </xsl:apply-templates>
+
+  </xsl:template>
+  
    <!--
      -  the template for rendering the SIA capability's extended 
      -  metadata.  It is called from the mode="simpleCapability" template.
      -->
-   <xsl:template match="capability[@standardID='ivo://ivoa.net/std/SIA']"
+   <xsl:template match="capability[@standardID='ivo://ivoa.net/std/SIA'] | capability[@standardID='ivo://ivoa.net/std/SIA#query-2.0']"
                  mode="extendedCapability">
 
      <strong>Image service type: </strong>
