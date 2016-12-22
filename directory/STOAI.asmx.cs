@@ -36,7 +36,7 @@ namespace registry
         private static string registryEmail = (string)System.Configuration.ConfigurationManager.AppSettings["registryEmail"];
 
         // Accepted UTC formats for OAI-PMH protocol
-        public static string ISO8601DateWithTime = "yyyy-MM-ddThh:mm:ssZ";
+        public static string ISO8601DateWithTime = "yyyy-MM-ddTHH:mm:ssZ";
         public static string ISO8601Date = "yyyy-MM-dd";
         static string[] dateFormats = {ISO8601Date,ISO8601DateWithTime};                               
 
