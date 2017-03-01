@@ -249,7 +249,11 @@ namespace registry
             return sr;
         }
 
-        private static string CleanUpBaseURL(string xml)
+        //Currently unused: there was a frequent issue in the early IVOA with accessURLs not containing a trailing
+        // ? or & where required in the standard. There is now more validation across the IVOA and also standard
+        //services where this no longer makes sense. Function left in case requested removal of this feature
+        //discloses the problem is still more rampant than the problems of removing it.
+        /*private static string CleanUpBaseURL(string xml)
         {
             int startbaseurl = -1;
             int endbaseurl = -1;
@@ -276,7 +280,7 @@ namespace registry
             }
 
             return xml;
-        }
+        }*/
 
         //tdower todo - clean this up. regexp.
         private static string CleanUpOAIDates(string xml)
@@ -401,8 +405,7 @@ namespace registry
                     try
                     {
                         docs[i] = new System.Xml.XmlDocument();
-                        docs[i].LoadXml(CleanUpBaseURL(CleanUpOAIDates((string)dr[0])));
-                        //docs[i].LoadXml((string)dr[0]);
+                        docs[i].LoadXml(CleanUpOAIDates((string)dr[0]));
                     }
                     catch (Exception e)
                     {
