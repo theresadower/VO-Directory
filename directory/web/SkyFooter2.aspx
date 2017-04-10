@@ -4,7 +4,8 @@
 <hr align="left" noshade=""/>
     <table width="100%"  border="0" align="center" cellpadding="4" cellspacing="0">
   <tr align="center" valign="top">
-    
+    <td width="8%"></td>
+    <td width="8%"></td>
     <td width="76%"><div align="center">
         <p class="style10"> Developed with the support of the <a href="http://www.nsf.gov">National Science Foundation</a> <br/>
 

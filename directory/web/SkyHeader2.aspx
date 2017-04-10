@@ -75,7 +75,7 @@
         <td class="navlink"><a href="../publishing">Publish</a></td>
         <td class="navlink"><a href="riws.aspx">Developers</a></td>
         <td class="navlink"><a href="helpnew.aspx">Help</a></td>
-        <td class="helplink"><a href="http://www.us-vo.org/feedback/">Contact Us</a></td>
+<!--        <td class="helplink"><a href="http://www.us-vo.org/feedback/">Contact Us</a></td>-->
            </tr>
          </table>
          </td>

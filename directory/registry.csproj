@@ -130,6 +130,11 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="ResumptionInformation.cs" />
     <Compile Include="ResumptionInformationUtil.cs" />
     <Compile Include="ConeSearch-v1_0_VOResource-v1_0_VORegistry-v1_0_VOStandard-v0_1_VODataService-v1_0_SSA-v0_1_SkyNode-v0_2_SIA-v1_0_stc_v1_30_xlink_RegistryInterface.cs" />
@@ -152,11 +157,6 @@
     <Compile Include="oai_dc_simpledc20021212.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
     <Compile Include="Registry.asmx.cs">
       <DependentUpon>Registry.asmx</DependentUpon>
       <SubType>Component</SubType>
@@ -178,6 +178,7 @@
     <Compile Include="savexml.aspx.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="SQLHelper.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -248,6 +249,12 @@
     <Content Include="images\desc.png" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
+    </Content>
+    <Content Include="web\SkyFooter2.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="web\SkyHeader2.aspx">
+      <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="web\styles.css" />
     <EmbeddedResource Include="oai.aspx.resx">

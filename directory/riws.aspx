@@ -142,14 +142,14 @@ Server.Execute("web/SkyHeader2.aspx" + "?" + Parameters);
     <h2 style="text-align: left">
         Documentation for Services</h2>
     <ul>
-        <li><a href="http://www.us-vo.org/news/story.cfm?ID=32"><span style="color: #000000">The VAO Book, published as an ASP Conference Series</span></a></li>
+<!--        <li><a href="http://www.us-vo.org/news/story.cfm?ID=32"><span style="color: #000000">The VAO Book, published as an ASP Conference Series</span></a></li>-->
         <li><a href="http://www.ivoa.net/Documents/"><span style="color: #000000">IVOA Documents and Standards</span></a></li>
-        <li><a href="http://www.us-vo.org/summer-school/2006/proceedings/"><span style="color: #000000">
-            Summer School 2006 proceedings</span></a></li>
-        <li><a href="http://www.us-vo.org/summer-school/2005/proceedings/"><span style="color: #000000">
-            Summer School 2005 proceedings</span></a></li>
-        <li><a href="http://www.us-vo.org/summer-school/2004/proceedings/"><span style="color: #000000">
-            Summer School 2004 proceedings</span></a></li>
+<!--        <li><a href="http://www.us-vo.org/summer-school/2006/proceedings/"><span style="color: #000000">
+            Summer School 2006 proceedings</span></a></li>-->
+<!--        <li><a href="http://www.us-vo.org/summer-school/2005/proceedings/"><span style="color: #000000">
+            Summer School 2005 proceedings</span></a></li>-->
+<!--        <li><a href="http://www.us-vo.org/summer-school/2004/proceedings/"><span style="color: #000000">
+            Summer School 2004 proceedings</span></a></li>-->
 
     </ul><br />
     

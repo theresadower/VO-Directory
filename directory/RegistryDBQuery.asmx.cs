@@ -10,6 +10,8 @@ using System.Text;
 using System.Configuration;
 
 using registry;
+using log4net;
+
 
 
 namespace registry
@@ -19,8 +21,9 @@ namespace registry
     public class RegistryDBQuery : System.Web.Services.WebService
 	{
 		public static string sConnect;
-
-		public RegistryDBQuery()
+        private static readonly log4net.ILog log =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        public RegistryDBQuery()
 		{
 			//CODEGEN: This call is required by the ASP.NET Web Services Designer
 			InitializeComponent();
@@ -71,6 +74,7 @@ namespace registry
 		[WebMethod (Description="Input WHERE predicate for SQL Query. This queries the Resource table only.")]
 		public DataSet DSQueryRegistry(string predicate)
 		{
+            log.Info("Log is working");
             string cmd = SQLHelper.createBasicResourceSelect(predicate);
             cmd = EnsureSafeSQLStatement(cmd);
             string PASS = Properties.Settings.Default.dbAdmin;
@@ -90,11 +94,14 @@ namespace registry
 			SqlConnection conn = null;
 			DataSet ds = null;
 			try
-			{	
+			{
+                log.Info("Sconnect: " + sConnect);
 				conn = new SqlConnection (sConnect);
 				conn.Open();
+                log.Info("sqlStmt before: " + sqlStmnt);
                 sqlStmnt = SQLHelper.TranslateOldSchemaQuery(sqlStmnt);
-				SqlDataAdapter sqlDA = new SqlDataAdapter(sqlStmnt,conn);
+                log.Info("sqlStmt after: " + sqlStmnt);
+                SqlDataAdapter sqlDA = new SqlDataAdapter(sqlStmnt,conn);
 				ds= new DataSet();
 				sqlDA.Fill(ds);
 			}
