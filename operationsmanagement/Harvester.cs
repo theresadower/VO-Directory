@@ -55,77 +55,6 @@ namespace Replicate
 
         }
 
-        public oai.granularityType GetTimeGranularity(string baseurl)
-        {
-            string url = baseurl;
-            if (!baseurl.EndsWith("?"))
-                url += "?";
-
-            url += "verb=Identify";
-
-            HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(url);
-            // Sends the HttpWebRequest and waits for the response. 
-            HttpWebResponse resp = null;
-            try
-            {
-                resp = (HttpWebResponse)wr.GetResponse();
-            }
-            catch (Exception e)
-            {
-                sb.Append(" Harvester: " + e.Message);
-            }
-
-            if (resp == null)
-            {
-                sb.Append("\nError: No time granularity can be determined.");
-                throw new Exception(sb.ToString());
-            }
-
-            // Gets the stream associated with the response.
-            Stream receiveStream = resp.GetResponseStream();
-            Encoding encode = System.Text.Encoding.GetEncoding("utf-8");
-            // Pipes the stream to a higher level stream reader with the required encoding format. 
-            StreamReader stream = new StreamReader(receiveStream, encode);
-
-            // it is OAI we presume so make a serializer for it
-            OAIPMHtype oai = null;
-            try
-            {
-                XmlSerializer ser = new XmlSerializer(typeof(OAIPMHtype));
-                oai = (OAIPMHtype)ser.Deserialize(stream);
-            }
-            catch (Exception)
-            {
-                //workaround for a mostly-functional astrogrid service.
-                return granularityType.YYYYMMDD;
-                
-                //sb.Append("\nError deserializing OAI Identification. Response is not valid. " + ex.Message);
-                //throw new Exception(sb.ToString());
-                
-            }
-
-            if (oai.Items[0] is oai.OAIPMHerrorType)
-            {
-                OAIPMHerrorType err = oai.Items[0] as OAIPMHerrorType;
-                sb.Append("\nOAI Error :");
-                sb.Append(((OAIPMHerrorType)oai.Items[0]).Value);
-
-                throw new Exception(sb.ToString());
-            }
-            else if (oai.Items[0] is oai.IdentifyType)
-            {
-                granularityType gran = ((oai.IdentifyType)(oai.Items[0])).granularity;
-                return gran;
-            }
-            else
-            {
-                sb.Append("\nError: No time granularity can be determined.");
-                throw new Exception(sb.ToString());
-            }
-
-            //return granularityType.YYYYMMDD;
-        }
-
         //todo: record deletion here, remove it from registrydbquery
 
 		public string harvest(string baseurl, string registryID, string extraParams) 
@@ -296,9 +225,9 @@ namespace Replicate
 
                             try
                             {
-                                //                          Do not store the XML Header for instances of selecting
-                                //                          and concatenating xml resources.
-                                //							theXML = XMLHEADER+recs[r].metadata.OuterXml;
+                                //Do not store the XML Header for instances of selecting
+                                //and concatenating xml resources.
+                                //theXML = XMLHEADER+recs[r].metadata.OuterXml;
                                 theXML = recs[r].metadata.OuterXml;
                             }
                             catch
@@ -320,22 +249,22 @@ namespace Replicate
                                     theXML = theXML.Insert(index, "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ");
                                 }
 
-                                int status = vorXML.LoadVORXML(theXML, 0, harvestURL, registryID, sb);
+                                int status = 0;
                                 try
                                 {
+                                    status = vorXML.LoadVORXML(theXML, 0, harvestURL, registryID, sb);
                                     if (status != 0)
                                     {
                                         ++recFailures;
-
-                                        //Console.Out.WriteLine("Err is " + sb.ToString());
-
-                                        Console.Out.WriteLine("Failed to harvest resource. dumping fragment to bad" + r + "\n");
+                        
+                                        Console.Out.WriteLine("Failed to harvest resource " + id + ". dumping fragment to bad" + r + "\n" +
+                                                               "Err is " + sb.ToString());
                                         StreamWriter sr = new StreamWriter(log_location + "\\bad" + r + ".xml");
                                         sr.Write(theXML);
                                         sr.Flush();
                                         sr.Close();
 
-                                        errLog.Log("Failed to harvest resource. Dumped to bad" + r + ".xml\n" +
+                                        errLog.Log("Failed to harvest resource " + id + ". Dumped to " + log_location + "\\bad" + r + ".xml\n" +
                                                    "Err is " + sb.ToString());
                                     }
                                 }
@@ -351,6 +280,7 @@ namespace Replicate
                             {
                                 try
                                 {
+                                    ++recFailures;
                                     Console.Out.WriteLine(se + ":" + se.StackTrace);
                                     sb.Append(se + ": " + se.StackTrace + " : dumping fragment to bad" + r + "\n");
                                     StreamWriter sr = new StreamWriter(log_location + "\\bad" + r + ".xml");

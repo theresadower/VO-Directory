@@ -140,15 +140,15 @@ namespace Replicate
                 pars += "&set=ivo_managed";
             pars += "&metadataPrefix=ivo_vor&from=";
 			try{
-
-			//	oai dates .. 2004-04-22T21:09:50Z
-	            oai.granularityType gran = h.GetTimeGranularity(url);
-	            pars += STOAI.GetOAIDatestamp(from, gran);
+                //As of RegistryInterfaces 1.1, all IVOA registries already used seconds granularity. 
+                //Modified standard operating procedure to expect it, in lieu of priming oai:Identify call.
+	            pars += STOAI.GetOAIDatestamp(from, oai.granularityType.YYYYMMDDThhmmssZ);
 
 				ret += h.harvest(url, registryID, pars);		
 			}catch(Exception ex){
 				log.Error ("Error harvesting from url " + url, ex);
 				ret += ex + "\n";
+                throw (ex);
 			}
 
 			return ret;

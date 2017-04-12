@@ -336,13 +336,8 @@ namespace registry
             sb.Append(" ) and ");
             sb.Append(predicate);
 
-            //This should at least ensure that deleted/undeleted 'duplicate' records will 
-            //have their last state reported last. Harvesters processing the data serially
-            //which I assume to be most, if not all, of them, will wind up with the correct
-            //record state. This needs to be handled better later, removing the duplicates entirely
-            //either through SQL magic or upstream in the OAI processing. --tdower
             if (includeDeleted || includeInactive)
-                sb.Append(" order by [updated] " );
+                sb.Append(" order by [updated] desc" );
 
             return sb.ToString();
         }

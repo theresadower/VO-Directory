@@ -44,14 +44,14 @@ public partial class getRecord : System.Web.UI.Page
             // Query the resource from the registry 
             registry.Registry reg = new registry.Registry();
 
-            XmlDocument[] docs = reg.QueryRIResourceXMLDocAllResources("resource.ivoid like \'" + id + "'", false, true);
-            if (docs.Length > 0) //we want the last, most recent one if there are multiple active/inactive/deleted versions
+            XmlDocument[] docs = reg.QueryRIResourceXMLDocAllResources("resource.ivoid = \'" + id + "'", false, true);
+            if (docs.Length > 0) //we want the first, most recent one if there are multiple active/inactive/deleted versions
             {
                 try
                 {
                     StringWriter sw = new StringWriter();
                     XmlTextWriter xw = new XmlTextWriter(sw);
-                    docs[docs.Length - 1].WriteTo(xw);
+                    docs[0].WriteTo(xw);
  
                     StringReader reader = new StringReader(sw.ToString());
                     XPathDocument myXPathDoc = new XPathDocument(reader);

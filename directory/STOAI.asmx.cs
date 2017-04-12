@@ -452,7 +452,7 @@ namespace registry
                     fromDate = DateTime.ParseExact(from, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None);
 
                 }
-                catch(FormatException ex)
+                catch(FormatException)
                 {
                     fromDate = null;
                 }
@@ -464,7 +464,7 @@ namespace registry
                     untilDate = DateTime.ParseExact(until, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None);
 
                 }
-                catch (FormatException ex)
+                catch (FormatException)
                 {
                     fromDate = null;
                 }

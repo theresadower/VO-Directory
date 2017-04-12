@@ -178,7 +178,6 @@
     <Compile Include="savexml.aspx.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Settings.cs" />
     <Compile Include="SQLHelper.cs">
       <SubType>Code</SubType>
     </Compile>

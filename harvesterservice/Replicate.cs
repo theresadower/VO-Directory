@@ -14,41 +14,18 @@ namespace Replicate
 	class Replicate
 	{
 		const int MLEN = 4000;
-        //because we need to write to the log table, this is an admin connection
+        private static DateTime harvestingEpoch = DateTime.Parse("2000-JAN-01");
 
+        //because we need to write to the log table, this is an admin connection
         private static string connStr = Properties.Settings.Default.SqlAdminConnection;
         private static string dbAdmin = Properties.Settings.Default.dbAdmin;
 		private static readonly ILog log = LogManager.GetLogger (typeof(Replicate));
 
-		/// <summary>
-		/// The main entry point for the application.
-		/// </summary>
-		//[STAThread]
-		/*public static void replicate()
-		{
-			int status = 0;
-			Console.Out.WriteLine("Replicate "+fromReg+ " to "+toReg );
-			DateTime lastRep = lookupLastRep(fromReg);
-			DateTime entry = writeStartLog(fromReg);
-			StringBuilder message = new StringBuilder();
-			message.Append("Last rep ");
-			message.Append(lastRep);
-			message.Append("\nToRegistry:");
-			message.Append(toReg);
-			message.Append("\n");
-			status += replicateResourceTypes(message);
-			status += replicateDeletedResources(message,lastRep,toReg,fromReg);
-			status += replicateResources(message,lastRep,toReg,fromReg);
-			writeEndLog(entry,message.ToString(),status);
-			Console.Out.Write("Done.\n");
-
-
-		}*/
-
-		public static DateTime lookupLastRep(string fromReg)
+		public static DateTime lookupLastRep(string fromReg, out bool everHarvested)
 		{
 			SqlConnection conn = null;
-			DateTime ret = DateTime.Parse("2000-JAN-01");
+            DateTime ret = harvestingEpoch;
+            everHarvested = false;
 
 			try 
 			{
@@ -62,11 +39,12 @@ namespace Replicate
 				try 
 				{
 					ret = (DateTime)cmd.ExecuteScalar();
+                    everHarvested = true;
 				} 
 				catch (Exception) 
 				{
-					// there is no log entry !
-                    ret = DateTime.Parse("2000-JAN-01");
+                    // there is no prior successful log entry
+                    ret = harvestingEpoch;
 				}
 			}
 			finally
@@ -160,13 +138,14 @@ namespace Replicate
                 sb.Remove(0, sb.Length);
                 string url = (string)dr["ServiceUrl"];
                 string regid = (string)dr["RegistryID"];
-                DateTime last = Replicate.lookupLastRep(url);
+                bool everHarvested = false;
+                DateTime last = Replicate.lookupLastRep(url, out everHarvested);
 
-                //oai is on UTC
-                //last = last.ToUniversalTime(); //is already in UTC
-                last = new DateTime(last.Ticks - (last.Ticks % TimeSpan.TicksPerSecond), last.Kind);
+                //Add a days' worth of leeway if not harvesting since the start of harvesting epoch.
+                //Ticks finagling is for UTC.
+                if( everHarvested )
+                    last = new DateTime(last.Ticks - (last.Ticks % TimeSpan.TicksPerSecond), last.Kind).AddDays(-1);
 
-                //let's add some leeway in here for gateways that have less fine-grained time resolution than w
                 DateTime startTime = DateTime.Now.ToUniversalTime();
                 startTime = new DateTime(startTime.Ticks - (startTime.Ticks % TimeSpan.TicksPerSecond), startTime.Kind);
 
@@ -177,7 +156,7 @@ namespace Replicate
                     sb.Append(" ");
                     try
                     {
-                        Console.Out.WriteLine("trying :" + url + " last harvest " + last);
+                        Console.Out.WriteLine("trying :" + url + " since (last success - 1 day) " + last);
                         string res = harvest.HarvestOAI(url, regid, last, true, dbAdmin);
                         sb.Append(res);
                     }
@@ -187,8 +166,9 @@ namespace Replicate
                         sb.Append(e);
                         stat = 1;
                     }
-                    //hack to make sense of status from logging.
+
                     string mes = sb.ToString();
+                    if( mes.Contains("Error harvesting from url"))
                     if (mes.Contains("No Records to Harvest")) //test: in case of hidden timeout errors.
                         stat = 3;
                     else if (mes.Contains("Loaded 0 RESOURCES"))
