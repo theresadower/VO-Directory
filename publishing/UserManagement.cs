@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -9,15 +8,17 @@ namespace Publishing
     {
         private static string sAdminConnect = (string)System.Configuration.ConfigurationManager.AppSettings["SqlAdminConnection"];
         private static string sConnect = (string)System.Configuration.ConfigurationManager.AppSettings["SqlConnection"];
-        private static string sUserDecrypt = (string)System.Configuration.ConfigurationManager.AppSettings["userDecrypt"];
 
         private static string strGetAuths = "select distinct authorityID from UserAuthorities where ukey = $1";
         private static string strCheckAuthForOrg = "select ivoid from resource where ivoid like '$1%' and rstat = 1 and res_type = 'Organisation'";
 
         internal static long GetUserKey(string username)
         {
-            try
-            {
+           if (username == null || username == string.Empty || username == "anonymous")
+                return 0;
+
+           try
+           {
                 SqlConnection conn = new SqlConnection(sConnect);
                 conn.Open();
 
@@ -70,6 +71,25 @@ namespace Publishing
             return foundOrg;
         }
 
+        public static string[] GetAuthorityList(long ukey, SqlConnection conn)
+        {
+
+            SqlDataAdapter sqlDA = new SqlDataAdapter(strGetAuths.Replace("$1", ukey.ToString()), conn);
+            DataSet ds = new DataSet();
+            sqlDA.Fill(ds);
+
+            string[] results = new string[ds.Tables[0].Rows.Count];
+
+            for (int i = 0; i < results.Length; ++i)
+            {
+                results[i] = (string)ds.Tables[0].Rows[i][0];
+            }
+            return results;
+        }
+
+        //note this user management must be done on top of AD so that user authority and resource ownership information is maintained.
+        //TODO: migrate usernames to AD EZIDs.
+        //TODO: restrict use of these functions to a list of logged-in admin users who call it through a web form.
         internal string[] RegisterNewUser(string username, string email, string name, ref long ukey)
         {
             System.Collections.ArrayList errors = new System.Collections.ArrayList();
@@ -142,56 +162,5 @@ namespace Publishing
             return (string[])errors.ToArray(typeof(string));
         }
 
-        //internal string[] ResetUserPassword(string username, string temppassword, string password, ref long ukey)
-        //{
-        //    System.Collections.ArrayList errors = new System.Collections.ArrayList(); 
-        //    if ( ukey > 0)
-        //    {
-        //        SqlConnection conn = new SqlConnection(sAdminConnect);
-        //        conn.Open();
-        //        {
-        //            string sql = string.Empty;
-        //            try
-        //            {
-        //                string sqlKeyManagementInsert = "OPEN SYMMETRIC KEY PASS_Key_01 DECRYPTION BY CERTIFICATE PublishingPasswords WITH PASSWORD = '" + sUserDecrypt + "'; " +
-        //                                                " declare @pwd nvarchar(128) = '" + password + "'; " +
-        //                                                " update users set bpassword = EncryptByKey(Key_GUID('PASS_Key_01'), @pwd) where username = '" + username + "' and pkey = " + ukey + ";";
-
-        //                SqlTransaction transaction;
-        //                transaction = conn.BeginTransaction("NewUserTransaction");
-        //                SqlCommand command = new SqlCommand(sqlKeyManagementInsert);
-        //                command.Connection = conn;
-        //                command.Transaction = transaction;
-
-        //                int rows = command.ExecuteNonQuery();
-        //                transaction.Commit();
-
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                //transaction.Rollback();
-        //                errors.Add("Error updating user password: " + ex.Message);
-        //            }
-        //        }
-        //    }
-
-        //    return (string[])errors.ToArray(typeof(string));
-        //}
-
-        public static string[] GetAuthorityList(long ukey, SqlConnection conn)
-        {
-     
-            SqlDataAdapter sqlDA = new SqlDataAdapter(strGetAuths.Replace("$1", ukey.ToString()), conn);
-            DataSet ds = new DataSet();
-            sqlDA.Fill(ds);
-
-            string[] results = new string[ds.Tables[0].Rows.Count];
-
-            for (int i = 0; i < results.Length; ++i )
-            {
-                results[i] = (string)ds.Tables[0].Rows[i][0];
-            }
-            return results;
-        }
     }
 }

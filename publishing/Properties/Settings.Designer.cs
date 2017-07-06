@@ -48,16 +48,7 @@ namespace Publishing.Properties {
             get {
                 return ((int)(this["resumptionTokenLimit"]));
             }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string userDecrypt {
-            get {
-                return ((string)(this["userDecrypt"]));
-            }
-        }
+        }     
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -66,15 +57,6 @@ namespace Publishing.Properties {
             get {
                 return ((string)(this["log_location"]));
             }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://vaodev.stsci.edu/newdirectorypublishing")]
-        public string baseURL {
-            get {
-                return ((string)(this["baseURL"]));
-            }
-        }
+        }     
     }
 }

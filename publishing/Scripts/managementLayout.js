@@ -4,7 +4,7 @@ var resourceCopyURL = "domreaderwizard.html?debug&copy=true&identifier=";
 var resourceNewURL = "domreaderwizard.html?debug";
 var manageResourceURL = "ResourceManagement.aspx?action=1&identifier=2";
 var uploadResourceURL = "UploadXMLResource.aspx";
-var baseDirectoryURL = "http://vaotest.stsci.edu/directory/";
+var baseDirectoryURL = "http://vaodev.stsci.edu/directory/";
 var pendingArg = "&pending=true";
 
 var storeResourceInfo = Ext.create('Ext.data.Store', {

@@ -19,8 +19,7 @@
         queryString = window.location.search,
         test, path, i, ln, scriptSrc, match;
 
-    /* extPath = "http://galextest.stsci.edu/test/extjs/4.0.2/";*/
-    extPath = "http://vaotest.stsci.edu/publishing/scripts/extjs4/";
+    extPath = "https://vaodev.stsci.edu/vo-directory/publishing/scripts/extjs4/";
     
     for (i = 0, ln = scripts.length; i < ln; i++) {
         scriptSrc = scripts[i].src;
@@ -56,13 +55,6 @@
         isDevelopment = true;
     }
     //isDevelopment = false;
-    
-    // Enable the use of a remote server during client development.
-    mashupURLOverride = undefined;
-    if (window.location.protocol === 'file:') {
-	// The html was loaded from a local file, so we will assume the developer wants to use a remote server.
-	mashupURLOverride = 'http://vaodev.stsci.edu/portal/Mashup/Mashup.asmx/invoke';
-    } 
 
     var filestr = window.location.href;
     var cssBasePath = extPath + 'resources/';
