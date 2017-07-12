@@ -18,6 +18,8 @@ Ext.define('PublishingWizard.ui.ManagementContainer', {
     cls: 'itemManagementContainer',
     itemId: 'itemManagementContainer',
     columns: 1,
+    margin: '10 0 0 10',
+    bodyStyle: 'background: transparent;',
 
     initComponent: function () {
         var me = this;
@@ -30,9 +32,11 @@ Ext.define('PublishingWizard.ui.ManagementContainer', {
                     id: 'idManagementButton',
                     itemId: 'itemManagementButton',
                     disabled: true,
-                    margin: 1,
+                    width: 150,
+                    maxWidth: 150,
                     focusOnToFront: false,
-                    text: 'Mange My Resources'
+                    text: 'Manage My Resources'
+
                 }
             ]
         });

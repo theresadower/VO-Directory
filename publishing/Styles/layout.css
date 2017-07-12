@@ -143,6 +143,12 @@ p
 	padding-bottom: 12px;
 }
 
+#managementDiv
+{
+    width: 100%;
+    text-align: center;
+}
+
 .bottom-panel
 {
 	background: #d3e4ed url(../images/bottom-panel-galaxy.gif) no-repeat;
