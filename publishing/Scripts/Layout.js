@@ -1,5 +1,5 @@
 
-var resourceManagementURL = "resourcemanagement.html?debug";
+var resourceManagementURL = "resourcemanagement.html";
 
 var firstOrgRecord = false;
 var gotAuthInfo = false;
@@ -9,7 +9,7 @@ var identifierSuffix = '';
 getAuthInfo = function () {
     if( !gotAuthInfo) {
         Ext.Ajax.request({
-            url: 'login.aspx?action=getauthinfo',
+            url: PublishingWizard.LoginContainer.authinfoUrl,
             method: 'GET',
             success: function (result, request) {
                 var json = Ext.decode(result.responseText);
@@ -103,7 +103,7 @@ Ext.define('PublishingWizard.Layout', {
                 xtype: 'form',
                 id: 'formPanel',
                 waitMsgTarget: true,
-                url: './IngestResource.aspx',
+                url: '../publishing/IngestResource.asmx/IngestFormResource',
                 method: 'GET',
                 fieldDefaults: {
                     labelWidth: 150,

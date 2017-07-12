@@ -1,11 +1,10 @@
 
-var resourceEditURL = "domreaderwizard.html?debug&identifier=";
-var resourceCopyURL = "domreaderwizard.html?debug&copy=true&identifier=";
-var resourceNewURL = "domreaderwizard.html?debug";
-var manageResourceURL = "ResourceManagement.aspx?action=1&identifier=2";
-var uploadResourceURL = "UploadXMLResource.aspx";
+var resourceEditURL = "FormEditResource.html?identifier=";
+var resourceCopyURL = "FormEditResource.html?copy=true&identifier=";
+var resourceNewURL = "FormEditResource.html";
+var manageResourceURL = "IngestResource.asmx/SetMyResourceStatus?identifier=$1&status=$2";
+var uploadResourceURL = "IngestResource.asmx/IngestXMLResource";
 var baseDirectoryURL = "http://vaodev.stsci.edu/directory/";
-var pendingArg = "&pending=true";
 
 var storeResourceInfo = Ext.create('Ext.data.Store', {
     autoLoad: true,
@@ -14,7 +13,7 @@ var storeResourceInfo = Ext.create('Ext.data.Store', {
     sorters: { property: 'updated', direction : 'ASC' },
     proxy: {
         type: 'ajax',
-        url: 'GetResourceInfo.aspx?action=myList',
+        url: '../publishing/GetResourceInfo.asmx/GetMyResourcesList',
         reader: {
             type: 'json',
             root: 'ResourceInfo'
@@ -36,7 +35,7 @@ var storeResourceInfo = Ext.create('Ext.data.Store', {
 
 getAuthInfo = function () {
     Ext.Ajax.request({
-        url: 'login.aspx?action=getauthinfo',
+        url: PublishingWizard.LoginContainer.authinfoUrl,
         method: 'GET',
         success: function (result, request) {
             var json = Ext.decode(result.responseText);
@@ -53,11 +52,11 @@ getAuthInfo = function () {
                         },
                         fn: function (btn, text) {
                             if (btn == 'no') {
-                                var redirect = 'VAOLogin.aspx';
+                                var redirect = 'intro.html';
                                 window.location = redirect;
                             }
                             else {
-                                var redirect = 'domreaderwizard.html?debug';
+                                var redirect = 'FormEditResource.html';
                                 window.location = redirect;
                             }
                         }
@@ -78,11 +77,11 @@ getAuthInfo = function () {
                         },
                         fn: function (btn, text) {
                             if (btn == 'no') {
-                                var redirect = 'VAOLogin.aspx';
+                                var redirect = 'intro.html';
                                 window.location = redirect;
                             }
                             else {
-                                var redirect = 'domreaderwizard.html?debug';
+                                var redirect = 'FormEditResource.html';
                                 window.location = redirect;
                             }
                         }
@@ -149,8 +148,6 @@ redirectForEdit = function (identifier, status) {
     var redirect = resourceNewURL;
     if (identifier != "")
         redirect = resourceEditURL + identifier;
-    if (status == "PENDING")
-        redirect = redirect + "&pending=true";
 
     window.location = redirect;
 };
@@ -159,8 +156,6 @@ redirectForCopy = function (identifier, status) {
     var redirect = resourceNewURL;
     if (identifier != "")
         redirect = resourceCopyURL + identifier;
-    if (status == "PENDING")
-        redirect = redirect + "&pending=true";
 
     window.location = redirect;
 };
@@ -169,7 +164,6 @@ reloadStore = function (grid) {
     grid.store = store;
     store.load();
     grid.getView().refresh();
-    //store.sort(store.sorters);
 }
 
 uploadResource = function (fb, f) {
@@ -178,21 +172,19 @@ uploadResource = function (fb, f) {
         form_action = 1;
         Ext.getCmp('uploadForm').getForm().submit({
             method: 'POST',
-            isUpload: true,
+            fileUpload: true,
             waitMsg: 'Uploading file...',
             success: function (form, action) {
+                var text = action.response.responseText;
                 var json = Ext.decode(action.response.responseText);
                 Ext.Msg.alert('Success', json.details);
                 reloadStore(Ext.getCmp('resourcesGrid'));
             },
             failure: function (form, action) {
+                var text = action.response.responseText;
                 var json = Ext.decode(action.response.responseText);
                 if (json && json.details != undefined) {
                     Ext.Msg.alert('Error', 'Failed to upload and process your XML resource file: ' + json.details, function (btn, text) {
-                        if (json.details.indexOf("login") > -1 && btn == 'ok') {
-                            var redirect = 'VAOLogin.aspx';
-                            window.location = redirect;
-                        }
                     });
                 }
                 else {
@@ -205,13 +197,10 @@ uploadResource = function (fb, f) {
 
 manageResource = function (status, row) {
     var identifier = row.raw.identifier;
-    var rowPending = "";
-    if (row.raw.status == "PENDING")
-        rowPending = pendingArg;
 
     if (identifier != "") {
         Ext.Ajax.request({
-            url: manageResourceURL.replace('1', status).replace('2', identifier) + rowPending,
+            url: manageResourceURL.replace('$1', identifier).replace('$2', status),
             method: 'GET',
             success: function (result, request) {
                 var json = Ext.decode(result.responseText);
@@ -222,7 +211,7 @@ manageResource = function (status, row) {
                     }
                     else {
                         Ext.Msg.alert('Success', 'Resource status changed.');
-                        if (status.indexOf('deactiv') > -1) {
+                        if (status.indexOf('inactiv') > -1) {
                             row.set('status', 'inactive');
                             row.raw.status = 'inactive';
                             Ext.getCmp('activationButton').enable();
@@ -237,7 +226,6 @@ manageResource = function (status, row) {
                             Ext.getCmp('activationButton').hide();
                         }
                     }
-                    //Ext.getCmp('resourcesGrid').getView().refresh();
                     reloadStore(Ext.getCmp('resourcesGrid'));
                 }
                 else
@@ -300,27 +288,27 @@ Ext.define('PublishingWizard.ManagementLayout', {
                     disabled: true,
                     handler: function () { redirectForEdit() }
                 }
-                            , {
-                                xtype: 'file',
-                                buttonOnly: true,
-                                hideLabel: true,
-                                buttonText: 'Upload XML Resource File',
-                                id: 'fileFormButton',
-                                disabled: true,
-                                buttonConfig: { width: 150 },
-                                listeners: {
-                                    'change': function (fb, v) { uploadResource(fb, v); }
-                                }
-                            }
-                            , {
-                                height: 20,
-                                width: 650,
-                                border: 0,
-                                margin: '0 0 0 10',
-                                bodyStyle: 'background: transparent;',
-                                autoEl: { tag: 'h3', html: '...or select an existing resource below to edit, delete, or use as a template for a new resource.' }
-                            }
-                            ]
+                , {
+                     xtype: 'file',
+                     buttonOnly: true,
+                     hideLabel: true,
+                     buttonText: 'Upload XML Resource File',
+                     id: 'fileFormButton',
+                     disabled: true,
+                     buttonConfig: { width: 150 },
+                     listeners: {
+                         'change': function (fb, v) { uploadResource(fb, v); }
+                     }
+                 }
+                , {
+                    height: 20,
+                    width: 650,
+                    border: 0,
+                    margin: '0 0 0 10',
+                    bodyStyle: 'background: transparent;',
+                    autoEl: { tag: 'h3', html: '...or select an existing resource below to edit, delete, or use as a template for a new resource.' }
+                }
+                ]
             },
                     {
                         xtype: 'grid',
@@ -419,12 +407,12 @@ Ext.define('PublishingWizard.ManagementLayout', {
                 text: 'Delete Selected Resource',
                 handler: function () {
                     var msg = 'Are you sure you want to delete ' + selectedItem[0].raw.identifier +
-                              ' ? Deleted resources will no longer show up in registry search results, and should not be republished later using the same identifier. If necessary, their data can be recovered by contacting the VAO help desk.';
+                              ' ? Deleted resources will no longer show up in registry search results, and should not be republished later using the same identifier. If necessary, their data can be recovered by contacting the help desk at archive@stsci.edu.';
                     if (selectedItem[0].raw.status && selectedItem[0].raw.status == "PENDING") {
                         msg = 'Are you sure you want to delete the pending resource ' + selectedItem[0].raw.identifier +
-                              ' ? Deleted pending resources will no longer be accessible for editing. If necessary, their data can be recovered by contacting the VAO help desk.';
+                              ' ? Deleted pending resources will no longer be accessible for editing. If necessary, their data can be recovered by contacting the help desk at archive@stsci.edu.';
                     }
-                    Ext.MessageBox.confirm('Confirm', msg, function (btn) { if (btn == 'yes') { manageResource('deleteResource', selectedItem[0]); } })
+                    Ext.MessageBox.confirm('Confirm', msg, function (btn) { if (btn == 'yes') { manageResource('deleted', selectedItem[0]); } })
                 }
             },
             {
@@ -437,7 +425,7 @@ Ext.define('PublishingWizard.ManagementLayout', {
                 handler: function () {
                     Ext.MessageBox.confirm('Confirm', 'Are you sure you want to activate ' + selectedItem[0].raw.identifier +
                                             ' ? Active resources will show up in registry search results.', function (btn) {
-                                                if (btn == 'yes') { manageResource('activateResource', selectedItem[0]); }
+                                                if (btn == 'yes') { manageResource('active', selectedItem[0]); }
                                             })
                 }
             },
@@ -453,7 +441,7 @@ Ext.define('PublishingWizard.ManagementLayout', {
                     Ext.MessageBox.confirm('Confirm', 'Are you sure you want to deactivate ' + selectedItem[0].raw.identifier +
                                             ' ? Deactivated resources will not show up in registry search results, but will not be deleted. ' +
                                             'This is useful if your resource describes a service experiencing long-term downtime.', function (btn) {
-                                                if (btn == 'yes') { manageResource('deactivateResource', selectedItem[0]); }
+                                                if (btn == 'yes') { manageResource('inactive', selectedItem[0]); }
                                             })
                 }
             }] //centerpanel items

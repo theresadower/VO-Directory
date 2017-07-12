@@ -21,14 +21,16 @@
 <div id="main-wrapper">
   <div align="right"></div>
 
-<div id="logo"><a href="http://vao.stsci.edu/directory" title="Directory Search" target="_blank"><img src="images/Directory50.png" alt="Directory Search" height="50" width="50" /></a></div>
+    <div id="logo"><a href="http://vao.stsci.edu/directory" title="Directory Search" target="_blank"><img src="images/Directory50.png" alt="Directory Search" height="50" width="50" /></a></div>
     <div id="nav-wrapper"><div id="loginDiv"></div></div>
+    <div class="clear"></div>
 
-<div class="clear"></div>
-
-<div id="content-area"> 
+    <div id="content-area"> 
             <div id="helpcontent"><h1>VO Registry Publishing Interface</h1><br />
-            <p>Using the VO registry publishing interface, you can publish new and modify existing VO resources, representing data services, catalogs, archive institutions,
+            <p>Welcome to the VO Registry Publishing Interface at MAST. You must be logged in to proceed.</p>
+                <p><br /></p>
+                
+            <P>Using the VO registry publishing interface, you can publish new and modify existing VO resources, representing data services, catalogs, archive institutions,
             and many other astronomical data concepts. This system manages resources hosted at the VO registry at
             Space Telescope Science Institute. Resources in this registry are accessible by search tools and VO client software througout
             the IVOA. For more information, check the <a href="help.html" target="_blank">publishing help page</a>.
@@ -41,12 +43,8 @@
                to institutions and VO Registry records can be added by our service maintainers at MAST, archive@stsci.edu.
             </p>
             <br />
-</div>
-</div>
-
-    <div style="width:98%;text-align:right;float:left;padding-top:5px;padding-right:5px;">
-<a href="http://www.usvao.org/acknowledging-the-vao/"><span class="tiny">Acknowledging VAO</span></a><br/>
-  ©<strong> 2013 VAO, LLC</strong></div>
+    </div>
+    </div>
 </div>
 
 </body>

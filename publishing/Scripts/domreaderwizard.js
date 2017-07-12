@@ -1,7 +1,7 @@
 Ext.require('PublishingWizard.Layout');
 
-var getResourceURL = 'GetResourceInfo.aspx?action=getResource&identifier=';
-var resourceManagementURL = "resourcemanagement.html?debug";
+var getResourceURL = '../publishing/GetResourceInfo.asmx/GetMyResource';
+var resourceManagementURL = "resourcemanagement.html";
 var newResource = true;
 var resourceDOM = null;
 var emptyResourceDOM = null;
@@ -24,9 +24,6 @@ Ext.define('PublishingWizard.DomReaderWizard', {
                 options["copy"] = false;
             else
                 options["copy"] = true;
-            var pending = getArg("pending");
-            if( pending != "" )
-                options["pending"] = pending;
 
             var wizard = Ext.create('PublishingWizard.DomReaderWizard', options);
             wizard.run(options);
@@ -92,13 +89,10 @@ Ext.define('PublishingWizard.DomReaderWizard', {
 
     getResourceXML: function() {
          var identifier = appOptions.identifier;
-         var pending = appOptions.pending; 
 
          var url = './emptyVOResource.xml';
          if( identifier != 'undefined' && identifier != '' && identifier != undefined ) {
-              url = getResourceURL + identifier;
-              if( pending!= null && pending != '' && pending != undefined )
-                url = url + "&pending=true";
+              url = getResourceURL + '?identifier=' + identifier;
               newResource = false;
          }
 
@@ -125,7 +119,7 @@ Ext.define('PublishingWizard.DomReaderWizard', {
               else {
                   if( resourceDOM != null && emptyResourceDOM != null ) {
                       if (!appOptions.copy) {
-                        setTimeout('setupForms(app, resourceDOM, newResource, appOptions.copy, appOptions.pending);', 200);
+                        setTimeout('setupForms(app, resourceDOM, newResource, appOptions.copy);', 200);
                       }
                       if( newResource || appOptions.copy ) {
                           if( firstOrgRecord) 

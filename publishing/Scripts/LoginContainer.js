@@ -26,6 +26,7 @@ Ext.define('PublishingWizard.LoginContainer', {
         this.loginWindow = null;
         this.accountWindow = null;
         this.loginTimer = null;
+        this.helpWindow = null;
 
         // Get Buttons and wire up Event Handlers
         this.loginButton = this.getComponent('itemLoginButton');
@@ -33,6 +34,9 @@ Ext.define('PublishingWizard.LoginContainer', {
 
         this.accountButton = this.getComponent('itemAccountButton');
         this.accountButton.on('click', this.onAccountButtonClick, this);
+
+        this.helpButton = this.getComponent('itemHelpButton');
+        this.helpButton.on('click', this.onHelpButtonClick, this);
 
         // Perform initial request to see if we are logged in
         this.updateContainer(false, false, "...");
@@ -42,8 +46,10 @@ Ext.define('PublishingWizard.LoginContainer', {
 
     statics: {
         whoamiUrl: "../publishing/WhoAmI.asmx/whoami",
+        authinfoUrl: "../publishing/WhoAmI.asmx/getauthinfo",
         loginUrl: "../Login/login.html",
         accountUrl: "http://archive.stsci.edu/registration",
+        helpUrl: "../publishing/help.html",
         loginTimeoutMins: 2,
         login: false,
         loginFirstName: null,
@@ -144,6 +150,7 @@ Ext.define('PublishingWizard.LoginContainer', {
         var el = document.getElementById('loginDiv');
         if (!el) {
             alert("No login window");
+            PublishingWizard.LoginContainer.createDelayedContainer('loginDiv');
         }
 
         // Update User Login State, Login Button, Container Title Bar, and tooltip
@@ -295,5 +302,13 @@ Ext.define('PublishingWizard.LoginContainer', {
     //////////////////////////
     onAccountButtonClick: function (e) {
         this.accountWindow = this.openWindow(this.accountWindow, PublishingWizard.LoginContainer.accountUrl);
+    },
+
+    //////////////////////////
+    // onHelpButtonClick()
+    //////////////////////////
+    onHelpButtonClick: function (e) {
+        if( !this.helpWindow)
+            this.helpWindow = this.openWindow(this.helpWindow, PublishingWizard.LoginContainer.helpUrl);
     }
 });

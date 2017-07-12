@@ -1,1 +1,0 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="UploadXMLResource.aspx.cs" Inherits="Publishing.UploadXMLResource" %>

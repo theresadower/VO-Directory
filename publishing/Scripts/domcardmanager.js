@@ -1,4 +1,3 @@
-
 var formPages = [];
 var currentPageIndex = null;
 var errorsLoading = [];
@@ -10,7 +9,6 @@ Ext.define('tagDesc', {
             { type: 'string', name: 'description' }
         ]
 });
-
 
 var resourceTypes = [
         //real type: 'vs:CatalogService'
@@ -176,7 +174,7 @@ var storeAuthorityInfo = Ext.create('Ext.data.Store', {
     fields: ['title', 'identifier'],
     proxy: {
         type: 'ajax',
-        url: 'GetResourceInfo.aspx?action=myauthoritylist',
+        url: '../publishing/GetResourceInfo.asmx/GetMyAuthoritiesList',
         reader: {
             type: 'json',
             root: 'AuthorityInfo'
@@ -197,7 +195,7 @@ var storePublisherInfo = Ext.create('Ext.data.Store', {
     fields: ['title', 'identifier'],
     proxy: {
         type: 'ajax',
-        url: 'GetResourceInfo.aspx?action=publisherlist',
+        url: '../publishing/GetResourceInfo.asmx/GetPublisherList',
         reader: {
             type: 'json',
             root: 'PublisherInfo'
@@ -220,7 +218,7 @@ var storeResourceInfo = Ext.create('Ext.data.Store', {
     fields: ['title', 'shortName', 'identifier', 'status', 'updated', 'type'],
     proxy: {
         type: 'ajax',
-        url: 'GetResourceInfo.aspx?action=myList',
+        url: '../publishing/GetResourceInfo.asmx/GetMyResourcesList',
         reader: {
             type: 'json',
             root: 'ResourceInfo'
@@ -528,9 +526,9 @@ function submitDraftResource(isCopy, pending) {
     
     var formPanel = Ext.getCmp('formPanel');
 
-    var url = formPanel.url + "?saveAsDraft=true";
+    var url = formPanel.url + "?saveAsDraft";
     if( !isCopy && pending != undefined && pending != 'undefined')
-        url = url + "&pending=true";
+        url = url + "&pending";
 
     formPanel.getForm().submit({
         clientValidation: true,
@@ -541,7 +539,7 @@ function submitDraftResource(isCopy, pending) {
         success: function () {
             Ext.Msg.alert('Status', 'Draft Resource Publication Successful! Reopen draft in form editor to publish it.', function (btn, text) {
                 if (btn == 'ok') {
-                    var redirect = 'resourcemanagement.html?debug';
+                    var redirect = 'resourcemanagement.html';
                     window.location = redirect;
                 }
             });
@@ -576,7 +574,7 @@ function submitResource(isCopy, pending) {
         success: function () {
             Ext.Msg.alert('Status', 'Resource Publication Successful!', function (btn, text) {
                 if (btn == 'ok') {
-                    var redirect = 'resourcemanagement.html?debug';
+                    var redirect = 'resourcemanagement.html';
                     window.location = redirect;
                 }
             });
@@ -599,11 +597,6 @@ function submitResource(isCopy, pending) {
 function showWaitMsg() {
     Ext.MessageBox.show({
         msg: 'Loading resources, please wait...',
-        //progressText: 'Saving...',
-        //width: 300,
-        //wait: true,
-        //waitConfig: { interval: 200 },
-        //icon: 'my-progress-class', 
     });
 };
 

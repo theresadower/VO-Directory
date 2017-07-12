@@ -58,15 +58,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.aspx" />
-    <Content Include="domreaderwizard.html" />
+    <Content Include="FormEditResource.html" />
     <Content Include="EmptyVOResource.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="GetResourceInfo.aspx" />
+    <Content Include="GetResourceInfo.asmx" />
     <Content Include="Global.asax" />
     <Content Include="help.html" />
-    <Content Include="login.html" />
-    <Content Include="ResourceManagement.aspx" />
+    <Content Include="IngestResource.asmx" />
+    <Content Include="Intro.html" />
     <Content Include="resourcemanagement.html" />
     <Content Include="resourcewizard.html" />
     <Content Include="Scripts\cardmanager.js" />
@@ -81,7 +81,6 @@
     <Content Include="Scripts\namespace.js" />
     <Content Include="Scripts\RequestHandler.js" />
     <Content Include="Scripts\ResourceManagement.js" />
-    <Content Include="IngestResource.aspx" />
     <Content Include="Scripts\ui\LoginContainer.js" />
     <Content Include="Scripts\Viewport.js" />
     <Content Include="Scripts\wizard.js" />
@@ -90,8 +89,6 @@
     <Content Include="Scripts\xmlexport.js" />
     <Content Include="Scripts\xmlform.js" />
     <Content Include="Scripts\xmlimport.js" />
-    <Content Include="UploadXMLResource.aspx" />
-    <Content Include="VAOLogin.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -112,48 +109,24 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
-    <Compile Include="GetResourceInfo.aspx.cs">
-      <DependentUpon>GetResourceInfo.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="GetResourceInfo.aspx.designer.cs">
-      <DependentUpon>GetResourceInfo.aspx</DependentUpon>
+    <Compile Include="getResourceInfo.asmx.cs">
+      <DependentUpon>GetResourceInfo.asmx</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="IngestResource.asmx.cs">
+      <DependentUpon>IngestResource.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IngestResource.aspx.cs">
-      <DependentUpon>IngestResource.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="IngestResource.aspx.designer.cs">
-      <DependentUpon>IngestResource.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="ResourceManagement.aspx.cs">
-      <DependentUpon>ResourceManagement.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ResourceManagement.aspx.designer.cs">
-      <DependentUpon>ResourceManagement.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="UploadXMLResource.aspx.cs">
-      <DependentUpon>UploadXMLResource.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="UserManagement.cs" />
-    <Compile Include="VAOLogin.aspx.cs">
-      <DependentUpon>VAOLogin.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="VAOLogin.aspx.designer.cs">
-      <DependentUpon>VAOLogin.aspx</DependentUpon>
-    </Compile>
     <Compile Include="WhoAmI.asmx.cs">
       <DependentUpon>WhoAmI.asmx</DependentUpon>
       <SubType>Component</SubType>

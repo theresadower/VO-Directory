@@ -1,1 +1,0 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="GetResourceInfo.aspx.cs" Inherits="Publishing.GetResourceInfo" %>

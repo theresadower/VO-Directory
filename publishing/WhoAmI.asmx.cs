@@ -53,7 +53,6 @@ namespace Publishing
         }
 
         [WebMethod]
-
         //To match Portal whoami in mashup.asmx, without a heavier included JSON library.
         //{ "FirstName":"Anonymous","LastName":"","EZID":"anonymous","IsInternal":"defaultInt","Department":"defaultDept","Email":"","IP":"172.17.7.238"}
         public void whoami()

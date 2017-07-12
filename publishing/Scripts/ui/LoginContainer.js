@@ -14,7 +14,7 @@ Ext.define('PublishingWizard.ui.LoginContainer', {
     extend: 'Ext.container.ButtonGroup',
 
     frame: false,
-    minHeight: 70,
+    minHeight: 90,
     id: 'idLoginContainer',
     cls: 'itemLoginContainer',
     itemId: 'itemLoginContainer',
@@ -42,7 +42,7 @@ Ext.define('PublishingWizard.ui.LoginContainer', {
                     margin: 1,
                     focusOnToFront: false,
                     focusCls: ' ',
-                    text: 'Login...'
+                    text: 'Login'
                 },
                 {
                     xtype: 'button',
@@ -50,7 +50,15 @@ Ext.define('PublishingWizard.ui.LoginContainer', {
                     itemId: 'itemAccountButton',
                     margin: 1,
                     focusCls: ' ',
-                    text: 'Account Info...'
+                    text: 'Account Info'
+                },
+                {
+                    xtype: 'button',
+                    id: 'idHelpButton',
+                    itemId: 'itemHelpButton',
+                    margin: 1,
+                    focusCls: ' ',
+                    text: 'Help'
                 }
             ]
         });
