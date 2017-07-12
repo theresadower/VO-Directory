@@ -249,7 +249,6 @@ Ext.define('PublishingWizard.fileUpload', {
 
 Ext.define('PublishingWizard.ManagementLayout', {
     extend: 'Ext.panel.Panel',
-    //extend: 'Ext.Viewport',
 
     statics: {},
 

@@ -596,7 +596,7 @@ function submitResource(isCopy, pending) {
 
 function showWaitMsg() {
     Ext.MessageBox.show({
-        msg: 'Loading resources, please wait...',
+        msg: 'Loading, please wait...',
     });
 };
 

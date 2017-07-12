@@ -9,12 +9,9 @@
     <script type="text/javascript" src="scripts/namespace.js"></script>
     <script type="text/javascript" src="scripts/ui/LoginContainer.js"></script>
     <script type="text/javascript" src="scripts/LoginContainer.js"></script>
-    <script type="text/javascript" src="scripts/ui/managementContainer.js"></script>
-    <script type="text/javascript" src="scripts/managementContainer.js"></script>
 
     <script type="text/javascript">
         Ext.onReady(Ext.Function.createDelayed(function () { Ext.create('PublishingWizard.LoginContainer') }, 1000, this));
-        Ext.onReady(Ext.Function.createDelayed(function () { Ext.create('PublishingWizard.ManagementContainer') }, 1000, this));
     </script>
 </head>
 <body>
@@ -23,16 +20,13 @@
         <div align="right"></div>
 
         <div id="logo"><a href="http://vao.stsci.edu/directory" title="Directory Search" target="_blank"><img src="images/Directory50.png" alt="Directory Search" height="50" width="50" /></a></div>
-        <div id="nav-wrapper"><div id="loginDiv"></div></div>
+        <div id="nav-wrapper"><div id="loginDiv"></div></div><div id="IntroDiv"></div>
         <div class="clear"></div>
 
         <div id="content-area">
             <div id="helpcontent">
                 <h1>VO Registry Publishing Interface</h1><br />
                 <p>Welcome to the VO Registry Publishing Interface at MAST. You must be logged in to proceed.</p>
-                <p><br /></p>
-
-                <p><div id="managementDiv"></div></p>
                 <p><br /></p>
 
                 <P>

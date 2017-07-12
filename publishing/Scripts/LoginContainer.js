@@ -50,6 +50,7 @@ Ext.define('PublishingWizard.LoginContainer', {
         loginUrl: "../Login/login.html",
         accountUrl: "http://archive.stsci.edu/registration",
         helpUrl: "../publishing/help.html",
+        managementUrl: "../publishing/resourcemanagement.html",
         loginTimeoutMins: 2,
         login: false,
         loginFirstName: null,
@@ -150,7 +151,6 @@ Ext.define('PublishingWizard.LoginContainer', {
         var el = document.getElementById('loginDiv');
         if (!el) {
             alert("No login window");
-            PublishingWizard.LoginContainer.createDelayedContainer('loginDiv');
         }
 
         // Update User Login State, Login Button, Container Title Bar, and tooltip
@@ -167,12 +167,12 @@ Ext.define('PublishingWizard.LoginContainer', {
             this.tooltip = null;
         }
 
-        // Fire global event that login info changed.
-        //dower publishing todo: rename and catch event.
-        if (userchange) {
-            this.fireEvent('APP.context.userchange', {
-                type: 'APP.context.userchange'
-            });
+        // Fire global event that login info acquired
+        if (PublishingWizard.LoginContainer.login) {
+            //this.fireEvent('APP.context.userLoggedIn');
+            if (document.getElementById("IntroDiv") != null) {
+                window.open(PublishingWizard.LoginContainer.managementUrl, '_self');
+            }
         }
     },
 
