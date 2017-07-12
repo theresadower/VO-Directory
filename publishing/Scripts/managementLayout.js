@@ -407,7 +407,7 @@ Ext.define('PublishingWizard.ManagementLayout', {
                 text: 'Delete Selected Resource',
                 handler: function () {
                     var msg = 'Are you sure you want to delete ' + selectedItem[0].raw.identifier +
-                              ' ? Deleted resources will no longer show up in registry search results, and should not be republished later using the same identifier. If necessary, their data can be recovered by contacting the help desk at archive@stsci.edu.';
+                              ' ? Deleted resources will no longer show up in registry search results, and should not be republished later using the same identifier. If necessary, their data can be recovered by contacting the help desk at archive@stsci.edu. Updates may take up to 24h to show in MAST registry search results.';
                     if (selectedItem[0].raw.status && selectedItem[0].raw.status == "PENDING") {
                         msg = 'Are you sure you want to delete the pending resource ' + selectedItem[0].raw.identifier +
                               ' ? Deleted pending resources will no longer be accessible for editing. If necessary, their data can be recovered by contacting the help desk at archive@stsci.edu.';
@@ -424,7 +424,7 @@ Ext.define('PublishingWizard.ManagementLayout', {
                 text: 'Activate Selected Resource',
                 handler: function () {
                     Ext.MessageBox.confirm('Confirm', 'Are you sure you want to activate ' + selectedItem[0].raw.identifier +
-                                            ' ? Active resources will show up in registry search results.', function (btn) {
+                                            ' ? Active resources will show up in registry search results. Updates may take up to 24h to show in MAST registry search results.', function (btn) {
                                                 if (btn == 'yes') { manageResource('active', selectedItem[0]); }
                                             })
                 }
@@ -440,7 +440,7 @@ Ext.define('PublishingWizard.ManagementLayout', {
                 handler: function () {
                     Ext.MessageBox.confirm('Confirm', 'Are you sure you want to deactivate ' + selectedItem[0].raw.identifier +
                                             ' ? Deactivated resources will not show up in registry search results, but will not be deleted. ' +
-                                            'This is useful if your resource describes a service experiencing long-term downtime.', function (btn) {
+                                            'This is useful if your resource describes a service experiencing long-term downtime. Updates may take up to 24h to show in MAST registry search results.', function (btn) {
                                                 if (btn == 'yes') { manageResource('inactive', selectedItem[0]); }
                                             })
                 }

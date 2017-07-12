@@ -70,6 +70,7 @@
     <Content Include="resourcemanagement.html" />
     <Content Include="resourcewizard.html" />
     <Content Include="Scripts\cardmanager.js" />
+    <Content Include="Scripts\managementContainer.js" />
     <Content Include="Scripts\LoginContainer.js" />
     <Content Include="Scripts\domcardmanager.js" />
     <Content Include="Scripts\domreaderwizard.js" />
@@ -81,6 +82,7 @@
     <Content Include="Scripts\namespace.js" />
     <Content Include="Scripts\RequestHandler.js" />
     <Content Include="Scripts\ResourceManagement.js" />
+    <Content Include="Scripts\ui\managementContainer.js" />
     <Content Include="Scripts\ui\LoginContainer.js" />
     <Content Include="Scripts\Viewport.js" />
     <Content Include="Scripts\wizard.js" />
