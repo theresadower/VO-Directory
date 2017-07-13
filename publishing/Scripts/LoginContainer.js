@@ -50,6 +50,7 @@ Ext.define('PublishingWizard.LoginContainer', {
         loginUrl: "../Login/login.html",
         accountUrl: "http://archive.stsci.edu/registration",
         helpUrl: "../publishing/help.html",
+        introUrl: "../publishing/intro.html",
         managementUrl: "../publishing/resourcemanagement.html",
         loginTimeoutMins: 2,
         login: false,
@@ -167,11 +168,17 @@ Ext.define('PublishingWizard.LoginContainer', {
             this.tooltip = null;
         }
 
-        // Fire global event that login info acquired
+        //todo: handle this with fired / listened global events as per Portal.
+        //If we're logged in and on the intro page, proceed forward:
         if (PublishingWizard.LoginContainer.login) {
-            //this.fireEvent('APP.context.userLoggedIn');
             if (document.getElementById("IntroDiv") != null) {
                 window.open(PublishingWizard.LoginContainer.managementUrl, '_self');
+            }
+        }
+        //If no login, and we're not on help or intro pages, redirect to intro page
+        else {
+            if (document.getElementById("IntroDiv") == null && document.getElementById("HelpDiv") == null) {
+                window.open(PublishingWizard.LoginContainer.introUrl, '_self');
             }
         }
     },

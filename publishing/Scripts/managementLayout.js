@@ -246,7 +246,6 @@ Ext.define('PublishingWizard.fileUpload', {
     alias: 'widget.file'
 });
 
-
 Ext.define('PublishingWizard.ManagementLayout', {
     extend: 'Ext.panel.Panel',
 
@@ -309,75 +308,75 @@ Ext.define('PublishingWizard.ManagementLayout', {
                 }
                 ]
             },
+            {
+                xtype: 'grid',
+                store: storeResourceInfo,
+                title: 'My Resources',
+                id: 'resourcesGrid',
+                autoScroll: true,
+                minHeight: 200,
+                width: 980,
+                maxWidth: 980,
+                selModel: sm,
+                margin: 10,
+                layout: 'fit',
+                forceFit: true,
+                columns: [
                     {
-                        xtype: 'grid',
-                        store: storeResourceInfo,
-                        title: 'My Resources',
-                        id: 'resourcesGrid',
-                        autoScroll: true,
-                        minHeight: 200,
-                        width: 980,
-                        maxWidth: 980,
-                        selModel: sm,
-                        margin: 10,
-                        layout: 'fit',
-                        forceFit: true,
-                        columns: [
-                            {
-                                text: 'Title',
-                                width: 300,
-                                hideable: false,
-                                dataIndex: 'title'
-                            },
-                            {
-                                text: 'Short Name',
-                                dataIndex: 'shortName',
-                                hideable: false
-                            },
-                            {
-                                text: 'Identifier',
-                                width: 175,
-                                dataIndex: 'identifier',
-                                hideable: false
-                            },
-                            {
-                                text: 'Last Updated (UTC)',
-                                width: 130,
-                                dataIndex: 'updated',
-                                hideable: false
-                            },
-                            {
-                                text: 'Status',
-                                width: 75,
-                                dataIndex: 'status',
-                                hideable: false
-                            },
-                            {
-                                text: 'Service Type(s)',
-                                dataIndex: 'type',
-                                hideable: false
-                            },
-                            {
-                                text: 'Pending File',
-                                dataIndex: 'file',
-                                hideable: true,
-                                hidden: true
-                            },
-                            {
-                                width: 80,
-                                maxWidth: 80,
-                                text: 'Preview',
-                                dataIndex: 'identifier',
-                                sortable: false,
-                                renderer: function (val, meta, record) {
-                                    if (record.get('status') == 'PENDING')
-                                        return '';
-                                    else
-                                        return '<a href="' + baseDirectoryURL + 'getRecord.aspx?id=' + val + '" target="_blank">' + 'Preview' + '</a>';
-
-                                }
-                            }]
+                        text: 'Title',
+                        width: 300,
+                        hideable: false,
+                        dataIndex: 'title'
                     },
+                    {
+                        text: 'Short Name',
+                        dataIndex: 'shortName',
+                        hideable: false
+                    },
+                    {
+                        text: 'Identifier',
+                        width: 175,
+                        dataIndex: 'identifier',
+                        hideable: false
+                    },
+                    {
+                        text: 'Last Updated (UTC)',
+                        width: 130,
+                        dataIndex: 'updated',
+                        hideable: false
+                    },
+                    {
+                        text: 'Status',
+                        width: 75,
+                        dataIndex: 'status',
+                        hideable: false
+                    },
+                    {
+                        text: 'Service Type(s)',
+                        dataIndex: 'type',
+                        hideable: false
+                    },
+                    {
+                        text: 'Pending File',
+                        dataIndex: 'file',
+                        hideable: true,
+                        hidden: true
+                    },
+                    {
+                        width: 80,
+                        maxWidth: 80,
+                        text: 'Preview',
+                        dataIndex: 'identifier',
+                        sortable: false,
+                        renderer: function (val, meta, record) {
+                            if (record.get('status') == 'PENDING')
+                                return '';
+                            else
+                                return '<a href="' + baseDirectoryURL + 'getRecord.aspx?id=' + val + '" target="_blank">' + 'Preview' + '</a>';
+
+                        }
+                    }]
+            },
             {
                 xtype: 'button',
                 id: 'selectionButton',
