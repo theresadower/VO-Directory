@@ -161,8 +161,7 @@ redirectForCopy = function (identifier, status) {
 };
 
 reloadStore = function (grid) {
-    grid.store = store;
-    store.load();
+    grid.getStore().load();
     grid.getView().refresh();
 }
 
@@ -183,8 +182,8 @@ uploadResource = function (fb, f) {
             failure: function (form, action) {
                 var text = action.response.responseText;
                 var json = Ext.decode(action.response.responseText);
-                if (json && json.details != undefined) {
-                    Ext.Msg.alert('Error', 'Failed to upload and process your XML resource file: ' + json.details, function (btn, text) {
+                if (json && json.errors != undefined) {
+                    Ext.Msg.alert('Error', 'Failed to upload and process your XML resource file: ' + json.errors.reason, function (btn, text) {
                     });
                 }
                 else {

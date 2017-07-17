@@ -199,12 +199,12 @@ namespace Publishing
         {
             Context.Response.ClearHeaders();
             Context.Response.ClearContent();
-            Context.Response.ContentType = "text/javascript";
-            //html/text and  around the json works around the form upload, but then the results come up as a file to download?
-
+            Context.Response.ContentType = "text/html"; 
+      
+            string response = string.Empty;
             if (!isLoggedIn())
             {
-                Context.Response.Write(JSONFailure("Not Logged In"));
+                response = JSONFailure("Not Logged In");
             }
             else
             {
@@ -212,7 +212,7 @@ namespace Publishing
                 long userKey = UserManagement.GetUserKey(Whoami.EZID);
                 string[] errors = userManagement.GetUserAuths(userKey, ref userAuths);
                 if (errors.Length > 0)
-                    Context.Response.Write(JSONFailure(errors));
+                    response = JSONFailure(errors);
                 else
                 {
                     try
@@ -220,7 +220,7 @@ namespace Publishing
                         HttpFileCollection uploadedFiles = Context.Request.Files;
                         if (uploadedFiles.Count == 0)
                         {
-                            Context.Response.Write(JSONFailure("No XML Resource uploaded."));
+                            response = JSONFailure("No XML Resource uploaded.");
                         }
                         else
                         {
@@ -239,7 +239,7 @@ namespace Publishing
                                         string ivoid = FindIdentifier(strResource);
                                         if (ivoid == string.Empty)
                                         {
-                                            Context.Response.Write(JSONFailure("File does not contain a valid identifier record."));
+                                            response = JSONFailure("File does not contain a valid identifier record.");
                                         }
                                         else
                                         {
@@ -249,36 +249,38 @@ namespace Publishing
                                                 doc.LoadXml(strResource);
                                                 validationStatus status = ResourceManagement.IngestXmlResource(doc, true, ivoid, userKey);
                                                 if (status.IsValid)
-                                                    Context.Response.Write(JSONSuccess());
+                                                    response = JSONSuccess();
                                                 else
-                                                    Context.Response.Write(JSONFailure(status.GetErrors()));
+                                                    response = JSONFailure(status.GetErrors());
                                             }
                                             catch (Exception ex)
                                             {
-                                                Context.Response.Write(JSONFailure(ex.Message));
+                                                response = JSONFailure(ex.Message);
                                             }
                                         }
                                     }
                                     else
-                                        Context.Response.Write(JSONFailure("File is empty or did not upload."));
+                                        response = JSONFailure("File is empty or did not upload.");
                                 }
                                 catch (System.ArgumentOutOfRangeException)
                                 {
-                                    Context.Response.Write(JSONFailure("File is not a valid XML Resource beginning with an ri:resource tag."));
+                                    response = JSONFailure("File is not a valid XML Resource beginning with an ri:resource tag.");
                                 }
                                 catch (Exception Ex)
                                 {
-                                    Context.Response.Write(JSONFailure("General failure reading file: " + Ex.Message));
+                                    response = JSONFailure("General failure reading file: " + Ex.Message);
                                 }
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                        Context.Response.Write(JSONFailure("Error uploading XML resource: " + Server.UrlEncode(ex.Message)));
+                        response = JSONFailure("Error uploading XML resource: " + Server.UrlEncode(ex.Message));
                     }
                 }
             }
+
+            Context.Response.Write(response);
             Context.Response.Flush();
         }
 
