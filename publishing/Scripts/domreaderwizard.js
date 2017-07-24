@@ -122,8 +122,6 @@ Ext.define('PublishingWizard.DomReaderWizard', {
                         setTimeout('setupForms(app, resourceDOM, newResource, appOptions.copy);', 200);
                       }
                       if( newResource || appOptions.copy ) {
-                          if( firstOrgRecord) 
-                                storeResourceTypes = Ext.create('Ext.data.Store', { model: 'tagDesc', data: orgResourceTypes });
                           showResourceTypeWindow(resourceDOM);
                       }
                   }

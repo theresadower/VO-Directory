@@ -175,12 +175,12 @@ Ext.define('PublishingWizard.LoginContainer', {
                 window.open(PublishingWizard.LoginContainer.managementUrl, '_self');
             }
         }
-        //If no login, and we're not on help or intro pages, redirect to intro page
-        else {
-            if (document.getElementById("IntroDiv") == null && document.getElementById("HelpDiv") == null) {
-                window.open(PublishingWizard.LoginContainer.introUrl, '_self');
-            }
-        }
+        ////If no login, and we're not on help or intro pages, redirect to intro page
+        //else {
+        //    if (document.getElementById("IntroDiv") == null && document.getElementById("HelpDiv") == null) {
+        //        window.open(PublishingWizard.LoginContainer.introUrl, '_self');
+        //    }
+        //}
     },
 
     ///////////////////////

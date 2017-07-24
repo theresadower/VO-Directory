@@ -279,19 +279,13 @@ function setupForms(app, resourceDOM, newResource, isCopy, pending) {
         Ext.getCmp('coverageFieldSet').show();
     }
 
-    if( firstOrgRecord) {
-        resourceDOM.firstChild.attributes["xsi:type"].textContent = "vg:Authority";
-        Ext.getCmp('identifierAuthority').emptyText= 'Identifier Authority. This cannot be changed later.';
-        Ext.getCmp('identifierAuthority').helpText = 'Identifier Authority (short form, prefix to all identifiers for this organisation). Cannot be changed later.';
-        Ext.getCmp('identifierSuffix').emptyText= 'Identifier Suffix for organisation (short form). Cannot be changed later.';
-    }
-    else if ( storeAuthorityInfo.data.length < 2 ){
+    if (storeAuthorityInfo.data.length < 2){
         Ext.getCmp('identifierAuthority').helpText= 'Identifier Authority. If a user is only associated with one organisation, that value is required.';
         Ext.getCmp('identifierAuthority').disable();  
         Ext.getCmp('identifierAuthority').setValue(storeAuthorityInfo.data.items[0].raw['identifier']);
     }
 
-    if(!firstOrgRecord && resourceDOM.firstChild.attributes["xsi:type"].textContent != "vg:Authority") {
+    if (resourceDOM.firstChild.attributes["xsi:type"].textContent != "vg:Authority") {
         Ext.getCmp('generalFieldSet').remove(Ext.getCmp('managingOrg'));
         Ext.getCmp('generalFieldSet').doLayout();
     }
@@ -309,16 +303,10 @@ function setupForms(app, resourceDOM, newResource, isCopy, pending) {
 
     fillFormData(formPanel, resourceDOM, newResource, isCopy, pending);
 
-    if (firstOrgRecord == true)
-        Ext.getCmp('buttonSubmitDraftResource').disable();
-
-
     if (errorsLoading.length == 0) {
         Ext.getCmp('errorPanel').removeAll();
         Ext.getCmp('buttonSubmitResource').enable();
-
-        if((!firstOrgRecord) && newResource || isCopy || (pending != '' && pending != undefined && pending != 'undefined'))
-            Ext.getCmp('buttonSubmitDraftResource').enable();
+        Ext.getCmp('buttonSubmitDraftResource').enable();
 
         app.mainPanel.centerPanel.add(formPanel);
         Ext.getCmp('buttonNext').enable();
@@ -507,7 +495,6 @@ function switchPublisherType() {
     Ext.getCmp('curationFieldSet').doLayout();
 }
 
-
 function getXmlAsString(xmlDomObj) {
     return (typeof XMLSerializer !== "undefined") ?
       (new XMLSerializer()).serializeToString(xmlDomObj) :
@@ -517,6 +504,7 @@ function getXmlAsString(xmlDomObj) {
 function buildDOMString() {
     var paramList = {};
     var testString = getXmlAsString(resourceDOM);
+    Ext.log("Resource xml: " + testString);
     paramList['DOM'] = testString;
 
     return paramList;
@@ -549,7 +537,8 @@ function submitDraftResource(isCopy, pending) {
                 obj = Ext.decode(action.response.responseText);
                 Ext.Msg.alert('Resource Creation Failed!', obj.errors.reason);
             } else if (action.failureType == Ext.form.action.Action.CLIENT_INVALID) {
-                Ext.Msg.alert('Failure', 'Missing or invalid information from required field(s). All fields marked with an * are required. Some fields have maximum text lengths, or are required to be in valid URL or email address format.');
+                Ext.Msg.alert('Failure', 'Missing or invalid information from required field(s). All fields marked with an * are required.' +
+                    'Some fields have maximum text lengths, or are required to be in valid URL or email address format. Invalid fields are highlighted in red.');
             }
             else {
                 Ext.Msg.alert('Warning!', 'Publishing server is unreachable.');

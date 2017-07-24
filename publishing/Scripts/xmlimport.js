@@ -86,7 +86,7 @@ function fillFormData(formPanel, resourceDOM, newResource, isCopy, pending) {
         else //fix up missing required element
             createEmptyElement(resourceDOM.firstChild, 'mangingOrg', 'content');
     }
-    else if (!firstOrgRecord) {
+    else {
         var managingOrg = resourceDOM.getElementsByTagName('managingOrg')[0];
         if (managingOrg != undefined) {
             managingOrg.textContent = "";

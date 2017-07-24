@@ -11,11 +11,7 @@ function setResourceType(isClone) {
 
     resourceDOM.firstChild.attributes["xsi:type"].textContent = val;
 
-    if (firstOrgRecord == true)
-        Ext.getCmp('buttonSubmitDraftResource').disable();
-
     if (val == 'vs:CatalogService') {
-        Ext.getCmp('buttonSubmitDraftResource').disable();
         setResourceSubtype(isClone, selection);
     }
     else {
@@ -186,7 +182,7 @@ function setIdentifierAuthority(newVal, oldVal, resourceDOM) {
             identifierAuthority = newVal[0].data.identifier;
 
         if (!identifierAuthority.indexOf('ivo://') == 0) identifierAuthority = 'ivo://' + identifierAuthority;
-        if( firstOrgRecord == true || oldVal != undefined)
+        if (oldVal != undefined)
             resourceDOM.getElementsByTagName('identifier')[0].textContent =  identifierAuthority + identifierSuffix;
     }
 }
@@ -195,7 +191,7 @@ function setIdentifierSuffix(newVal, oldVal, resourceDOM) {
     if (oldVal != newVal && resourceDOM != null && newVal.length > 0) {
         identifierSuffix = newVal;
         if (!identifierSuffix.indexOf('/') == 0) identifierSuffix = '/' + identifierSuffix;
-        if( firstOrgRecord == true || oldVal != undefined )
+        if (oldVal != undefined )
             resourceDOM.getElementsByTagName('identifier')[0].textContent = identifierAuthority + identifierSuffix;
     }
 }
@@ -230,7 +226,6 @@ function setDOMAltPublisher(newVal, oldVal, resourceDOM) {
     }
     Ext.getCmp('altPublisherInfo').allowBlank = false;
     Ext.getCmp('publisherInfo').allowBlank = true;
-    //Ext.getCmp('enterAltPublisher').text = 'Select Existing Publisher from Drop Down';
 }
 
 function setDOMVersion(newVal, oldVal, resourceDOM) {

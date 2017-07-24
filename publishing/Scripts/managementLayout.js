@@ -41,56 +41,30 @@ getAuthInfo = function () {
             var json = Ext.decode(result.responseText);
             if (json && json.success == true) {
                 if (json.message != undefined && json.message.length > 0) {
-                    Ext.MessageBox.show({
-                        title: 'No Organisation Information',
-                        msg: 'No other resources can be created or edited until you have created an IVOA record for your organisation using your existing authority record. You may do so by selecting "Yes" below.',
-                        buttons: Ext.MessageBox.YESNO,
-                        closable: false,
-                        buttonText: {
-                            yes: 'Create New Organisation',
-                            no: 'Cancel'
-                        },
-                        fn: function (btn, text) {
-                            if (btn == 'no') {
-                                var redirect = 'intro.html';
-                                window.location = redirect;
-                            }
-                            else {
-                                var redirect = 'FormEditResource.html';
-                                window.location = redirect;
-                            }
-                        }
+                    Ext.Msg.alert('No Organisation Information',
+                        'No other resources can be created or edited until you have created an IVOA record for your organisation using your existing authority record. ' +
+                        'Please contact archive@stsci.edu for assistance in completing account setup.',
+                      function (btn, text) {
+                          if (btn == 'ok') {
+                              window.open(resourceManagementURL, '_self');
+                          }
                     });
                 }
-                else if (json.defaultauth == undefined || json.defaultauth.length == 0) {
-                    Ext.MessageBox.show({
-                        title: 'No User Authority Information',
-                        msg: 'No resources can be created or edited until an IVOA authority has been associated with this user account. ' +
-                    'If you are associated with an existing IVOA institution and would like to edit or create new records under their authority, please contact helpdesk@usvao.org for assistance in completing account setup. ' +
-                    'If you are a new user not belonging to an existing IVOA institution and would like to create your own IVOA records for your organisation and naming authority, you may do so by selecting "Yes" below. ' +
-                    'One form entry of your organisational data will generate two records, one for the organisation itself and a second representing the "naming authority", used for curational purposes within the IVOA system of registries.',
-                        buttons: Ext.MessageBox.YESNO,
-                        closable: false,
-                        buttonText: {
-                            yes: 'Create New Authority',
-                            no: 'Cancel'
-                        },
-                        fn: function (btn, text) {
-                            if (btn == 'no') {
-                                var redirect = 'intro.html';
-                                window.location = redirect;
-                            }
-                            else {
-                                var redirect = 'FormEditResource.html';
-                                window.location = redirect;
-                            }
-                        }
-                    });
-                }
-                else { //if (json.details.length > 0 && json.message.length == 0) {
+                else { //all is well
                     Ext.getCmp('newResourceButton').enable();
                     Ext.getCmp('fileFormButton').enable();
                 }
+            }
+            else if (json.defaultauth == undefined || json.defaultauth.length == 0) {
+                Ext.Msg.alert('No User Authority Information',
+                     'No resources can be created or edited until an IVOA authority has been associated with this user account. ' +
+                     'If you are associated with an existing IVOA institution and would like to edit or create new records under their authority, ' +
+                     'or are associated with an institution not yet involved with the IVOA, please contact archive@stsci.edu for assistance in completing account setup.',
+                      function (btn, text) {
+                        if (btn == 'ok') {
+                            window.open(resourceManagementURL, '_self');
+                        }
+                });
             }
         },
         failure: function (result, request) {
@@ -176,15 +150,14 @@ uploadResource = function (fb, f) {
             success: function (form, action) {
                 var text = action.response.responseText;
                 var json = Ext.decode(action.response.responseText);
-                Ext.Msg.alert('Success', json.details);
-                reloadStore(Ext.getCmp('resourcesGrid'));
+                Ext.Msg.alert('Success', json.details + 
+                    ' You may need to refresh this page to see changes.');
             },
             failure: function (form, action) {
                 var text = action.response.responseText;
                 var json = Ext.decode(action.response.responseText);
                 if (json && json.errors != undefined) {
-                    Ext.Msg.alert('Error', 'Failed to upload and process your XML resource file: ' + json.errors.reason, function (btn, text) {
-                    });
+                    Ext.Msg.alert('Error', 'Failed to upload and process your XML resource file: ' + json.errors.reason);
                 }
                 else {
                     Ext.Msg.alert('Error', 'Failed to upload and process your XML resource file.');

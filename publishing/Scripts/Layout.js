@@ -15,15 +15,12 @@ getAuthInfo = function () {
                 var json = Ext.decode(result.responseText);
                 if (json && json.success == true) {
                     defaultAuth = json.defaultauth;
-                    if(defaultAuth == undefined)
-                        firstOrgRecord = true;
                     app.getResourceXML(); //fills in resourceDOM object on success, clears on failure
                     gotAuthInfo = true;
                 }
             },
             failure: function (result, request) {
                 gotAuthInfo = true;
-                firstOrgRecord = true;
                 Ext.Msg.alert('Error', 'Timeout loading authorization information', function (btn, text) {
                        if (btn == 'ok') {
                            window.location = resourceManagementURL;
@@ -31,25 +28,6 @@ getAuthInfo = function () {
                 })
             }
         })
-    }
-};
-
-testURL = function (button) {
-    var textfieldname = button.name.substring(0, button.name.indexOf('button'));
-    var textfield = Ext.getCmp(textfieldname);
-    if( textfield != null && textfield != undefined) {
-        var urlvalue = textfield.value;
-
-        Ext.Ajax.request({
-        url: urlvalue,
-        method: 'GET',
-        success: function (result, request) {
-            Ext.Msg.Alert('Success', 'Test URL responded successfully.');
-        },
-        failure: function (result, request) {
-            Ext.Msg.alert('Error', 'Error loading test URL ' + request.url + ': ' + result.responseText);
-        }
-    })
     }
 };
 
@@ -79,14 +57,12 @@ Ext.apply(Ext.form.field.VTypes, {
 
 Ext.define('PublishingWizard.Layout', {
     extend: 'Ext.panel.Panel',
-    //extend: 'Ext.Viewport',
 
     statics: {},
 
     constructor: function (config) {
         var me = this;
-
-        // Apply mandatory config items.       
+     
         Ext.apply(config, {
             border: 0,
             layout: 'fit',
@@ -96,7 +72,6 @@ Ext.define('PublishingWizard.Layout', {
             defaults: {
                 autoScroll: 'true',
                 autoHeight: 'true',
-                //layout: 'fit'
             },
             items: [
             {
@@ -111,7 +86,6 @@ Ext.define('PublishingWizard.Layout', {
                     msgTarget: 'side'
                 },
 
-                // configure how to read the XML data
                 reader: Ext.create('Ext.data.reader.Xml', {
                     model: 'PublishingWizard.Resource',
                     record: 'ri:Resource',
@@ -247,12 +221,14 @@ Ext.define('PublishingWizard.Layout', {
                         hidden: true,
                         listeners: { 'change': function (field, newVal, oldVal) { setDOMAltPublisher(newVal, oldVal, resourceDOM); } }
                     },
-                    {
+                    { //re-enable if a user needs to create a publisher record.
+                      //Without that rare need it's more trouble than it's worth.
                         name: 'publisherTypeButton',
                         id: 'publisherTypeButton',
                         xtype: 'button',
                         text: 'Enter New Publisher as Text',
                         width: 150,
+                        hidden: true,
                         handler: function () { switchPublisherType(); }
                     },
                     {
@@ -505,32 +481,15 @@ Ext.define('PublishingWizard.Layout', {
                        defaults: { },
                        items: [
                        {
-//                        xtype: 'fieldcontainer',
-//                        layout: 'hbox',
-//                        id: 'referenceURLcontainer',
-//                        items: [
-//                            {
-                                id: 'referenceURL',
-                                helpText: 'A URL pointing to additional human-readable information about the resource.',
-                                fieldLabel: '* Reference URL',
-                                emptyText: 'URL for more information',
-                                name: 'referenceURL',
-                                vtype: 'url',
-                                xtype: 'textfield',
-                                allowBlank: false,
-                                //width: 620,
-                                //labelWidth: 120,
-                                listeners: { 'change': function (field, newVal, oldVal) { setDOMUniqueTag(newVal, oldVal, resourceDOM, 'referenceURL'); } }
-//                            }
-//                            ,{width: 10, heigth: 0, border: 0, autoEl: { tag: 'div' } }
-//                            ,{
-//                               name: 'referenceURLbutton',
-//                                xtype: 'button',
-//                                text: 'Test URL',
-//                                width: 100,
-//                                handler: function () { testURL(this); }
-//                            } 
-//                            ]
+                            id: 'referenceURL',
+                            helpText: 'A URL pointing to additional human-readable information about the resource.',
+                            fieldLabel: '* Reference URL',
+                            emptyText: 'URL for more information',
+                            name: 'referenceURL',
+                            vtype: 'url',
+                            xtype: 'textfield',
+                            allowBlank: false,
+                            listeners: { 'change': function (field, newVal, oldVal) { setDOMUniqueTag(newVal, oldVal, resourceDOM, 'referenceURL'); } }
                         },
                         {
                             xtype: 'fieldset',
@@ -714,9 +673,10 @@ Ext.define('PublishingWizard.Layout', {
                                                 'the absence of suitable terms (the IAU Thesaurus is not complete in all areas of astronomical research) the following alternate collections of astronomical research terms may ' +
                                                 'be used: Vizier keywords (CDS):  http://vizier.u-strasbg.fr/doc/ADCkwds.htx ' +
                                                 'Astronomy journal keywords:  http://www.aanda.org/index2.php?option=com_content&task=view&id=170&Itemid=184',
-                                    fieldLabel: 'Subject',
+                                    fieldLabel: '* Subject',
                                     emptyText: 'Freetext subject of this resource',
                                     xtype: 'textfield',
+                                    allowBlank: false,
                                     listeners: { 'change': function (field, newVal, oldVal) { setDOMArrayValue(field, newVal, oldVal, resourceDOM.getElementsByTagName('content')[0]); } }
                                 },
                                 {
@@ -1703,7 +1663,6 @@ Ext.define('PublishingWizard.Layout', {
             }] //centerpanel items
         }); //viewport
 
-        // Apply defaults for config.       
         Ext.applyIf(config, {
             width: 1100,
             autoScroll: true
@@ -1712,6 +1671,5 @@ Ext.define('PublishingWizard.Layout', {
         this.callParent([config]);
 
         this.centerPanel = Ext.getCmp('centerViewport');
-        //checkLoginInfo();
     }
 });

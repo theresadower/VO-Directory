@@ -249,7 +249,7 @@ namespace Publishing
                                                 doc.LoadXml(strResource);
                                                 validationStatus status = ResourceManagement.IngestXmlResource(doc, true, ivoid, userKey);
                                                 if (status.IsValid)
-                                                    response = JSONSuccess();
+                                                    response = JSONSuccess("Resource " + ivoid + " uploaded.");
                                                 else
                                                     response = JSONFailure(status.GetErrors());
                                             }
@@ -487,33 +487,33 @@ namespace Publishing
         }
 
         private void WritePendingResource(long userKey, string DOM)
-                {
-                    XmlDocument doc = new XmlDocument();
-                    doc.LoadXml(DOM);
-                    string id = doc.GetElementsByTagName("identifier")[0].InnerText;
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(DOM);
+            string id = doc.GetElementsByTagName("identifier")[0].InnerText;
 
-                    const int maxntext = 1073741823; //2^30-1 is max.
-                    SqlConnection conn = new SqlConnection(sConnect);
-                    conn.Open();
-                    try
-                    {
-                        SqlCommand ins = conn.CreateCommand();
+            const int maxntext = 1073741823; //2^30-1 is max.
+            SqlConnection conn = new SqlConnection(sConnect);
+            conn.Open();
+            try
+            {
+                SqlCommand ins = conn.CreateCommand();
 
-                        ins.CommandText = "update [PendingResources] set rstat=2 where rstat = 1 and ivoid = '" + id + "' and ukey = " + userKey + ";";
-                        ins.ExecuteNonQuery();
+                ins.CommandText = "update [PendingResources] set rstat=2 where rstat = 1 and ivoid = '" + id + "' and ukey = " + userKey + ";";
+                ins.ExecuteNonQuery();
 
-                        ins = conn.CreateCommand();
-                        ins.CommandText = "insert into [PendingResources](ukey, rstat, ivoid, xml) values(" + userKey + ",1,'" + id + "',@xml);";
-                        ins.Parameters.Add("@xml", SqlDbType.NText, maxntext);
-                        ins.Parameters[0].Value = DOM;
-                        ins.Prepare();
-                        ins.ExecuteNonQuery();
-                    }
-                    finally
-                    {
-                        conn.Close();
-                    }
-                }
+                ins = conn.CreateCommand();
+                ins.CommandText = "insert into [PendingResources](ukey, rstat, ivoid, xml) values(" + userKey + ",1,'" + id + "',@xml);";
+                ins.Parameters.Add("@xml", SqlDbType.NText, maxntext);
+                ins.Parameters[0].Value = DOM;
+                ins.Prepare();
+                ins.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
 
         private void DeprecatePendingResource(long userKey, string DOM)
         {
@@ -536,10 +536,6 @@ namespace Publishing
                 conn.Close();
             }
         }
-
-        //Note there is an issue with file upload responses on some browsers wrapping this response in <pre> tags 
-        //if something else isn't provided. This will break the JSON decoding of file upload response.
-        //This is part of a workaround from Sencha.
 
         private string JSONSuccess()
         {
