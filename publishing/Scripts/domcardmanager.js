@@ -523,7 +523,7 @@ function submitDraftResource(isCopy, pending) {
         url: url,
         submitEmptyText: false,
         method: 'POST',
-        params: buildDOMString(),           //send the entire resourceDOM.
+        params: buildDOMString(),   //send the entire resourceDOM.
         success: function () {
             Ext.Msg.alert('Status', 'Draft Resource Publication Successful! Reopen draft in form editor to publish it.', function (btn, text) {
                 if (btn == 'ok') {
@@ -573,7 +573,8 @@ function submitResource(isCopy, pending) {
                 obj = Ext.decode(action.response.responseText);
                 Ext.Msg.alert('Resource Creation Failed!', obj.errors.reason);
             } else if (action.failureType == Ext.form.action.Action.CLIENT_INVALID) {
-                Ext.Msg.alert('Failure', 'Missing or invalid information from required field(s). All fields marked with an * are required. Some fields have maximum text lengths, or are required to be in valid URL or email address format.');
+                Ext.Msg.alert('Failure', 'Missing or invalid information from required field(s). All fields marked with an * are required.' +
+                    'Some fields have maximum text lengths, or are required to be in valid URL or email address format. Invalid fields are highlighted in red.');
             }
             else {
                 Ext.Msg.alert('Warning!', 'Publishing server is unreachable.');
