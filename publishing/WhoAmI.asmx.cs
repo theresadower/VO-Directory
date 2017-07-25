@@ -93,27 +93,21 @@ namespace Publishing
             string response = string.Empty;
             if (Whoami.EZID != null && Whoami.EZID != "anonymous")
             {
-
                 string[] userAuthData = FetchUserAuthData(Whoami.EZID);
-                if (userAuthData != null) 
+                if (userAuthData != null && userAuthData.Length > 0)
                 {
-                    if (userAuthData.Length > 0)
+                    string defaultAuth = userAuthData[0];
+                    if (defaultAuth.Length > 0)
                     {
-                        string defaultAuth = userAuthData[0];
-                        if (defaultAuth.Length > 0)
-                        {
-                            bool bHasOrg = userManager.CheckAuthForOrg(defaultAuth);
-                            if (bHasOrg)
-                                response = JSONSuccess(defaultAuth, null, null);
+                        bool bHasOrg = userManager.CheckAuthForOrg(defaultAuth);
+                        if (bHasOrg)
+                            response = JSONSuccess(defaultAuth, null, null);
 
-                            else
-                                response = JSONSuccess(defaultAuth, defaultAuth, "Organisation record required.");
-                        }
                         else
-                            response = JSONFailure(new string[] { "Invalid default authority resource for user " + Whoami.EZID });
+                            response = JSONSuccess(defaultAuth, defaultAuth, "Organisation record required.");
                     }
                     else
-                        response = JSONSuccess();
+                        response = JSONFailure(new string[] { "Invalid default authority resource for user " + Whoami.EZID });
                 }
                 else
                     response = JSONFailure(new string[] { "No publishing authorization data for user " + Whoami.EZID });
