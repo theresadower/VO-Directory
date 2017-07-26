@@ -44,8 +44,6 @@ namespace nvo.oai
         private static ArrayList requiredArgs = new ArrayList();
         private static ArrayList optArgs = new ArrayList();
 
-        //private static Hashtable resumptionTokens = new Hashtable();
-
 		private void Page_Load(object sender, System.EventArgs e)
         {
             #region Load Parameter Checking Information (once)
@@ -79,9 +77,8 @@ namespace nvo.oai
 
                     optArgs.AddRange(new String[verbs.Count]);
 
-                    //Theoretically we should handle resumptionTokens on ListSets if we have many sets.
-                    //However, with only one set in the DB, there is no reason that we should
-                    //hand out a resumptionToken for ListSets. Therefore, any resumptionToken
+                    //The standard requires handling resumptionTokens on ListSets if we have many sets.
+                    //We have a very small number of sets so any resumptionToken
                     //passed into ListSets must be invalid.
 
                     optArgs[(int)Verbs.ListIdentifiers] = new ArrayList();
@@ -143,7 +140,7 @@ namespace nvo.oai
                     sb.Append("=");
                     try
                     {
-                        //There is at least one special character in identifiers that .Net thinks mean s
+                        //There is at least one special character in identifiers that .Net thinks means
                         //something else in request parameters.
                         if( thisParam == "identifier" )
                         {
@@ -172,9 +169,6 @@ namespace nvo.oai
             #endregion
 		}
 
-		// Checking required OAI input parameters exist
-        // tdower - changed so that parameters don't need to be in any order and
-        //          we will get better error responses for some verbs on malformed query.
 		bool checkRequired(String value, System.Collections.Specialized.NameValueCollection collection)
 		{
             foreach (String param in collection.AllKeys)
@@ -391,42 +385,7 @@ namespace nvo.oai
 
             return ResumptionInformationUtil.getResumptionInformation(value, removeToken);
         }
-        /*
-        public static resumptionTokenType RetrieveValidResumptionToken(String value)
-        {
 
-            resumptionTokenType token = (resumptionTokenType)resumptionTokens[value];
-
-            //check date validity, etc.
-            if (token != null)
-            {
-                if (token.expirationDateSpecified == true && token.expirationDate < DateTime.Now.ToUniversalTime())
-                {
-                    resumptionTokens.Remove(token.Value); //token "value" is the string we're using as a key.
-                    token = null;
-                }
-            }
-            return token;
-        }
-        */
-        /*
-        public static void SaveResumptionToken( resumptionTokenType token )
-        {
-            //Todo -- eventually we ought to have a cleanup thread for this and temp files.
-            //For now, delete old ones when creating new one since it's a rarely occuring and relevant time
-            //to afford the slowdown.
-            foreach (DictionaryEntry myEntry in resumptionTokens)
-            {
-                if (((resumptionTokenType)myEntry.Value).expirationDateSpecified &&
-                    ((resumptionTokenType)myEntry.Value).expirationDate > DateTime.Now.ToUniversalTime())
-                {
-                    resumptionTokens.Remove(myEntry);
-                }
-            }
-
-            resumptionTokens.Add(token.Value, token);
-        }
-        */
         //Appends empty params to query string before sending off to web service.
         //the web service will require all optional parameters because function
         //overloading for web services is non-compliant and unpleasant.
@@ -464,32 +423,39 @@ namespace nvo.oai
             } return bAddedParams;
         }
 
-		// This allows schemaLocation output to be handled for OAI
+        // This allows schema and namespace information not kept in individual resource records
+        // to be added to the OAI response for validation.
 		void filterXML(string partURL)
 		{
+            //creates local request
             string fullURL = Request.Url.GetLeftPart(System.UriPartial.Authority) + Request.ApplicationPath + "/" + partURL;
-
-            //fullURL = "http://" + System.Environment.MachineName + ".stsci.edu:8087" + Request.ApplicationPath + "/" + partURL;
-            //Uri relativeUri = new System.Uri(
-          //fullURL,
-          //System.UriKind.Relative);
 			HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(fullURL); 
-			// Sends the HttpWebRequest and waits for the response. 
 			HttpWebResponse resp = null;
 
 			try
 			{
 				resp = (HttpWebResponse)wr.GetResponse(); 
-				// Gets the stream associated with the response.
 				Stream receiveStream = resp.GetResponseStream();
 				Encoding encode = System.Text.Encoding.GetEncoding("utf-8");
 				StreamReader stream = new StreamReader( receiveStream, encode);
 				string line = null;
+
+                //Read the stream and correct namespace issues on ouput.
+                //This should be done lower on the stack.
+                bool doneNamespaces = false;
 				while ((line = stream.ReadLine())!=null) 
 				{
-					line = line.Replace(" schemaLocation", " xsi:schemaLocation");
-                    //line = line.Replace("http://www.ivoa.net/xml/SkyNode/v0.2", "http://www.ivoa.net/xml/OpenSkyNode/OpenSkyNode-v0.2.xsd");
-					Response.Output.WriteLine(line);
+                    if (!doneNamespaces)
+                    {
+                        int iSchema = line.IndexOf("schemaLocation");
+                        if (iSchema >= 0)
+                        {
+                            int iEnd = line.IndexOf(">", iSchema);
+                            line = line.Remove(iSchema, iEnd - iSchema).Insert(iSchema, BuildSchemaLocation());
+                            doneNamespaces = true;
+                        }
+                    }
+                    Response.Output.WriteLine(line);
 				}
 			}
 			catch (Exception ex)
@@ -498,6 +464,39 @@ namespace nvo.oai
 			}
 
 		}
+
+        private static string BuildSchemaLocation()
+        {
+            string line = 
+                "xmlns = \"http://www.openarchives.org/OAI/2.0/\"\n" +              
+                "xmlns:cs =\"http://www.ivoa.net/xml/ConeSearch/v1.0\"\n" +
+                "xmlns:vg = \"http://www.ivoa.net/xml/VORegistry/v1.0\"\n" +
+                "xmlns:ri=\"http://www.ivoa.net/xml/RegistryInterface/v1.0\"\n" +
+                "xmlns:vs=\"http://www.ivoa.net/xml/VODataService/v1.0\"\n" +
+                "xmlns:sn = \"http://www.ivoa.net/xml/OpenSkyNode/v0.2\"\n" +
+                "xmlns:ssa = \"http://www.ivoa.net/xml/SSA/v1.1\"\n" +
+                "xmlns:sia = \"http://www.ivoa.net/xml/SIA/v1.0\"\n" +
+                "xmlns:slap = \"http://www.ivoa.net/xml/SLAP/v1.1\"\n" +
+                "xmlns:vd = \"http://www.ivoa.net/xml/StandardRegExt/v1.0\"\n" +
+                "xmlns:tap = \"http://www.ivoa.net/xml/TAPRegExt/v1.0\"\n" +
+                "xmlns:vr = \"http://www.ivoa.net/xml/VOResource/v1.0\"\n" +
+                "xsi:schemaLocation = \"" +
+                "http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd\n" +
+                "http://www.ivoa.net/xml/ConeSearch/v1.0 http://www.ivoa.net/xml/ConeSearch/ConeSearch-v1.0.xsd\n" +
+                "http://www.ivoa.net/xml/VORegistry/v1.0 http://www.ivoa.net/xml/VORegistry/VORegistry-v1.0.xsd\n" +
+                "http://www.ivoa.net/xml/RegistryInterface/v1.0 http://www.ivoa.net/xml/RegistryInterface/RegistryInterface-v1.0.xsd\n" +
+                "http://www.ivoa.net/xml/VODataService/v1.0 http://www.ivoa.net/xml/VODataService/v1.0\n" +
+                "http://www.ivoa.net/xml/OpenSkyNode/v0.2 http://www.ivoa.net/xml/OpenSkyNode/OpenSkyNode-v0.2.xsd\n" +
+                "http://www.ivoa.net/xml/SSA/v1.1 http://www.ivoa.net/xml/SSA/SSA-v1.1.xsd\n" +
+                "http://www.ivoa.net/xml/SIA/v1.0 http://www.ivoa.net/xml/SIA/SIA-v1.0.xsd\n" +
+                "http://www.ivoa.net/xml/SLAP/v1.0 http://www.ivoa.net/xml/SLAP/SLAP-v1.1.xsd\n" +
+                "http://www.ivoa.net/xml/StandardRegExt/v1.0 http://www.ivoa.net/xml/StandardsRegExt/StandardsRegExt-1.0.xsd\n" +
+                "http://www.ivoa.net/xml/TAPRegExt/v1.0 http://www.ivoa.net/xml/TAPRegExt/TAPRegExt-v1.0.xsd\n" +
+                "http://www.ivoa.net/xml/VOResource/v1.0 http://www.ivoa.net/xml/VOResource/VOResource-v1.0.xsd\"";
+
+            return line;
+
+        }
 
 		#region Web Form Designer generated code
 		override protected void OnInit(EventArgs e)

@@ -155,8 +155,7 @@ namespace registry
                     catch (Exception e) { sbOut.Append("Lookup table info error:" + e.Message + ":" + e.StackTrace); };
                 }
 
-                // (1) Load in the VOR DB Schema Table Fields
-
+                //Load in the VOR DB Schema Table Fields
                 try
                 {
                     // convert XML resource into db sql insert commands via XSL

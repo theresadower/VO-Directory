@@ -222,22 +222,14 @@ namespace registry
 
         public XmlElement GetElementFromXMLResource(ivoa.net.ri1_0.server.Resource vor)
         {
-            // ggreene- STILL WORKING ON THIS... need to find out how OAI to be packaged.
-            // Does this use the VOResources outer wrapper with Resources inside like the RI
-            // or just a set of Resources like before???
-            //
-            // tdower- looks like just a set of resources as before. trying that.
             XmlSerializer ser = new XmlSerializer(typeof(ivoa.net.ri1_0.server.Resource));
             StringBuilder sb = new StringBuilder();
             StringWriter sw = new StringWriter(sb);
 
-            //Resource res = new Resource();
-            //res.Resource = vor;
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
             ns.Add("", "http://www.ivoa.net/xml/RegistryInterface/v1.0");
 
             ser.Serialize(sw, vor, ns);
-            //			ser.Serialize(sw,vor,ns);
             sw.Close();
 
             XmlSerializer ser2 = new XmlSerializer(typeof(XmlElement));
