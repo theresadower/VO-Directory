@@ -41,8 +41,8 @@ getAuthInfo = function () {
             var json = Ext.decode(result.responseText);
             if (json && json.success == true) {
                 if (json.message != undefined && json.message.length > 0) {
-                    Ext.Msg.alert('No Organisation Information',
-                        'No other resources can be created or edited until you have created an IVOA record for your organisation using your existing authority record. ' +
+                    Ext.Msg.alert('No Organization Information',
+                        'No other resources can be created or edited until an IVOA record for your organization is created. ' +
                         'Please contact archive@stsci.edu for assistance in completing account setup.',
                       function (btn, text) {
                           if (btn == 'ok') {
