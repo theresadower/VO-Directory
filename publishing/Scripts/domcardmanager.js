@@ -324,10 +324,12 @@ function setupForms(app, resourceDOM, newResource, isCopy, pending) {
 
 var resourceWin;
 var clonedResourceType = null;
+var cloneOriginalID = null;
 function showResourceTypeWindow(resourceDOM) {
     var title = 'Choose a resource type. This will determine the required information for your resource.';
     if( appOptions.copy ) {
         clonedResourceType = getResourceType(resourceDOM);
+        cloneOriginalID = resourceDOM.getElementsByTagName('identifier')[0].textContent;
         title = 'Choose a type for your cloned resource. Current type is ' + clonedResourceType +'.';
     }
       
@@ -518,6 +520,15 @@ function submitDraftResource(isCopy, pending) {
     if( !isCopy && pending != undefined && pending != 'undefined')
         url = url + "&pending";
 
+    //ensure a cloned resource's ID has changed before trying to submit.
+    if (isCopy && cloneOriginalID != null) {
+        var cloneNewID = resourceDOM.getElementsByTagName('identifier')[0].textContent;
+        if (cloneOriginalID.toLowerCase() == cloneNewID.toLowerCase()) {
+            Ext.Msg.alert('Error!', 'Cloned resource must have a different identifier value than the original.');
+            return;
+        }
+    }
+
     formPanel.getForm().submit({
         clientValidation: true,
         url: url,
@@ -553,6 +564,15 @@ function submitResource(isCopy, pending) {
     var url = formPanel.url;
     if( !isCopy && pending != '' && pending != undefined && pending != 'undefined')
         url = url + "?pending=true";
+
+    //ensure a cloned resource's ID has changed before trying to submit.
+    if (isCopy && cloneOriginalID != null) {
+        var cloneNewID = resourceDOM.getElementsByTagName('identifier')[0].textContent;
+        if (cloneOriginalID.toLowerCase() == cloneNewID.toLowerCase()) {
+            Ext.Msg.alert('Error!', 'Cloned resource must have a different identifier value than the original.');
+            return;
+        }
+    }
 
     formPanel.getForm().submit({
         clientValidation: true,
