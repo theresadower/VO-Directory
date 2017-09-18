@@ -50,12 +50,12 @@ namespace Publishing
             {
                 if (id == "ivo://")
                 {
-                    return new validationStatus("Resource identifier must have additional information added after the base value for your archive.");
+                    return new validationStatus("IVOA Identifier suffix missing: resource identifier must have additional information added after the base value for your archive.");
                 }
                 else if (id.StartsWith(auth))
                 {
                     if (id == auth + '/')
-                        return new validationStatus("Resource identifier must have additional information added after the base value for your archive");
+                        return new validationStatus("IVOA Identifier suffix missing: resource identifier must have additional information added after the base value for your archive");
 
                     bFoundValidAuth = true;
                     break;
