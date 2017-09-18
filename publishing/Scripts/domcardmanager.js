@@ -16,7 +16,7 @@ var resourceTypes = [
         { 'tag': 'sia:SimpleImageAccess', 'description': 'Simple Image Access Catalog Service: A standard service for searching a catalog ' },
         { 'tag': 'ssa:SimpleSpectralAccess', 'description': 'Simple Spectral Access Catalog Service: A standard service for searching a catalog ' },
 
-        { 'tag': 'vs:DataService', 'description': 'Data Service: A web page or other non-standard data service. (SLAP and TAP services are not supported using form view at this time. Please use the "Upload XML Resource" feature.)' },
+        //{ 'tag': 'vs:DataService', 'description': 'Data Service: A web page or other non-standard data service. (SLAP and TAP services are not supported using form view at this time. Please use the "Upload XML Resource" feature.)' },
         //{ 'tag': 'vr:Organisation', 'description': 'Organisation: An organisation to be referenced by other resources' },
         //{ 'tag': 'vg:Authority', 'description': 'Naming Authority: An archive itself which will publish other resources' },
         { 'tag': 'vr:Resource', 'description': 'Generic Resource: This resource does not fit into any specified category' }
