@@ -157,7 +157,7 @@ href="http://www.usvao.org" class="nvolink" target="_top"></td>
           <tr>
              <!-- the local links -->
         <td class="navlink"><a href="keywordsearch.aspx">Search</a></td>
-        <td class="navlink"><a href="http://vao.stsci.edu/publishing">Publish</a></td>
+        <td class="navlink"><a href="https://vao.stsci.edu/vo-directory/publishing">Publish</a></td>
         <td class="navlink"><a href="riws.aspx">Developers</a></td>
         <td class="navlink"><a href="helpnew.aspx">Help</a></td>
            </tr>

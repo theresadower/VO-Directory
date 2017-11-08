@@ -72,7 +72,7 @@
           <tr>
              <!-- the local links -->
          <td class="navlink"><a href="keywordsearch.aspx">Search</a></td>
-        <td class="navlink"><a href="../publishing">Publish</a></td>
+        <td class="navlink"><a href="https://vao.stsci.edu/vo-directory/publishing">Publish</a></td>
         <td class="navlink"><a href="riws.aspx">Developers</a></td>
         <td class="navlink"><a href="helpnew.aspx">Help</a></td>
 <!--        <td class="helplink"><a href="http://www.us-vo.org/feedback/">Contact Us</a></td>-->

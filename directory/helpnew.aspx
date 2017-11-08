@@ -100,8 +100,8 @@ column of the results you wish to save. Resources on multiple pages of results c
 then save your selected results, use "Save Selected as CSV" or "Save Selected as VOTable". </li>
 
 <br /><br /><H3 class="Section1" id="register">Registering a Resource in the Directory </H3>
-You can <A href="http://vao.stci.edu/directory/publishing">publish</A> your resources locally to the VO registry at STScI (the underlying database) and your data 
-will be automatically circulated to the other VO  repositories and immediately available for searching via the Directory.<br /><br />
+You can <A href="https://vao.stsci.edu/vo-directory/publishing">publish</A> your resources locally to the VO registry at STScI and  
+it will be automatically circulated to the other VO  repositories and available for searching via the Directory.<br /><br />
 
 
 
