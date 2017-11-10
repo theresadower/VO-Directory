@@ -83,7 +83,7 @@ namespace registry
             odt.Items[3].Value = (string)dr["publisher"];
             odt.Items[ind++] = new elementType();
 
-            if (dr["subject"] == null)
+            if (dr["subject"] is System.DBNull)
                 odt.Items[4].Value = string.Empty;
             else
                 odt.Items[4].Value = (string)dr["subject"];

@@ -446,15 +446,8 @@ namespace nvo.oai
 				while ((line = stream.ReadLine())!=null) 
 				{
                     if (!doneNamespaces)
-                    {
-                        int iSchema = line.IndexOf("schemaLocation");
-                        if (iSchema >= 0)
-                        {
-                            int iEnd = line.IndexOf(">", iSchema);
-                            line = line.Remove(iSchema, iEnd - iSchema).Insert(iSchema, BuildSchemaLocation());
-                            doneNamespaces = true;
-                        }
-                    }
+                        line = line.Replace(" schemaLocation", " xsi:schemaLocation");
+                    //todo: improve BuildSchemaLocation, call only for queries that display full VOResources.
                     Response.Output.WriteLine(line);
 				}
 			}
@@ -462,41 +455,40 @@ namespace nvo.oai
 			{
 				Response.Output.WriteLine(" Failed "+fullURL+" " +ex.Message+" : "+ ex.StackTrace);
 			}
-
 		}
 
-        private static string BuildSchemaLocation()
-        {
-            string line = 
-                "xmlns = \"http://www.openarchives.org/OAI/2.0/\"\n" +              
-                "xmlns:cs =\"http://www.ivoa.net/xml/ConeSearch/v1.0\"\n" +
-                "xmlns:vg = \"http://www.ivoa.net/xml/VORegistry/v1.0\"\n" +
-                "xmlns:ri=\"http://www.ivoa.net/xml/RegistryInterface/v1.0\"\n" +
-                "xmlns:vs=\"http://www.ivoa.net/xml/VODataService/v1.0\"\n" +
-                "xmlns:sn = \"http://www.ivoa.net/xml/OpenSkyNode/v0.2\"\n" +
-                "xmlns:ssa = \"http://www.ivoa.net/xml/SSA/v1.1\"\n" +
-                "xmlns:sia = \"http://www.ivoa.net/xml/SIA/v1.0\"\n" +
-                "xmlns:slap = \"http://www.ivoa.net/xml/SLAP/v1.1\"\n" +
-                "xmlns:vd = \"http://www.ivoa.net/xml/StandardRegExt/v1.0\"\n" +
-                "xmlns:tap = \"http://www.ivoa.net/xml/TAPRegExt/v1.0\"\n" +
-                "xmlns:vr = \"http://www.ivoa.net/xml/VOResource/v1.0\"\n" +
-                "xsi:schemaLocation = \"" +
-                "http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd\n" +
-                "http://www.ivoa.net/xml/ConeSearch/v1.0 http://www.ivoa.net/xml/ConeSearch/ConeSearch-v1.0.xsd\n" +
-                "http://www.ivoa.net/xml/VORegistry/v1.0 http://www.ivoa.net/xml/VORegistry/VORegistry-v1.0.xsd\n" +
-                "http://www.ivoa.net/xml/RegistryInterface/v1.0 http://www.ivoa.net/xml/RegistryInterface/RegistryInterface-v1.0.xsd\n" +
-                "http://www.ivoa.net/xml/VODataService/v1.0 http://www.ivoa.net/xml/VODataService/v1.0\n" +
-                "http://www.ivoa.net/xml/OpenSkyNode/v0.2 http://www.ivoa.net/xml/OpenSkyNode/OpenSkyNode-v0.2.xsd\n" +
-                "http://www.ivoa.net/xml/SSA/v1.1 http://www.ivoa.net/xml/SSA/SSA-v1.1.xsd\n" +
-                "http://www.ivoa.net/xml/SIA/v1.0 http://www.ivoa.net/xml/SIA/SIA-v1.0.xsd\n" +
-                "http://www.ivoa.net/xml/SLAP/v1.0 http://www.ivoa.net/xml/SLAP/SLAP-v1.1.xsd\n" +
-                "http://www.ivoa.net/xml/StandardRegExt/v1.0 http://www.ivoa.net/xml/StandardsRegExt/StandardsRegExt-1.0.xsd\n" +
-                "http://www.ivoa.net/xml/TAPRegExt/v1.0 http://www.ivoa.net/xml/TAPRegExt/TAPRegExt-v1.0.xsd\n" +
-                "http://www.ivoa.net/xml/VOResource/v1.0 http://www.ivoa.net/xml/VOResource/VOResource-v1.0.xsd\"";
+        //private static string BuildSchemaLocation()
+        //{
+        //    string line = 
+        //        "xmlns = \"http://www.openarchives.org/OAI/2.0/\"\n" +              
+        //        "xmlns:cs =\"http://www.ivoa.net/xml/ConeSearch/v1.0\"\n" +
+        //        "xmlns:vg = \"http://www.ivoa.net/xml/VORegistry/v1.0\"\n" +
+        //        "xmlns:ri=\"http://www.ivoa.net/xml/RegistryInterface/v1.0\"\n" +
+        //        "xmlns:vs=\"http://www.ivoa.net/xml/VODataService/v1.0\"\n" +
+        //        "xmlns:sn = \"http://www.ivoa.net/xml/OpenSkyNode/v0.2\"\n" +
+        //        "xmlns:ssa = \"http://www.ivoa.net/xml/SSA/v1.1\"\n" +
+        //        "xmlns:sia = \"http://www.ivoa.net/xml/SIA/v1.0\"\n" +
+        //        "xmlns:slap = \"http://www.ivoa.net/xml/SLAP/v1.1\"\n" +
+        //        "xmlns:vd = \"http://www.ivoa.net/xml/StandardRegExt/v1.0\"\n" +
+        //        "xmlns:tap = \"http://www.ivoa.net/xml/TAPRegExt/v1.0\"\n" +
+        //        "xmlns:vr = \"http://www.ivoa.net/xml/VOResource/v1.0\"\n" +
+        //        "xsi:schemaLocation = \"" +
+        //        "http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd\n" +
+        //        "http://www.ivoa.net/xml/ConeSearch/v1.0 http://www.ivoa.net/xml/ConeSearch/ConeSearch-v1.0.xsd\n" +
+        //        "http://www.ivoa.net/xml/VORegistry/v1.0 http://www.ivoa.net/xml/VORegistry/VORegistry-v1.0.xsd\n" +
+        //        "http://www.ivoa.net/xml/RegistryInterface/v1.0 http://www.ivoa.net/xml/RegistryInterface/RegistryInterface-v1.0.xsd\n" +
+        //        "http://www.ivoa.net/xml/VODataService/v1.0 http://www.ivoa.net/xml/VODataService/v1.0\n" +
+        //        "http://www.ivoa.net/xml/OpenSkyNode/v0.2 http://www.ivoa.net/xml/OpenSkyNode/OpenSkyNode-v0.2.xsd\n" +
+        //        "http://www.ivoa.net/xml/SSA/v1.1 http://www.ivoa.net/xml/SSA/SSA-v1.1.xsd\n" +
+        //        "http://www.ivoa.net/xml/SIA/v1.0 http://www.ivoa.net/xml/SIA/SIA-v1.0.xsd\n" +
+        //        "http://www.ivoa.net/xml/SLAP/v1.0 http://www.ivoa.net/xml/SLAP/SLAP-v1.1.xsd\n" +
+        //        "http://www.ivoa.net/xml/StandardRegExt/v1.0 http://www.ivoa.net/xml/StandardsRegExt/StandardsRegExt-1.0.xsd\n" +
+        //        "http://www.ivoa.net/xml/TAPRegExt/v1.0 http://www.ivoa.net/xml/TAPRegExt/TAPRegExt-v1.0.xsd\n" +
+        //        "http://www.ivoa.net/xml/VOResource/v1.0 http://www.ivoa.net/xml/VOResource/VOResource-v1.0.xsd\"";
 
-            return line;
+        //    return line;
 
-        }
+        //}
 
 		#region Web Form Designer generated code
 		override protected void OnInit(EventArgs e)
@@ -517,56 +509,7 @@ namespace nvo.oai
 			this.Load += new System.EventHandler(this.Page_Load);
 		}
 		#endregion
-
-		// Checking for Bad input parameters or argument for OAI
-		/*private bool checkParam(string str)
-		{
-			string lstr = str.ToLower();
-
-			// Added by .NET so okay, ignore these
-			if (lstr.StartsWith("asp")|| lstr.StartsWith("all") || lstr.StartsWith("app") 
-				|| lstr.StartsWith("auth") || lstr.StartsWith("log") || lstr.StartsWith("rem")  
-				|| lstr.StartsWith("cert") || lstr.StartsWith("cont")
-				|| lstr.StartsWith("gate") || lstr.StartsWith("http")  
-				|| lstr.StartsWith("ins")|| lstr.StartsWith("loc")  
-				|| lstr.StartsWith("path") || lstr.StartsWith("quer")  
-				|| lstr.StartsWith("req") || lstr.StartsWith("scri") 
-                || lstr.StartsWith("__utm") //google analytics.
-				|| lstr.StartsWith("serv") || lstr.StartsWith("url") ) return true;
-
-			for (int i=0;i<validParams.Length;i++)
-			{
-				if (validParams[i]==lstr) return true;	
-			}
-
-			return false;
-		}*/
 		
 	}
 }
-/* Log of changes
- * $Log: oai.aspx.cs,v $
- * Revision 1.3  2005/05/06 16:29:53  grgreene
- * fixed oai oaiParams list
- *
- * Revision 1.2  2005/05/06 15:32:13  grgreene
- * fixed oai validparams list
- *
- * Revision 1.1.1.1  2005/05/05 15:17:01  grgreene
- * import
- *
- * Revision 1.5  2005/05/05 14:59:01  womullan
- * adding oai files
- *
- * Revision 1.4  2005/03/17 20:54:07  womullan
- * oai fixing
- *
- * Revision 1.3  2004/04/15 18:01:39  womullan
- * updated index form
- *
- * Revision 1.2  2004/03/12 19:15:49  womullan
- * added keyword search to form
- *
- *
- * 
- * */
+

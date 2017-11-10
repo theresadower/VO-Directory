@@ -538,10 +538,9 @@ namespace registry
                     outgoingToken = GenerateResumptionTokenOutput(tokenValue, start, expirationDate);
                 }
 
-                //revamped to use XML docs only, no serialization/deserialization.
 				for (int ii=start; ii< end; ++ii)
 				{
-					lisT.record[ii] = new recordType();
+ 					lisT.record[ii] = new recordType();
 					
 					try 
 					{
@@ -575,25 +574,28 @@ namespace registry
 
                 if (outgoingToken.Value != null)
                 {
-                    //resumptionTokenType nextToken = new resumptionTokenType(outgoingToken);
-                    //nextToken.cursor = Convert.ToString(Convert.ToInt32(outgoingToken.cursor) + resumptionTokenLimit);
                     ResumptionInformationUtil.saveResumptionInformation(outgoingResumptionInfo);
-                    //nvo.oai.oai.SaveResumptionToken(nextToken);
                 }
                 lisT.resumptionToken = outgoingToken;
 			}
 			else if (metadataPrefix=="oai_dc")
 			{
-				if (incomingResumptionInfo != null)
-                    return makeError(OAIPMHerrorcodeType.badResumptionToken, String.Empty);
-
-                oai_dc.oai_dcType[] odc = reg.QueryOAIDC(querystring);
+                oai_dc.oai_dcType[] odc = reg.QueryOAIDC(querystring, paramList);
                 if (odc.Length == 0)
                     return makeError(OAIPMHerrorcodeType.noRecordsMatch, String.Empty);
 
 				lisT.record = new recordType[odc.Length];
-			
-				for (int ii=0; ii< odc.Length;ii++)
+
+                end = Math.Min(start + resumptionTokenLimit, odc.Length);
+                if ((odc.Length > resumptionTokenLimit) && (end < odc.Length))
+                {
+                    string tokenValue = GenerateResumptionTokenValue(fromDate, untilDate, set, metadataPrefix, start);
+                    DateTime expirationDate = System.DateTime.Now.AddHours(6).ToUniversalTime();
+                    outgoingResumptionInfo = new ResumptionInformation(tokenValue, expirationDate, fromDate, untilDate, set, metadataPrefix, end, odc.Length);
+                    outgoingToken = GenerateResumptionTokenOutput(tokenValue, start, expirationDate);
+                }
+
+                for (int ii = start; ii < end; ++ii)
 				{
 					lisT.record[ii] = new recordType();
 					try 
@@ -603,22 +605,23 @@ namespace registry
                         headerType ht = new headerType();
                         ht.identifier = lisT.record[ii].metadata.GetElementsByTagName("identifier")[0].InnerXml;
                         ht.datestamp = lisT.record[ii].metadata.GetElementsByTagName("date")[0].InnerXml;
-                        ht.setSpec = new string[1] { "ivo_vor" };
-                        //ht.statusSpecified = true;
-                        //ht.status = lisT.record[ii].metadata.GetElementsByTagName("
-
+                        if (IsManagedAuthority(ht.identifier))
+                            ht.setSpec = new string[2] { "ivo_vor", managedSet };
+                        else
+                            ht.setSpec = new string[1] { "ivo_vor" };
                         lisT.record[ii].header = ht;
-
-                        //tdower oai question why were we doing this
-                        //lisT.record[ii].metadata = null;
-
 					}
 					catch(Exception e)
 					{
 						Console.Write(e);
 					}
 				}
+
                 outgoingToken.completeListSize = odc.Length.ToString();
+                if (outgoingToken.Value != null)
+                {
+                    ResumptionInformationUtil.saveResumptionInformation(outgoingResumptionInfo);
+                }
                 lisT.resumptionToken = outgoingToken;
             }
 				

@@ -157,10 +157,10 @@ namespace registry
 
 
 		[WebMethod (Description="Returns OAI_DC: Input WHERE predicate for SQL Query")]
-		public oai_dc.oai_dcType[] QueryOAIDC(string predicate)
+		public oai_dc.oai_dcType[] QueryOAIDC(string predicate, ArrayList queryParams = null)
 		{
 			string cmd = SQLHelper.TranslateOldSchemaQuery(SQLHelper.createBasicResourceSelect(predicate));	
-			return SQLQueryOAIDC(cmd);
+			return SQLQueryOAIDC(cmd, queryParams);
 		}
 
         public ivoa.net.ri1_0.server.Resource[] SQLQueryRI10Resource(string cmd)
@@ -728,7 +728,7 @@ namespace registry
         }
 
 		//	[WebMethod (Description="Returns VOResources: Input Select Statement should return Resource Columns e.g. \n Select r.* from Resource r where maxRecords > 200")]
-		public oai_dc.oai_dcType[] SQLQueryOAIDC(string cmd)
+		public oai_dc.oai_dcType[] SQLQueryOAIDC(string cmd, ArrayList queryParams = null)
 		{
 			SqlConnection conn = null;
 			oai_dc.oai_dcType[] odc = null;
@@ -737,11 +737,22 @@ namespace registry
                 conn = new SqlConnection(sConnect);
                 conn.Open();
 
-                SqlDataAdapter sqlDA = new SqlDataAdapter(cmd, conn);
+                SqlCommand command = new SqlCommand();
+                command.Connection = conn;
+                command.CommandText = cmd;
+                if (queryParams != null)
+                {
+                    foreach (SqlParameter s in queryParams)
+                    {
+                        command.Parameters.Add(s);
+                    }
+                }
+                command.Prepare();
+                SqlDataAdapter sqlDA = new SqlDataAdapter(command);
+
                 DataSet ds = new DataSet();
                 sqlDA.Fill(ds);
                 int ncount = ds.Tables[0].Rows.Count;
-                //long dbid = 0;
                 odc = new oai_dc.oai_dcType[ncount];
                 for (int i = 0; i < ncount; i++)
                 {
