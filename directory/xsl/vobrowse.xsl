@@ -277,10 +277,29 @@ window.onload=init;
         <h3>More About this Resource</h3>
 <xsl:apply-templates select="." mode="moreAbout"/>
 
+        <xsl:if test="rights">
+          <table class="more" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+              <td class="morebut"></td>
+              <td class="moretitle">Rights and Usage Information</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <p class="morehelp">This section describes the rights and usage information for this data.</p>
+                <div class="moresect">
+                  <xsl:apply-templates select="rights" />
+                </div>
+              </td>
+            </tr>
+          </table>
+        </xsl:if>       
+        
 <xsl:if test="capability">
 
 <h3>Available Service Interfaces</h3>
 
+  
 <xsl:apply-templates select="capability" />
 
 </xsl:if>
@@ -351,7 +370,8 @@ window.onload=init;
          </xsl:when>
          <xsl:otherwise><xsl:value-of select="shortName"/></xsl:otherwise>
       </xsl:choose> <br />
-<strong>IVOA Identifier: </strong>  <xsl:value-of select="identifier"/><br />
+<strong>IVOA Identifier: </strong>  <xsl:value-of select="identifier"/>
+<xsl:call-template name="altIdentifier"/>
 <strong>Publisher: </strong>
 <xsl:choose>
    <xsl:when test="curation/publisher/@ivo-id">
@@ -366,7 +386,7 @@ window.onload=init;
 </span>
  </xsl:if>
  <br />
- <strong>More Info: </strong> <a href="{normalize-space(content/referenceURL)}"><xsl:value-of select="content/referenceURL"/></a> <br/>
+ <strong>More Info: </strong> <a target="_blank" href="{normalize-space(content/referenceURL)}"><xsl:value-of select="content/referenceURL"/></a> <br/>
 <xsl:call-template name="showValidationLevel" />
 
     </xsl:template>
@@ -509,7 +529,7 @@ window.onload=init;
              <xsl:text>   </xsl:text>
              <xsl:comment> Logo for Resource: </xsl:comment><xsl:text>
     </xsl:text>
-             <a href="{normalize-space(../content/referenceURL)}"><xsl:text>
+             <a target="_blank" href="{normalize-space(../content/referenceURL)}"><xsl:text>
        </xsl:text>
                 <img src="{normalize-space(.)}" border="0" /><xsl:text>
     </xsl:text>
@@ -526,6 +546,45 @@ window.onload=init;
           </xsl:if>
        </xsl:for-each>
     </xsl:template>
+
+  <xsl:template name="altIdentifier">
+    <xsl:choose>
+      <!--only provide a link to resolve our own (MAST's) minted DOIs. We cannot reliably create a link for others.-->
+      <xsl:when test="altIdentifier and starts-with(altIdentifier, 'doi:10.17909') ">
+        <br /><strong>DOI (Digital Object Identifier): </strong>
+        <a target="_blank" href="{concat('https://archive.stsci.edu/doi/resolve/resolve.html?doi=', normalize-space(substring-after(altIdentifier, ':')))}">
+        <xsl:value-of select="substring-after(altIdentifier, ':')"/>
+        </a>
+        <br/>
+      </xsl:when>
+      <!--display other DOIs similarly, with no link.-->
+      <xsl:when test="altIdentifier and starts-with(altIdentifier, 'doi:') and not(starts-with(altIdentifier, 'doi:10.17909')) ">
+        <br /><strong>DOI (Digital Object Identifier): </strong>
+          <xsl:value-of select="substring-after(altIdentifier, ':')"/>
+        <br/>
+      </xsl:when>
+      <xsl:when test="altIdentifier and starts-with(altIdentifier, 'orcid:')">
+        <br /><strong>ORCID iD: </strong>
+        <xsl:value-of select="substring-after(altIdentifier, ':')"/>
+        <br/>
+      </xsl:when>
+      <xsl:when test="altIdentifier and starts-with(altIdentifier, 'bibcode:')">
+        <br /><strong>Bibcode: </strong>
+        <xsl:value-of select="substring-after(altIdentifier, ':')"/>
+        <br/>
+      </xsl:when>
+      <!--altIdentifier specified, but its namespace is not one we understand-->
+      <xsl:when test="altIdentifier">
+        <br /><strong>Alternate Identifier: </strong>
+        <xsl:value-of select="altIdentifier"/>
+        <br/>
+      </xsl:when>
+      <xsl:otherwise>
+        <!--<em>not specified</em>-->
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
 
     <!--
       -  render the validation level.  If the validation level has not 
@@ -594,7 +653,6 @@ window.onload=init;
 
  <div class="moresect">
  <p style="font-size: 100%;">
- <!-- <font size="120%"> -->
  <strong>Publisher: </strong>
  <xsl:choose>
     <xsl:when test="curation/publisher/@ivo-id">
@@ -602,7 +660,6 @@ window.onload=init;
     </xsl:when>
     <xsl:otherwise><xsl:value-of select="curation/publisher"/></xsl:otherwise>
  </xsl:choose>
- <!-- </font>  -->
  <xsl:if test="curation/publisher/@ivo-id">
  <span class="showhide">
     <span class="show"><xsl:value-of select="curation/publisher/@ivo-id"/></span>
@@ -613,7 +670,7 @@ window.onload=init;
 
  <p>
  <table border="0" cellpadding="0" cellspacing="0" width="100%">
- <tr><td valign="top" width="35%">
+ <tr><td valign="top">
  <xsl:apply-templates select="curation" mode="creator"/>
  </td><td valign="top">
  <xsl:apply-templates select="curation" mode="contributor"/>
@@ -717,7 +774,7 @@ window.onload=init;
  </td></tr></table>
  </xsl:if>
 -->
-
+      
  <xsl:if test="coverage">
  <table class="more" border="0" cellpadding="0" cellspacing="0" width="100%"><tr>
  <td class="morebut"></td>
@@ -733,6 +790,19 @@ window.onload=init;
        <xsl:apply-templates select="." mode="moreAboutExtended"/>
 
     </xsl:template>
+
+  <xsl:template match="rights">
+    <strong>Rights: </strong>
+    <xsl:if test="@rightsURI">
+      <a target="_blank" href="{normalize-space(@rightsURI)}">
+        <xsl:value-of select="@rightsURI"/>
+      </a>
+      <blockquote>
+        <xsl:value-of select="."/>
+      </blockquote>
+    </xsl:if>
+    
+  </xsl:template>
 
     <!--
       -  render the data coverage information
@@ -828,7 +898,7 @@ window.onload=init;
         <xsl:when test="starts-with(@xlink:href, 'ivo://') and 
                         contains(@xlink:href,'#')">
           <!-- registered, pre-defined coordinate system -->
-          <a href="http://www.ivoa.net/Documents/latest/STC.html">
+          <a target="_blank" href="http://www.ivoa.net/Documents/latest/STC.html">
             <xsl:value-of 
                  select="substring-after(normalize-space(@xlink:href),'#')"/>
           </a>
@@ -845,7 +915,7 @@ window.onload=init;
         <xsl:when test="starts-with(@xlink:href, 'ivo://')">
 
           <!-- registered, pre-defined coordinate system -->
-          <a href="{$getRecordSrvc}{normalize-space(@xlink:href)}">
+          <a target="_blank" href="{$getRecordSrvc}{normalize-space(@xlink:href)}">
             <xsl:value-of select="normalize-space(@xlink:href)"/>
           </a>
           <span style="visibility: hidden;">XX</span>
@@ -859,7 +929,7 @@ window.onload=init;
 
         <xsl:when test="@xlink:href">
           <xsl:text>Unrecognized, pre-defined system (</xsl:text>
-          <a href="{@xlink:href}">more info</a>
+          <a target="_blank" href="{@xlink:href}">more info</a>
           <xsl:text>)</xsl:text>
           <span style="visibility: hidden;">XX</span>
           <span class="showhide">
@@ -1096,7 +1166,7 @@ window.onload=init;
       </xsl:if>
     </xsl:template>
 
-   <!--
+  <!--
      -  Display detailed renderings of the extended metadata for the section
      -  "More About this Resource".  This template is intended to be overridden
      -  for specific xsi:types of resources (e.g. vg:Registry)
@@ -1134,14 +1204,14 @@ window.onload=init;
                            <span class="hide">[Creator ID]</span>
                         </span>
                      </xsl:if>
+                     <xsl:call-template name="altIdentifier"/>
                   </xsl:for-each>
                </dd><xsl:text>
    </xsl:text>
             </dl>
          </xsl:when>
-
-         <xsl:otherwise>
-            <!-- Just one (or zero) Creator -->
+        <!--one creator-->
+         <xsl:when test="creator">
             <xsl:text>   </xsl:text>
             <strong>Creator: </strong> 
             <xsl:for-each select="creator">
@@ -1162,8 +1232,12 @@ window.onload=init;
                      <xsl:value-of select="name"/>
                   </xsl:otherwise>
                </xsl:choose>
+               <xsl:call-template name="altIdentifier"/>
             </xsl:for-each>
-         </xsl:otherwise>
+         </xsl:when>
+        <xsl:otherwise>
+          <!--<xsl:text>   (No Creator information available)</xsl:text>--><contact><name>STScI Archive</name><email>archive@stsci.edu</email></contact>
+        </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
 
@@ -1207,8 +1281,7 @@ window.onload=init;
             </dl>
          </xsl:when>
 
-         <xsl:otherwise>
-            <!-- Just one (or zero) Contributor -->
+         <xsl:when test="contributor"> 
             <xsl:text>   </xsl:text>
             <strong>Contributor: </strong> 
             <xsl:for-each select="contributor">
@@ -1228,7 +1301,10 @@ window.onload=init;
                   </xsl:otherwise>
                </xsl:choose>
             </xsl:for-each>
-         </xsl:otherwise>
+         </xsl:when>
+         <xsl:otherwise>
+          <!--<xsl:text>   (No contributor information available)</xsl:text>-->
+        </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
 
@@ -1247,16 +1323,24 @@ window.onload=init;
           <td><span style="visibility: hidden" >X</span></td><xsl:text>
     </xsl:text>
 
-          <xsl:for-each select="contact">
-             <td valign="top"><xsl:text>
-      </xsl:text>
-               <xsl:apply-templates select="name" mode="contact"/>
-               <xsl:apply-templates select="email" />
-               <xsl:apply-templates select="address" />
-               <xsl:apply-templates select="phone" />
-             </td><xsl:text>
-</xsl:text>
-          </xsl:for-each>
+          <xsl:choose>
+            <xsl:when test="contact">
+              <xsl:for-each select="contact">
+                 <td valign="top"><xsl:text>
+          </xsl:text>
+                   <xsl:apply-templates select="name" mode="contact"/>
+                   <xsl:apply-templates select="email" />
+                   <xsl:apply-templates select="address" />
+                   <xsl:apply-templates select="phone" />
+                   <xsl:call-template name="altIdentifier"/>
+                 </td><xsl:text>
+          </xsl:text>
+              </xsl:for-each>         
+            </xsl:when>
+            <xsl:otherwise>
+              <!--<xsl:text>   (No contact information available)</xsl:text>-->
+            </xsl:otherwise>         
+          </xsl:choose>
           <xsl:text>  </xsl:text>
         </tr></table><xsl:text>
 </xsl:text></p>
@@ -1289,7 +1373,7 @@ window.onload=init;
    <xsl:template match="email">
       <br /><xsl:text>
       </xsl:text>
-      <xsl:text>Email: </xsl:text>
+      <strong>Email: </strong>
       <xsl:choose>
          <xsl:when test="contains(.,'@')">
             <xsl:value-of select="substring-before(.,'@')"/>
@@ -1306,7 +1390,7 @@ window.onload=init;
    <xsl:template match="address">
       <br /><xsl:text>
       </xsl:text>
-      <xsl:text>Address: </xsl:text>
+      <strong>Address: </strong>
       <xsl:call-template name="breakbydelim">
          <xsl:with-param name="text"><xsl:value-of select="."/></xsl:with-param>
          <xsl:with-param name="pre" select="'      '"/>
@@ -1347,7 +1431,7 @@ window.onload=init;
    <xsl:template match="phone">
       <br /><xsl:text>
       </xsl:text>
-      <xsl:text>Phone: </xsl:text>
+      <strong>Phone: </strong>
       <xsl:value-of select="."/>
       <br /><xsl:text>
       </xsl:text>
@@ -1692,7 +1776,7 @@ window.onload=init;
              <xsl:value-of select="$spectype"/>
              <xsl:text> specification.  This specification can be found at
        </xsl:text>
-             <a href="{normalize-space(content/referenceURL)}">
+             <a target="_blank" href="{normalize-space(content/referenceURL)}">
                <xsl:value-of select="content/referenceURL"/>
              </a>
              <xsl:text>.
@@ -1936,7 +2020,7 @@ window.onload=init;
      <strong>More Info: </strong>
      <xsl:choose>
        <xsl:when test="referenceURL">
-         <a href="{normalize-space(referenceURL)}">
+         <a target="_blank" href="{normalize-space(referenceURL)}">
            <xsl:value-of select="referenceURL"/></a>
        </xsl:when>
        <xsl:otherwise><i>none provided</i></xsl:otherwise>
@@ -2211,6 +2295,7 @@ window.onload=init;
 
   </xsl:template>
 
+  
   <!--
      -  summarize a generic or otherwise unrecognized capability 
      -->
@@ -2228,7 +2313,7 @@ window.onload=init;
 <blockquote class="vordesc"><xsl:value-of select="description"/></blockquote>
 </xsl:if>
 
-<strong>Available endpoints for this service interface: </strong>
+  <strong>Available endpoints for this service interface: </strong>
 <ul>
 <xsl:apply-templates select="interface" />
 </ul>
@@ -2249,8 +2334,8 @@ window.onload=init;
 <td class="morebut"></td>
 <td class="moretitle"><xsl:value-of select="$name"/>
 <span style="visibility: hidden">XX</span>
-  <xsl:if test="not($name = 'Simple Spectral Access') and not($name = 'Simple Image Access (version 2.0)')">
-<font size="-1"><a href="{$SimpleQueryURL}{normalize-space(../identifier)}&amp;type=cone"><i>Search Me</i></a></font>
+  <xsl:if test="not($name = 'Simple Spectral Access') and not($name = 'Simple Image Access') and not($name = 'Simple Image Access (version 2.0)')">
+<font size="-1"><a target="_blank" href="{$SimpleQueryURL}{normalize-space(../identifier)}&amp;type=cone"><i>Search Me</i></a></font>
   </xsl:if>
 </td></tr>
 <tr><td></td><td>
@@ -2483,12 +2568,12 @@ window.onload=init;
                                   contains(@xsi:type,':WebBrowser')]">
       <li> <strong>Interactive web page: </strong> 
            <i>
-           <a href="{normalize-space(accessURL[1])}"><xsl:value-of select="normalize-space(accessURL[1])"/></a>
+           <a target="_blank" href="{normalize-space(accessURL[1])}"><xsl:value-of select="normalize-space(accessURL[1])"/></a>
            </i>
            <xsl:for-each select="accessURL[position() > 1]">
               <br /><xsl:text>Alternate: </xsl:text>
               <i>
-              <a href="{normalize-space(.)}">
+              <a target="_blank" href="{normalize-space(.)}">
               <xsl:value-of select="normalize-space(.)"/></a>
               </i>
            </xsl:for-each>
@@ -2508,12 +2593,12 @@ window.onload=init;
            <xsl:choose>
               <xsl:when test="wsdlURL">
                  <xsl:text> (</xsl:text>
-                 <a href="{normalize-space(wsdlURL[1])}">WSDL</a>
+                 <a target="_blank" href="{normalize-space(wsdlURL[1])}">WSDL</a>
                  <xsl:text>)</xsl:text>
               </xsl:when>
               <xsl:otherwise>
                  <xsl:text> (</xsl:text>
-                 <a href="{normalize-space(accessURL[1])}?wsdl">WSDL</a>
+                 <a target="_blank" href="{normalize-space(accessURL[1])}?wsdl">WSDL</a>
                  <xsl:text>)</xsl:text>
               </xsl:otherwise>
            </xsl:choose>
@@ -2538,7 +2623,7 @@ window.onload=init;
            <xsl:for-each select="accessURL[position() > 1]">
               <br /><xsl:text>Alternate: </xsl:text>
               <i>
-              <a href="{normalize-space(.)}">
+              <a target="_blank" href="{normalize-space(.)}">
               <xsl:value-of select="normalize-space(.)"/></a>
               </i>
            </xsl:for-each>
