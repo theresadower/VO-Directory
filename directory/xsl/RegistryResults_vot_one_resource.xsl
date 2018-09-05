@@ -249,6 +249,12 @@
               <xsl:when test="$stdID='ivo://ivoa.net/std/VOSI#tables'">
                 <xsl:text>VOSI Tables</xsl:text>
               </xsl:when>
+              <xsl:when test="$stdID='ivo://ivoa.net/std/VOSI#tables'">
+                <xsl:text>VOSI Tables</xsl:text>
+              </xsl:when>
+              <xsl:when test="$stdID='ivo://ivoa.net/std/DALI#examples-1.0'">
+                <xsl:text>DALI Examples</xsl:text>
+              </xsl:when>
               <xsl:when test="interface">
                 <xsl:for-each select="interface">
                   <xsl:variable name="ixsitype" select="substring-after(@xsi:type,':')"/>
