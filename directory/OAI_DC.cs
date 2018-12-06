@@ -1,59 +1,13 @@
 ﻿using System;
 using System.Data;
 
-using ivoa.net.vr1_0;
-using ivoa.net.ri1_0;
 using oai_dc;
 using oai;
 
 using log4net;
 
 namespace registry
-{
-
-	/*
-	 * <xs:element ref="title"/>
-	 *                       RESOURCE.res_title,
-
-	 * <xs:element ref="subject"/>
-	 *                       [subject] ");
-
-	 * <xs:element ref="description"/>
-	 *                       RESOURCE.res_description,
-
-	 * <xs:element ref="publisher"/>
-	 *                       res_role.role_name as publisher,
-	 * <xs:element ref="date"/>
-	 *                       RESOURCE.updated,
-	 * <xs:element ref="identifier"/>
-	 *                       RESOURCE.ivoid,
-	 * <xs:element ref="rights"/>
-	 *                       RESOURCE.rights,
-	 * except rights is never populated in a useful way...
-
-
-	 * <xs:element ref="creator"/>
-	 * <xs:element ref="contributor"/>
-	 * <xs:element ref="type"/>
-	 * <xs:element ref="format"/>
-	 * <xs:element ref="source"/>
-	 * <xs:element ref="language"/>
-	 * <xs:element ref="relation"/>
-	 * <xs:element ref="coverage"/>
-
-	 * 
-	 	@"RESOURCE.res_type,
-                      RESOURCE.created,
-                      RESOURCE.short_name,
-                      RESOURCE.reference_url,
-                      RESOURCE.waveband,
-                      RESOURCE.rstat,
-                      harvestedFromID,
-                      harvestedFromDate,
-                      tag,
-                      xml,
-
-		*/
+{ 
      class OAI_DC
     {
 		private static readonly ILog log = LogManager.GetLogger(typeof(OAI_DC));
@@ -90,6 +44,16 @@ namespace registry
 
             odt.Items[ind++] = new elementType();
 			odt.Items[5].Value = GetOAIDatestamp(((DateTime) dr["updated"]), oai.granularityType.YYYYMMDDThhmmssZ);
+
+            odt.recordStatus = string.Empty;
+            if ((int)dr["rstat"] == 3)
+                odt.recordStatus = "deleted";
+            else if ((int)dr["rstat"] == 2)
+                odt.recordStatus = "inactive";
+            else if ((int)dr["rstat"] == 1)
+                odt.recordStatus = "active";
+            else if ((int)dr["rstat"] == 0)
+              odt.recordStatus = "deprecated";
 
             return odt;
         }

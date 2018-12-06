@@ -43,6 +43,9 @@ namespace oai_dc {
         [System.Xml.Serialization.XmlElementAttribute("ItemsElementName")]
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public ItemsChoiceType[] ItemsElementName;
+
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public string recordStatus;
     }
     
     /// <remarks/>

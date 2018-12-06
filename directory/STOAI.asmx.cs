@@ -423,7 +423,7 @@ namespace registry
 			return oaiT;
 		}
 
-		// WEB SERVICE OAI METHOD:  ListIdentifiers
+		// WEB SERVICE OAI METHOD:  ListRecords
 		// Returns detailed record structure
 	    [WebMethod(Description="Returns list of records - OAI")]
 		public OAIPMHtype ListRecords(string from, string metadataPrefix, string until, string set, string resumptionToken)
@@ -491,7 +491,7 @@ namespace registry
                 rqT.metadataPrefix = metadataPrefix;
             if (untilDate != null)
                 rqT.until = untilDate.Value.ToString(ISO8601Date);
-            if (set != null && set == managedSet) //the only one we're using.
+            if (set != null && set == managedSet) //the only set we're using.
                 rqT.set = set;
 			oaiT.request = rqT;
 
@@ -544,6 +544,7 @@ namespace registry
 					
 					try 
 					{
+
                         lisT.record[ii].metadata = vod[ii].DocumentElement;
 
 						headerType ht = new headerType();
@@ -551,13 +552,18 @@ namespace registry
 
                         ht.datestamp = vod[ii].DocumentElement.Attributes["updated"].Value;
 						lisT.record[ii].header = ht;
-		
+
+
+                        //OAI-PMH validator - OAI2.5.1: An OAI record with status deleted may not contain a resource document.
+                        //errata to the standard notes this means 'metadata', but headers remain if registry keeps track of deletions.
                         if (vod[ii].DocumentElement.Attributes["status"].Value.ToLower().CompareTo("deleted") == 0 )
 						{
 							ht.status = statusType.deleted;
 							ht.statusSpecified = true;
 							lisT.record[ii].header.status = ht.status;
-						}
+                            lisT.record[ii].metadata = null;
+                        }
+
                         if (IsManagedAuthority(ht.identifier))
                         {
                             ht.setSpec = new string[1];
@@ -598,13 +604,26 @@ namespace registry
                 for (int ii = start; ii < end; ++ii)
 				{
 					lisT.record[ii] = new recordType();
-					try 
-					{
-						lisT.record[ii].metadata = GetElementFromOAIDC(odc[ii]);
+                    headerType ht = new headerType();
 
-                        headerType ht = new headerType();
-                        ht.identifier = lisT.record[ii].metadata.GetElementsByTagName("identifier")[0].InnerXml;
-                        ht.datestamp = lisT.record[ii].metadata.GetElementsByTagName("date")[0].InnerXml;
+                    try 
+					{
+                        //todo: MASTVO-164 for OAI-DC
+                        //OAI-PMH validator - OAI2.5.1: An OAI record with status deleted may not contain a resource document.
+                        //errata to the standard notes this means 'metadata', but headers remain if registry keeps track of deletions.
+                        XmlElement recordMetadata = GetElementFromOAIDC(odc[ii]);                     
+                        if(odc[ii].recordStatus == "deleted")
+                        {
+                            ht.status = statusType.deleted;
+                            ht.statusSpecified = true;
+                            lisT.record[ii].metadata = null;
+                        }
+                        else {
+                            lisT.record[ii].metadata = recordMetadata;
+                        }
+
+                        ht.identifier = recordMetadata.GetElementsByTagName("identifier")[0].InnerXml;
+                        ht.datestamp = recordMetadata.GetElementsByTagName("date")[0].InnerXml;
                         if (IsManagedAuthority(ht.identifier))
                             ht.setSpec = new string[2] { "ivo_vor", managedSet };
                         else
@@ -674,10 +693,8 @@ namespace registry
             if (recordIVO_VOR > 0)
             {
                 metaF[0] = new metadataFormatType();
-                //metaF[0].metadataNamespace = "http://www.ivoa.net/xml/VOResource/v0.10";
                 metaF[0].metadataNamespace = "http://www.ivoa.net/xml/VOResource/v1.0";
                 metaF[0].metadataPrefix = "ivo_vor";
-                //metaF[0].schema = "http://www.ivoa.net/xml/VOResource/v0.10/VOResource-v0.10.xsd";
                 metaF[0].schema = "http://www.ivoa.net/xml/VOResource/v1.0";
             }
             if (recordOAI_DC > 0)
