@@ -28,6 +28,9 @@ bld/
 # Roslyn cache directories
 *.ide/
 
+# Visual Studio internal files
+.vs/
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
@@ -189,3 +192,4 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+*.ide
