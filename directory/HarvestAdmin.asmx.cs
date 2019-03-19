@@ -148,7 +148,6 @@ namespace Replicate
 			}catch(Exception ex){
 				log.Error ("Error harvesting from url " + url, ex);
 				ret += ex + "\n";
-                throw (ex);
 			}
 
 			return ret;

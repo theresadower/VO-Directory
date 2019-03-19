@@ -1,18 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
-using System.Configuration;
-using System.Collections;
-using System.Web.Security;
-using System.Web.UI.WebControls.WebParts;
-using System.Web.UI.HtmlControls;
 using System.Data.SqlClient;
 
 namespace OperationsManagement
 {
+    public enum HarvestStatus
+    {
+        Success, //0
+        Failure,
+        PartialFailure,
+        NoRecords,
+        Unknown
+    };
+
     public class HarvestSourceInfo
     {
         public string url = string.Empty;
@@ -113,7 +115,7 @@ namespace OperationsManagement
 
                 DateTime date = DateTime.MinValue;
                 string message = String.Empty;
-                int status = -1;
+                HarvestStatus status = HarvestStatus.Unknown;
 
 
                 TableRow trow = new TableRow();
@@ -181,27 +183,27 @@ namespace OperationsManagement
 
                     tcell = new TableCell();
                     tcell.VerticalAlign = VerticalAlign.Top;
-                    if (status == 0) 
+                    if (status == HarvestStatus.Success) 
                     {
                         tcell.Controls.Add(new LiteralControl("Success"));
                         tcell.ForeColor = System.Drawing.Color.Green;
                     }
-                    else if (status == 1)
+                    else if (status == HarvestStatus.Failure)
                     {
                         tcell.Controls.Add(new LiteralControl("Failure"));
                         tcell.ForeColor = System.Drawing.Color.Red;
                     }
-                    else if (status == 2)
+                    else if (status == HarvestStatus.PartialFailure)
                     {
                         tcell.Controls.Add(new LiteralControl("Partial Failure"));
                         tcell.ForeColor = System.Drawing.Color.DarkGoldenrod;
                     }
-                    else if (status == 3) //no updates
+                    else if (status == HarvestStatus.NoRecords) //no updates
                     {
                         tcell.Controls.Add(new LiteralControl("Success"));
                         tcell.ForeColor = System.Drawing.Color.Green;
                     }
-                    else if (status == -1)
+                    else if (status == HarvestStatus.Unknown)
                     {
                         if (date == DateTime.MinValue)
                         {
@@ -219,7 +221,7 @@ namespace OperationsManagement
 
                     //todo - fix the logging so this isn't so shaky.
                     string truncMessage = String.Empty;
-                    if (status != -1)
+                    if (status != HarvestStatus.Unknown)
                     {
                         truncMessage = "From " + message.Replace("Wrote DB inserts.", "").Replace(url, "");
                         int inHarvest = truncMessage.IndexOf("Harvesting") + 11;
@@ -228,12 +230,19 @@ namespace OperationsManagement
                             truncMessage = truncMessage.Remove(inHarvest, inGot - inHarvest);
                         while (truncMessage.Contains("resumption"))
                         {
-                            int startVerb = truncMessage.IndexOf("?verb");
-                            int endToken = truncMessage.IndexOf("Got", truncMessage.IndexOf("resumption")) - 1;
-                            if (endToken > 0)
-                                truncMessage = truncMessage.Remove(startVerb, endToken - startVerb);
-                            else //in case we have logged an error.
-                                truncMessage = truncMessage.Remove(startVerb, truncMessage.IndexOf("Harvester", startVerb) - startVerb);
+                            try
+                            {
+                                int startVerb = truncMessage.IndexOf("?verb");
+                                int endToken = truncMessage.IndexOf("Got", truncMessage.IndexOf("resumption")) - 1;
+                                if (endToken > 0)
+                                    truncMessage = truncMessage.Remove(startVerb, endToken - startVerb);
+                                else //in case we have logged an error.
+                                    truncMessage = truncMessage.Remove(startVerb, truncMessage.IndexOf("Harvester", startVerb) - startVerb);
+                            }
+                            catch (Exception)
+                            {
+                                truncMessage = "Harvest success but error reading total records loaded.";
+                            }
                         }
                         if (truncMessage.Contains("recs") && truncMessage.Contains("Loaded"))
                         {
@@ -302,7 +311,7 @@ namespace OperationsManagement
             }
         }
 
-        private void GetLastLogEntry(string harvestURL, SqlConnection conn, ref DateTime date, ref string message, ref int status)
+        private void GetLastLogEntry(string harvestURL, SqlConnection conn, ref DateTime date, ref string message, ref HarvestStatus status)
         {
             string sGetEntry = "select top 1 date, message, status " +
                                "from harvesterlog where serviceurl = '" +
@@ -319,15 +328,15 @@ namespace OperationsManagement
                 if (!(data[1] is System.DBNull))
                     message = (String)data[1];
                 if (data[2] is System.DBNull)
-                    status = -1;
+                    status = HarvestStatus.Unknown;
                 else
-                    status = (int)data[2];
+                    status = (HarvestStatus)(int)data[2];
             }
             else
             {
                 date = DateTime.MinValue;
                 message = String.Empty;
-                status = -1;
+                status = HarvestStatus.Unknown;
             }
         }
     }
