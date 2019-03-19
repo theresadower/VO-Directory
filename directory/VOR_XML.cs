@@ -185,8 +185,7 @@ namespace registry
 
                     // Load the Xsl Parameters
                     XsltArgumentList argList = new XsltArgumentList();
-                    //DateTime harvestDate = DateTime.Now;
-                    String harvestDate = DateTime.Now.ToString();
+                    String harvestDate = DateTime.Now.ToUniversalTime().ToString("s");
 
                     argList.AddParam("harvestedFromEP", "", harvestUrl);
                     argList.AddParam("harvestedFromDate", "", harvestDate);
