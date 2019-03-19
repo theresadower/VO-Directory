@@ -1,0 +1,15 @@
+ -- VOResource-to-database Converter 
+
+declare @existingCopies smallint;
+set @existingCopies=0;
+
+declare @rrivoid varchar(max);
+declare @rrcapseq smallint;
+declare @rrifseq smallint;
+declare @rrschemaseq smallint;
+declare @rrtableseq smallint;
+
+
+-- if this IVOID already exists,  remove the old one from TAP cache before inserting
+execute rr.deletedeprecatedresourcefromtapcache '', @existingCopies OUTPUT;
+
