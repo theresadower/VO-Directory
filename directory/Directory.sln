@@ -1,18 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EB871F3A-82DF-47B8-AED2-B6EF5F176EFA}"
 	ProjectSection(SolutionItems) = preProject
 		..\dbsetup\InsertVOResource.xsl = ..\dbsetup\InsertVOResource.xsl
 		xsl\InsertVOResource_RegTap.xsl = xsl\InsertVOResource_RegTap.xsl
 		..\dbsetup\VOResourceCreateBaseTables.sql = ..\dbsetup\VOResourceCreateBaseTables.sql
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OperationsManagement", "..\OperationsManagement\OperationsManagement.csproj", "{5D2AFF6A-2285-46F4-A5A3-00BCDC691349}"
-	ProjectSection(ProjectDependencies) = postProject
-		{030B00DA-2C47-40CC-B064-973EAD48B728} = {030B00DA-2C47-40CC-B064-973EAD48B728}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "registry", "registry.csproj", "{030B00DA-2C47-40CC-B064-973EAD48B728}"
@@ -76,18 +71,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5D2AFF6A-2285-46F4-A5A3-00BCDC691349}.Debug|.NET.ActiveCfg = Debug|Any CPU
-		{5D2AFF6A-2285-46F4-A5A3-00BCDC691349}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5D2AFF6A-2285-46F4-A5A3-00BCDC691349}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5D2AFF6A-2285-46F4-A5A3-00BCDC691349}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{5D2AFF6A-2285-46F4-A5A3-00BCDC691349}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{5D2AFF6A-2285-46F4-A5A3-00BCDC691349}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{5D2AFF6A-2285-46F4-A5A3-00BCDC691349}.Release|.NET.ActiveCfg = Release|Any CPU
-		{5D2AFF6A-2285-46F4-A5A3-00BCDC691349}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5D2AFF6A-2285-46F4-A5A3-00BCDC691349}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5D2AFF6A-2285-46F4-A5A3-00BCDC691349}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{5D2AFF6A-2285-46F4-A5A3-00BCDC691349}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{5D2AFF6A-2285-46F4-A5A3-00BCDC691349}.Release|x86.ActiveCfg = Release|Any CPU
 		{030B00DA-2C47-40CC-B064-973EAD48B728}.Debug|.NET.ActiveCfg = Debug|Any CPU
 		{030B00DA-2C47-40CC-B064-973EAD48B728}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{030B00DA-2C47-40CC-B064-973EAD48B728}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -144,5 +127,8 @@ Global
 		{F27275A9-A9D3-47D4-A007-1142A4803E8C} = {CDD6A808-BD5C-4DB3-9EB3-C487BB790700}
 		{062F0F85-29FB-4F03-8CA8-2EA9525AC7EF} = {CDD6A808-BD5C-4DB3-9EB3-C487BB790700}
 		{45D33FE2-FB67-4996-A2DF-E06099CFEE2F} = {062F0F85-29FB-4F03-8CA8-2EA9525AC7EF}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3F23070C-B344-4491-96BD-20356B243E34}
 	EndGlobalSection
 EndGlobal

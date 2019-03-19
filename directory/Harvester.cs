@@ -4,10 +4,7 @@ using System.IO;
 using System.Xml.Serialization;
 using oai;
 using System.Text;
-using System.Xml;
-using System.Configuration;
 using System.Collections;
-using System.Data;
 using log4net;
 
 using registry;
@@ -35,10 +32,17 @@ namespace Replicate
         {
             errLog = new logfile("err_HarvesterService.log");
 
+            //newer SSL connections require this, including HEASARC.
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
             //These are known bad records to be managed by hand.
-            //Note we can *delete* them easily enough, if they were already imported
-            //somehow. If they're in this list, they've repeatedly failed to import properly
-            //and been caught in the logs by a real person.
+            //Note we can just delete bad records if they were already imported
+            //and falsely validated.
+            //If they're in this list, they've repeatedly failed to import properly
+            //and been caught in the harvest logs. Putting them on this list will allow
+            //them to be skipped, keeping the harvester from re-importing ALL records from
+            //a publishing registry after the date of first failure, in perpetuity until 
+            //the record is fixed (which may never happen).
             try
             {
                 string appDir = System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath;
@@ -55,8 +59,7 @@ namespace Replicate
 
         }
 
-        //todo: record deletion here, remove it from registrydbquery
-
+        //todo: refactor: record deletion goes here, remove it from registrydbquery
 		public string harvest(string baseurl, string registryID, string extraParams) 
 		{
             string connect = (string)System.Configuration.ConfigurationManager.AppSettings["SqlAdminConnection"];
@@ -91,7 +94,7 @@ namespace Replicate
                     sb.Append(DateTime.Now + " Harvesting " + url);
                     Console.Out.WriteLine(DateTime.Now + " Harvesting " + url);
                     HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(url);
-                    // Sends the HttpWebRequest and waits for the response. 
+
                     HttpWebResponse resp = null;
                     try
                     {
@@ -99,11 +102,10 @@ namespace Replicate
                     }
                     catch (Exception e)
                     {
-                        sb.Append(" Harvester: " + e.Message + " : " + e.StackTrace);
-                        throw new Exception(sb.ToString());
+                        sb.Append(" Harvester Error: " + e.Message );
                     }
-
-                    if (resp == null) return sb.ToString();
+                    if (resp == null)
+                        return sb.ToString();
 
                     // Gets the stream associated with the response.
                     Stream receiveStream = resp.GetResponseStream();
@@ -214,9 +216,8 @@ namespace Replicate
                         else
                         {
                             //These are known bad records to be managed by hand.
-                            //Note we can *delete* them easily enough, if they were already imported
-                            //somehow. If they're in this list, they've repeatedly failed to import properly
-                            //and been caught in the logs by a real person.
+                            //If they're in this list, they've repeatedly failed to import properly
+                            //and been caught in the logs by a human operator.
                             if (knownbad.Contains(id))
                             {
                                 ++recSkipped;
@@ -257,14 +258,9 @@ namespace Replicate
                                     {
                                         ++recFailures;
                         
-                                        Console.Out.WriteLine("Failed to harvest resource " + id + ". dumping fragment to bad" + r + "\n" +
-                                                               "Err is " + sb.ToString());
-                                        StreamWriter sr = new StreamWriter(log_location + "\\bad" + r + ".xml");
-                                        sr.Write(theXML);
-                                        sr.Flush();
-                                        sr.Close();
-
-                                        errLog.Log("Failed to harvest resource " + id + ". Dumped to " + log_location + "\\bad" + r + ".xml\n" +
+                                        Console.Out.WriteLine("Failed to harvest resource " + id + ".\n" +
+                                                               "Err is " + sb.ToString());                  
+                                        errLog.Log("Failed to harvest resource " + id + ".\n" +
                                                    "Err is " + sb.ToString());
                                     }
                                 }
@@ -282,18 +278,9 @@ namespace Replicate
                                 {
                                     ++recFailures;
                                     Console.Out.WriteLine(se + ":" + se.StackTrace);
-                                    sb.Append(se + ": " + se.StackTrace + " : dumping fragment to bad" + r + "\n");
-                                    StreamWriter sr = new StreamWriter(log_location + "\\bad" + r + ".xml");
-                                    sr.Write(theXML);
-                                    sr.Flush();
-                                    sr.Close();
-
-                                    try
-                                    {
-                                        errLog.Log("Exception harvesting resource. Dumped to bad" + r + ".xml\n" +
-                                        "Message is " + se.Message);
-                                    }
-                                    catch (System.IO.IOException) { }
+                                    sb.Append(se + ": " + se.StackTrace + "\n");
+                                    errLog.Log("Exception harvesting resource. " +
+                                        "Message is: " + se.Message);
 
                                 }
                                 catch (System.IO.IOException)
@@ -310,7 +297,6 @@ namespace Replicate
                         sb.Append("Skipped " + recSkipped + " RESOURCES from known bad list. ");
                     if (recFailures > 0)
                         sb.Append("Failed to load " + recFailures + " RESOURCES. ");
-                    //sb.Append(DateTime.Now+" "+result);
                 }
                 catch (Exception ex)
                 {

@@ -69,5 +69,17 @@
     </xsl:apply-templates>
 
   </xsl:template>
+  
+  <xsl:template match="capability[@standardID='ivo://ivoa.net/std/DALI#examples-1.0']">
+
+    <xsl:apply-templates select="." mode="complexCapability">
+    <xsl:with-param name="name">DALI Examples</xsl:with-param>
+    <xsl:with-param name="desc">
+      This is a standard IVOA service endpoint that returns
+      a document with usage examples or similar material to the user.
+    </xsl:with-param>
+  </xsl:apply-templates>
+
+  </xsl:template>
 
 </xsl:stylesheet>

@@ -708,15 +708,17 @@ namespace registry
                     sqlDA.Fill(resource);
                     table = CreateResourceVOTable(resource, option);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    table = new ivoa.altVOTable.VOTABLE();
+                    //table = new ivoa.altVOTable.VOTABLE();
+                    table = CreateErrorVOTable(ex.Message);
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                table = new ivoa.altVOTable.VOTABLE();
+                //table = new ivoa.altVOTable.VOTABLE();
+                table = CreateErrorVOTable(ex.Message);
             }
             finally
             {
@@ -774,10 +776,23 @@ namespace registry
 
 			return odc;
 		}
-	
-	}
 
-    //put this in its own file when i can touch csproj
+        protected static VOTABLE CreateErrorVOTable(string errortext)
+        {
+            VOTABLE vot = new VOTABLE();
+
+            vot.version = VOTABLEVersion.Item11;
+            vot.RESOURCE = new ivoa.altVOTable.Resource[1];
+            vot.RESOURCE[0] = new ivoa.altVOTable.Resource();
+            vot.RESOURCE[0].type = ResourceType.results;
+            vot.RESOURCE[0].ID = "ERROR";
+            vot.RESOURCE[0].name = errortext;
+
+            return vot;
+        }
+   
+    }
+
 
     //This is quick and dirty and very inefficient for frequent writes, but it doesn't hog a file handle, keeping users
     //from moving the file and suchlike. If usage increases, keep a  file handle,
