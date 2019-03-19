@@ -17,10 +17,10 @@
   -->
 
    <xsl:template match="/">
-      <xsl:apply-templates select="ri:Resource" />
+      <xsl:apply-templates select="ri:VOResources" />
    </xsl:template>
 
-<!--   <xsl:template match="ri:VOResources" xml:space="preserve">
+   <xsl:template match="ri:VOResources" xml:space="preserve">
 <VOTABLE xmlns="http://www.ivoa.net/xml/VOTable/v1.1">
    <DESCRIPTION>Registry Search Results</DESCRIPTION>
    <RESOURCE name="Search Results">
@@ -59,111 +59,105 @@
    </RESOURCE>
 
 </VOTABLE>
-   </xsl:template>-->
+   </xsl:template>
 
    <xsl:template match="ri:Resource">
-     <resource>
-       <TR>
-         <xsl:text>
+      <TR><xsl:text>
 </xsl:text>
          <xsl:text>   </xsl:text>
-         <TD>
-           <xsl:apply-templates select="." mode="gettag"/>
-         </TD>
-         <xsl:text>
+         <TD><xsl:apply-templates select="." mode="gettag"/></TD><xsl:text>
 </xsl:text>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val" select="shortName" />
+            <xsl:with-param name="val" select="shortName" />
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val" select="title" />
+            <xsl:with-param name="val" select="title" />   
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val" select="content/description" />
+            <xsl:with-param name="val" select="content/description" />   
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val" select="curation/publisher" />
+            <xsl:with-param name="val" select="curation/publisher" />   
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val" select="coverage/waveband" />
-           <xsl:with-param name="asarray" select="true()"/>
+            <xsl:with-param name="val" select="coverage/waveband" />   
+            <xsl:with-param name="asarray" select="true()"/>
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val" select="identifier" />
+            <xsl:with-param name="val" select="identifier" />   
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val" select="@updated" />
+            <xsl:with-param name="val" select="@updated" />   
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val" select="content/subject" />
-           <xsl:with-param name="asarray" select="true()"/>
+            <xsl:with-param name="val" select="content/subject" />   
+            <xsl:with-param name="asarray" select="true()"/>
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val" select="content/type" />
-           <xsl:with-param name="asarray" select="true()"/>
+            <xsl:with-param name="val" select="content/type" />   
+            <xsl:with-param name="asarray" select="true()"/>
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val" select="content/contentLevel" />
-           <xsl:with-param name="asarray" select="true()"/>
+            <xsl:with-param name="val" select="content/contentLevel" />   
+            <xsl:with-param name="asarray" select="true()"/>
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val" select="coverage/stc:STCResourceProfile/stc:AstroCoords/stc:Position1D/stc:Size" />
+            <xsl:with-param name="val" select="coverage/stc:STCResourceProfile/stc:AstroCoords/stc:Position1D/stc:Size" />   
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val" select="curation/version" />
+            <xsl:with-param name="val" select="curation/version" />   
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val"
-                select="capability[@xsi:type and 
+            <xsl:with-param name="val" 
+                 select="capability[@xsi:type and 
                                     interface[@role='std']]/@xsi:type" />
-           <xsl:with-param name="removeScope" select="true()"></xsl:with-param>
+            <xsl:with-param name="removeScope" select="true()"></xsl:with-param>
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val"
-                select="capability[@xsi:type and 
-                                    interface[@role='std']]/@standardID" />
+            <xsl:with-param name="val" 
+                 select="capability[@xsi:type and 
+                                    interface[@role='std']]/@standardID" />   
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val"
-                select="capability[@xsi:type and 
+            <xsl:with-param name="val" 
+                 select="capability[@xsi:type and 
                                     interface[@role='std']]/validationLevel" />
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val"
-                select="capability[@xsi:type]/interface[@role='std']/self::node()[1]/@xsi:type" />
-           <xsl:with-param name="removeScope" select="true()"></xsl:with-param>
+            <xsl:with-param name="val"
+                 select="capability[@xsi:type]/interface[@role='std']/self::node()[1]/@xsi:type" />
+            <xsl:with-param name="removeScope" select="true()"></xsl:with-param>
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val"
-                select="capability[@xsi:type]/interface[@role='std']/self::node()[1]/@version" />
+            <xsl:with-param name="val" 
+                 select="capability[@xsi:type]/interface[@role='std']/self::node()[1]/@version" />   
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val"
-                select="capability[@xsi:type]/interface[@role='std']/self::node()[1]/@role" />
+            <xsl:with-param name="val" 
+                 select="capability[@xsi:type]/interface[@role='std']/self::node()[1]/@role" />   
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val"
-                select="capability[@xsi:type]/interface[@role='std']/self::node()[1]/accessURL[1]" />
+            <xsl:with-param name="val" 
+                 select="capability[@xsi:type]/interface[@role='std']/self::node()[1]/accessURL[1]" />   
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val"
-                select="capability[@xsi:type]/interface[@role='std']/self::node()[1]/param/name" />
-           <xsl:with-param name="asarray" select="true()"/>
+            <xsl:with-param name="val" 
+                 select="capability[@xsi:type]/interface[@role='std']/self::node()[1]/param/name" />   
+            <xsl:with-param name="asarray" select="true()"/>
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val" select="capability/maxSearchRadius|capability/maxSR" />
+            <xsl:with-param name="val" select="capability/maxSearchRadius|capability/maxSR" />   
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val" select="capability/maxRecords" />
+            <xsl:with-param name="val" select="capability/maxRecords" />   
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val" select="curation/publisher/@ivo-id" />
+            <xsl:with-param name="val" select="curation/publisher/@ivo-id" />   
          </xsl:call-template>
          <xsl:call-template name="valOrNull">
-           <xsl:with-param name="val" select="content/referenceURL" />
+            <xsl:with-param name="val" select="content/referenceURL" />   
          </xsl:call-template>
-       </TR>
-     </resource><xsl:text>
+      </TR><xsl:text>
 </xsl:text>
    </xsl:template>
 
@@ -220,8 +214,8 @@
             </xsl:if>
             <xsl:text> Registry#</xsl:text>
          </xsl:when>
-        <xsl:when test="capability">
-          <xsl:for-each select="capability">
+         <xsl:when test="capability">
+           <xsl:for-each select="capability">
             <xsl:variable name="cxsitype" select="substring-after(@xsi:type,':')"/>
             <xsl:variable name="stdID" select="@standardID"/>
             <xsl:choose>
@@ -239,21 +233,6 @@
                </xsl:when>
               <xsl:when test="$stdID='ivo://ivoa.net/std/TAP'">
                 <xsl:text>Table Service</xsl:text>
-              </xsl:when>
-              <xsl:when test="$stdID='ivo://ivoa.net/std/VOSI#capabilities'">
-                <xsl:text>VOSI Capabilities</xsl:text>
-              </xsl:when>
-              <xsl:when test="$stdID='ivo://ivoa.net/std/VOSI#availability'">
-                <xsl:text>VOSI Availability</xsl:text>
-              </xsl:when>
-              <xsl:when test="$stdID='ivo://ivoa.net/std/VOSI#tables'">
-                <xsl:text>VOSI Tables</xsl:text>
-              </xsl:when>
-              <xsl:when test="$stdID='ivo://ivoa.net/std/VOSI#tables'">
-                <xsl:text>VOSI Tables</xsl:text>
-              </xsl:when>
-              <xsl:when test="$stdID='ivo://ivoa.net/std/DALI#examples-1.0'">
-                <xsl:text>DALI Examples</xsl:text>
               </xsl:when>
               <xsl:when test="interface">
                 <xsl:for-each select="interface">
@@ -275,11 +254,11 @@
                   </xsl:choose>
                 </xsl:for-each>
               </xsl:when>
-              <xsl:otherwise>
-                     <xsl:text>Custom Service</xsl:text>
-                   </xsl:otherwise>
+               <xsl:otherwise>
+                  <xsl:text>Custom Service</xsl:text>
+               </xsl:otherwise>
             </xsl:choose>
-             <xsl:text>#</xsl:text>
+            <xsl:text>#</xsl:text>
            </xsl:for-each>
          </xsl:when>
          <xsl:when test="$rxsitype='DataCollection'">

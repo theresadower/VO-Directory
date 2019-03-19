@@ -146,16 +146,15 @@ declare @tableseq smallint;
       <!-- deprecate a resource with the same identifier as this one -->
       <xsl:choose>
         <xsl:when test="$existingrkey!=''">
-          <xsl:text>-- Replacing exising record: change the status of the old one before inserting 
-execute </xsl:text>
-         <xsl:value-of select="$rr"/>
-         <xsl:text>.deprecateresource '</xsl:text>
-         <xsl:value-of select="normalize-space(/*/identifier)"/>
-         <xsl:text>', </xsl:text>
-         <xsl:value-of select="$existingrkey"/>
-         <xsl:text>, @rev OUTPUT;
-
-</xsl:text>
+          <xsl:text>
+execute     </xsl:text>
+          <xsl:value-of select="$rr"/>
+          <xsl:text>.deprecateresource '</xsl:text>
+          <xsl:value-of select="normalize-space(/*/identifier)"/>
+          <xsl:text>', </xsl:text>
+          <xsl:value-of select="$existingrkey"/>
+          <xsl:text>, @rev OUTPUT;
+           </xsl:text>
         </xsl:when>
         <xsl:otherwise>
           <xsl:text>-- if this IVOID already exists, deprecate it.
@@ -334,7 +333,6 @@ execute </xsl:text>
            <xsl:with-param name="asarray" select="true()"/>
         </xsl:call-template>
       </xsl:variable>
-    
 
       <xsl:text>UPDATE </xsl:text>
       <xsl:value-of select="$rr"/>
@@ -506,8 +504,8 @@ execute </xsl:text>
            <xsl:with-param name="asarray" select="true()"/>
         </xsl:call-template>
       </xsl:variable>
-     
-     <xsl:text>UPDATE </xsl:text>
+      
+      <xsl:text>UPDATE </xsl:text>
       <xsl:value-of select="$rr"/>
       <xsl:text>.resource SET 
        facility=</xsl:text> <xsl:value-of select="$facility"/> <xsl:text>,
@@ -548,7 +546,6 @@ execute </xsl:text>
     WHERE pkey=@rkey;
 
 </xsl:text>
-     
    </xsl:template>   
 
    <!--
@@ -893,7 +890,7 @@ execute </xsl:text>
          </xsl:choose>
       </xsl:param>
 
-      <xsl:if test="string-length(normalize-space(.)) &gt; 0">
+     <xsl:if test="string-length(normalize-space(.)) &gt; 0">
         <xsl:text>INSERT INTO </xsl:text>
         <xsl:value-of select="$rr"/>
         <xsl:text>.date (
@@ -2271,13 +2268,14 @@ execute </xsl:text>
    <!--
      -  create a date value 
      -->
-   <xsl:template name="mkdateval">
-      <xsl:param name="valnodes"/>
-
-      <xsl:call-template name="mkstrval">
-         <xsl:with-param name="valnodes" select="$valnodes"/>
-      </xsl:call-template>
-   </xsl:template>
+  <xsl:template name="mkdateval">
+    <xsl:param name="valnodes"/>
+    <xsl:text> convert(date, </xsl:text>
+    <xsl:call-template name="mkstrval">
+      <xsl:with-param name="valnodes" select="$valnodes"/>
+    </xsl:call-template>
+    <xsl:text> , 111) </xsl:text>
+  </xsl:template>
 
    <!--
      -  create a string value 

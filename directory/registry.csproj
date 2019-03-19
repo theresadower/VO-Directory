@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.30729</ProductVersion>
@@ -28,7 +28,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <PublishUrl>http://localhost/registry/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -69,6 +69,7 @@
     <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
@@ -93,6 +94,7 @@
     <DebugType>none</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
@@ -130,11 +132,23 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="HarvestAdmin.asmx.cs">
+      <DependentUpon>HarvestAdmin.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Harvester.cs" />
+    <Compile Include="HarvestTable.aspx.cs">
+      <DependentUpon>HarvestTable.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="HarvestTable.aspx.designer.cs">
+      <DependentUpon>HarvestTable.aspx.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="ResourceManagement.cs" />
     <Compile Include="ResumptionInformation.cs" />
     <Compile Include="ResumptionInformationUtil.cs" />
     <Compile Include="ConeSearch-v1_0_VOResource-v1_0_VORegistry-v1_0_VOStandard-v0_1_VODataService-v1_0_SSA-v0_1_SkyNode-v0_2_SIA-v1_0_stc_v1_30_xlink_RegistryInterface.cs" />
@@ -185,6 +199,14 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="tapregex.cs" />
+    <Compile Include="validationmanagement.aspx.cs">
+      <DependentUpon>validationmanagement.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="validationmanagement.aspx.designer.cs">
+      <DependentUpon>validationmanagement.aspx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="validationstatus.cs" />
     <Compile Include="VOR_XML.cs" />
     <Content Include="apptemplate.aspx">
       <SubType>ASPXCodeBehind</SubType>
@@ -192,6 +214,8 @@
     <Content Include="getRecord.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
+    <Content Include="HarvestAdmin.asmx" />
+    <Content Include="HarvestTable.aspx" />
     <Content Include="help\clients.aspx" />
     <Content Include="help\gutter.aspx" />
     <Content Include="help\help.aspx">
@@ -244,6 +268,7 @@
     <Content Include="images\aprev_in.gif" />
     <Content Include="images\asc.png" />
     <Content Include="images\desc.png" />
+    <Content Include="validationmanagement.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
