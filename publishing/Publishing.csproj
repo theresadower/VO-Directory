@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Publishing</RootNamespace>
     <AssemblyName>Publishing</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -22,6 +22,8 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,6 +33,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -39,6 +42,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -46,9 +50,10 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
@@ -56,6 +61,7 @@
     <Reference Include="DotNetOpenAuth">
       <HintPath>lib\DotNetOpenAuth.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="PasswordReset.html" />
@@ -68,7 +74,6 @@
     <Content Include="Global.asax" />
     <Content Include="help.html" />
     <Content Include="Login.aspx" />
-    <Content Include="login.html" />
     <Content Include="ResourceManagement.aspx" />
     <Content Include="resourcemanagement.html" />
     <Content Include="resourcewizard.html" />
@@ -95,7 +100,6 @@
     <Content Include="Scripts\xmlform.js" />
     <Content Include="Scripts\xmlimport.js" />
     <Content Include="UploadXMLResource.aspx" />
-    <Content Include="VAOLogin.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -105,6 +109,7 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
+    <Content Include="WhoAmI.asmx" />
     <Content Include="XmlResource.aspx" />
   </ItemGroup>
   <ItemGroup>
@@ -157,13 +162,11 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="UserManagement.cs" />
-    <Compile Include="VAOLogin.aspx.cs">
-      <DependentUpon>VAOLogin.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
+    <Compile Include="WhoAmI.asmx.cs">
+      <DependentUpon>WhoAmI.asmx</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
-    <Compile Include="VAOLogin.aspx.designer.cs">
-      <DependentUpon>VAOLogin.aspx</DependentUpon>
-    </Compile>
+    <Compile Include="WhoamIInfo.cs" />
     <Compile Include="XmlResource.aspx.cs">
       <DependentUpon>XmlResource.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -179,10 +182,6 @@
     <ProjectReference Include="..\directory\registry.csproj">
       <Project>{030B00DA-2C47-40CC-B064-973EAD48B728}</Project>
       <Name>registry</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OperationsManagement\OperationsManagement.csproj">
-      <Project>{5D2AFF6A-2285-46F4-A5A3-00BCDC691349}</Project>
-      <Name>OperationsManagement</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -223,10 +222,10 @@
     </MonoDevelop>
   </ProjectExtensions>
   <PropertyGroup>
-  <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">>cp "$(SolutionDir)xsl\InsertVOResource.xsl" "$(ProjectDir)xsl\InsertVOResource.xsl"; 
+    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">&gt;cp "$(SolutionDir)xsl\InsertVOResource.xsl" "$(ProjectDir)xsl\InsertVOResource.xsl"; 
 cp "$(SolutionDir)xsl\InterfaceViewResults_one_resource.xsl" "$(ProjectDir)xsl\InterfaceViewResults_one_resource.xsl"; 
 cp "$(SolutionDir)xsl\RegistryResults_vot_one_resource.xsl" "$(ProjectDir)xsl\RegistryResults_vot_one_resource.xsl" </PostBuildEvent>
-<PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(SolutionDir)xsl\insertvoresource.xsl" "$(ProjectDir)xsl\insertvoresource.xsl" /Y
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(SolutionDir)xsl\insertvoresource.xsl" "$(ProjectDir)xsl\insertvoresource.xsl" /Y
 xcopy "$(SolutionDir)xsl\InterfaceViewResults_one_resource.xsl" "$(ProjectDir)xsl\InterfaceViewResults_one_resource.xsl" /Y
 xcopy "$(SolutionDir)xsl\RegistryResults_vot_one_resource.xsl" "$(ProjectDir)xsl\RegistryResults_vot_one_resource.xsl" /Y</PostBuildEvent>
   </PropertyGroup>
