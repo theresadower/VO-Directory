@@ -173,6 +173,7 @@ declare @rrtableseq smallint;
     <xsl:apply-templates select="." mode="table_resource"/>
     <xsl:text>
 </xsl:text>
+  <xsl:apply-templates select="altIdentifier"/>
 
     <!-- Roles -->
     <xsl:apply-templates select="curation/publisher"/>
@@ -632,6 +633,7 @@ declare @rrtableseq smallint;
      -->
   <xsl:template match="creator">
     <xsl:param name="seq" select="1"/>
+    <xsl:apply-templates select="altIdentifier"/>
     <xsl:call-template name="loadRole">
       <xsl:with-param name="name" select="name"/>
       <xsl:with-param name="ivoid" select="name/@ivo-id"/>
@@ -832,7 +834,7 @@ declare @rrtableseq smallint;
         <xsl:when test="normalize-space(@role)!=''">
           <xsl:value-of select="@role"/>
         </xsl:when>
-        <xsl:otherwise>representative</xsl:otherwise>
+        <xsl:otherwise>Collected</xsl:otherwise>
       </xsl:choose>
     </xsl:param>
 
@@ -855,6 +857,28 @@ declare @rrtableseq smallint;
 </xsl:text>
     </xsl:if>
   </xsl:template>
+  
+  <!--
+     -  handle an alternate identifier
+     -->
+  <xsl:template match="altIdentifier">
+    <xsl:if test="string-length(normalize-space(.)) &gt; 0">
+      <xsl:text>INSERT INTO </xsl:text>
+      <xsl:value-of select="$rr"/>
+      <xsl:text>.alt_identifier (
+        ivoid, alt_identifier
+      ) VALUES (
+        @rrivoid, </xsl:text>
+      <xsl:call-template name="mkstrval">
+        <xsl:with-param name="valnodes" select="."/>
+      </xsl:call-template>
+      <xsl:text>
+      );
+
+</xsl:text>
+    </xsl:if>
+  </xsl:template>  
+  
 
   <!-- ################################################################ 
   -  handle capabilities: determine type and load
@@ -1656,7 +1680,7 @@ declare @rrtableseq smallint;
     <xsl:value-of select="$rr"/>
     <xsl:text>.interface (
       ivoid, cap_index, intf_index, intf_type, intf_role, std_version,
-      url_use, access_url
+      url_use, access_url, mirror_url, security_method_id
     ) VALUES (
       @rrivoid, @rrcapseq, @rrifseq, </xsl:text>
     <xsl:call-template name="mkstrval">
@@ -1672,15 +1696,24 @@ declare @rrtableseq smallint;
     </xsl:call-template>
     <xsl:text>, 
       </xsl:text>
-
     <xsl:call-template name="mkstrval">
       <xsl:with-param name="valnodes" select="$urluse"/>
       <xsl:with-param name="notnull" select="true()"/>
     </xsl:call-template>
     <xsl:text>, </xsl:text>
+    <!--According to the resource standard there may be more than one accessURL but behavior is undefined. Use only the first.-->
     <xsl:call-template name="mkstrval">
       <xsl:with-param name="valnodes" select="accessURL[1]"/>
       <xsl:with-param name="notnull" select="true()"/>
+    </xsl:call-template>
+    <xsl:text>, </xsl:text>
+    <xsl:call-template name="mkstrval">
+      <xsl:with-param name="valnodes" select="mirrorURL"/>
+      <xsl:with-param name="asarray" select="true()"/>
+    </xsl:call-template>
+    <xsl:text>, </xsl:text>
+    <xsl:call-template name="mkstrval">
+      <xsl:with-param name="valnodes" select="securityMethod/@standardID"/>
     </xsl:call-template>
     <xsl:text>
     );
@@ -1699,7 +1732,7 @@ INSERT INTO </xsl:text>
     <xsl:value-of select="$rr"/>
     <xsl:text>.intf_param (
      ivoid, cap_index, intf_index, name, 
-     datatype, unit, ucd, utype, std, extended_schema, extended_type, param_use, 
+     datatype, arraysize, delim, unit, ucd, utype, std, extended_schema, extended_type, param_use, 
      param_description
 ) VALUES (
      @rrivoid,@rrcapseq,@rrifseq, </xsl:text>
@@ -1710,6 +1743,14 @@ INSERT INTO </xsl:text>
      </xsl:text>
     <xsl:call-template name="mkstrval">
       <xsl:with-param name="valnodes" select="dataType"/>
+    </xsl:call-template>
+    <xsl:text>, </xsl:text>
+    <xsl:call-template name="mkstrval">
+      <xsl:with-param name="valnodes" select="arraysize"/>
+    </xsl:call-template>
+    <xsl:text>, </xsl:text>
+    <xsl:call-template name="mkstrval">
+      <xsl:with-param name="valnodes" select="delim"/>
     </xsl:call-template>
     <xsl:text>, </xsl:text>
     <xsl:call-template name="mkstrval">
@@ -2140,7 +2181,7 @@ INSERT INTO </xsl:text>
 
   <!--
      -  filter out problematic character strings.  At the moment, this 
-     -  takes out "\'" and "\`" (from CDS records).
+     -  takes out "\'" and "\`" (mostly from CDS records).
      -->
   <xsl:template name="filterProblemText">
     <xsl:param name="text"/>
