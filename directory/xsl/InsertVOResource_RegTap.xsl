@@ -287,6 +287,15 @@ declare @rrtableseq smallint;
     <xsl:text>
 -- DataCollection-specific metadata 
 </xsl:text>
+    
+    <!--optional in RegTAP 1.1: also keep rights & rightsURI in the detail table-->
+    <xsl:if test="rights">
+      <xsl:apply-templates select="rights" mode="loadResDetail"/>
+      <xsl:call-template name="loadDetail">
+        <xsl:with-param name="val" select="rights/@rightsURI"/>
+        <xsl:with-param name="detail_xpath">/rights/@rightsURI</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
 
     <!-- add the DataCollection specific stuff -->
     <!-- augment the resource table -->
@@ -401,6 +410,14 @@ declare @rrtableseq smallint;
     <!-- add the Service-specific stuff -->
     <!-- augment the resource table -->
     <xsl:if test="rights">
+            
+      <!--optional in RegTAP 1.1: also keep rights & rightsURI in the detail table-->
+      <xsl:apply-templates select="rights" mode="loadResDetail"/>
+      <xsl:call-template name="loadDetail">
+        <xsl:with-param name="val" select="rights/@rightsURI"/>
+        <xsl:with-param name="detail_xpath">/rights/@rightsURI</xsl:with-param>
+      </xsl:call-template>
+        
       <xsl:variable name="rights">
         <xsl:call-template name="mkstrval">
           <xsl:with-param name="valnodes" select="rights"/>
@@ -580,19 +597,6 @@ declare @rrtableseq smallint;
 
     <xsl:apply-templates select="endorsedVersion" mode="loadResDetail"/>
       
-    <!-- not required, currently no examples. Apply later as needed. -->
-    <!--<xsl:apply-templates select="key" mode="loadResDetail">
-      <xsl:with-param name="val">
-        <xsl:value-of select="name"/>
-        <xsl:if test="description">
-          <xsl:text> : </xsl:text>
-          <xsl:value-of select="description"/>
-        </xsl:if>
-      </xsl:with-param>
-    </xsl:apply-templates>-->
-   
-    <!--<xsl:apply-templates select="." mode="type_StandardKeyEnumeration"/>-->
-
      <xsl:apply-templates select="schema/@namespace" mode="loadResDetail">
       <xsl:with-param name="val">
         <xsl:value-of select="schema/@namespace"/>
@@ -602,13 +606,6 @@ declare @rrtableseq smallint;
       </xsl:with-param>
     </xsl:apply-templates>
     <xsl:apply-templates select="deprecated" mode="loadResDetail"/>
-
-    <!-- not required, currently no examples. Apply later as needed. -->
-    <!--<xsl:for-each select="interface">
-      <xsl:apply-templates select=".">
-        <xsl:with-param name="seq" select="position()"/>
-      </xsl:apply-templates>
-    </xsl:for-each>-->
   
   </xsl:template>
 
@@ -967,6 +964,8 @@ declare @rrtableseq smallint;
         <xsl:with-param name="seq" select="position()"/>
       </xsl:apply-templates>
     </xsl:for-each>
+    
+    <xsl:apply-templates select="interface/testQueryString" mode="loadTQSDetail"/>
 
     <xsl:text>
 </xsl:text>
@@ -989,6 +988,9 @@ declare @rrtableseq smallint;
     <xsl:apply-templates select="testQuery/dec" mode="loadTQDetail"/>
     <xsl:apply-templates select="testQuery/sr" mode="loadTQDetail"/>
     <xsl:apply-templates select="testQuery/catalog" mode="loadTQDetail"/>
+  
+    <xsl:apply-templates select="interface/testQueryString" mode="loadTQSDetail"/>
+  
   </xsl:template>
 
   <xsl:template match="capability" mode="type_SIA">
@@ -1037,6 +1039,8 @@ declare @rrtableseq smallint;
 
     <xsl:apply-templates select="testQuery/verb"   mode="loadTQDetail"/>
     <xsl:apply-templates select="testQuery/extras" mode="loadTQDetail"/>
+  
+    <xsl:apply-templates select="interface/testQueryString" mode="loadTQSDetail"/>
   </xsl:template>
 
   <xsl:template match="capability" mode="type_SSA">
@@ -1069,6 +1073,8 @@ declare @rrtableseq smallint;
     </xsl:apply-templates>
     <xsl:apply-templates select="testQuery/size" mode="loadTQDetail"/>
     <xsl:apply-templates select="testQuery/queryDataCmd" mode="loadTQDetail"/>
+  
+    <xsl:apply-templates select="interface/testQueryString" mode="loadTQSDetail"/>
   </xsl:template>
 
   <xsl:template match="capability" mode="type_SLAP">
@@ -1097,6 +1103,7 @@ declare @rrtableseq smallint;
     </xsl:apply-templates>
 
     <xsl:apply-templates select="testQuery/queryDataCmd" mode="loadTQDetail"/>
+    <xsl:apply-templates select="interface/testQueryString" mode="loadTQSDetail"/>
 
   </xsl:template>
 
@@ -1156,9 +1163,10 @@ declare @rrtableseq smallint;
       <xsl:with-param name="subtype">uploadLimit.default</xsl:with-param>
     </xsl:apply-templates>
 
-
+    <xsl:apply-templates select="interface/testQueryString" mode="loadTQSDetail"/>
   </xsl:template>
 
+  <!--loading resource-level details, not in a capability-->
   <xsl:template match="*[identifier]//*|*[identifier]//@*" mode="loadResDetail">
     <xsl:param name="basetype">vor:resource.</xsl:param>
     <xsl:param name="subtype" select="local-name(.)"/>
@@ -1177,6 +1185,7 @@ declare @rrtableseq smallint;
     </xsl:variable>
 
     <xsl:call-template name="loadDetail">
+      <xsl:with-param name="incap" select="false()"/>
       <xsl:with-param name="val" select="."/>
       <xsl:with-param name="detail_xpath" select="$xpath"></xsl:with-param>
     </xsl:call-template>
@@ -1212,6 +1221,14 @@ declare @rrtableseq smallint;
         <xsl:text>vor:capability.testQuery.</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="subtype" select="$subtype"/>
+    </xsl:apply-templates>
+  </xsl:template>
+  
+  <xsl:template match="testQueryString" mode="loadTQSDetail">
+    <xsl:apply-templates select="." mode="loadCapDetail">
+      <xsl:with-param name="basetype">
+        <xsl:text>vor:capability.interface.testQueryString</xsl:text>
+      </xsl:with-param>
     </xsl:apply-templates>
   </xsl:template>
 
@@ -1794,7 +1811,6 @@ INSERT INTO </xsl:text>
 </xsl:text>
   </xsl:template>
 
-
   <!--
      -  load data into the schema table
      -->
@@ -1965,7 +1981,7 @@ INSERT INTO </xsl:text>
     <xsl:variable name="cseq">
       <xsl:choose>
         <xsl:when test="$incap">@rrcapseq</xsl:when>
-        <xsl:otherwise>0</xsl:otherwise>
+        <xsl:otherwise>NULL</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
 
