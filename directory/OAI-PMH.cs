@@ -23,12 +23,11 @@ namespace oai {
 	/// 
     
     /// <remarks/>
-    [System.Xml.Serialization.XmlTypeAttribute(TypeName="OAI-PMHtype", Namespace="http://www.openarchives.org/OAI/2.0/")]
+    [System.Xml.Serialization.XmlTypeAttribute(TypeName="OAI-PMHtype", Namespace="http://www.openarchives.org/OAI/2.0/", IncludeInSchema =true, AnonymousType = false)]
   	[System.Xml.Serialization.XmlRootAttribute("OAI-PMH", Namespace="http://www.openarchives.org/OAI/2.0/", IsNullable=false)]
-
     public class OAIPMHtype {
         
-		[System.Xml.Serialization.XmlAttribute()]
+		[System.Xml.Serialization.XmlAttribute(AttributeName="schemaLocation", Namespace = "http://www.openarchives.org/OAI/2.0/")]
 		public string schemaLocation = "http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd";
         /// <remarks/>
         /// 
