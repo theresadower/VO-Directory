@@ -790,7 +790,7 @@ declare @rrtableseq smallint;
   </xsl:template>
 
   <!--
-     -  handle a relationship
+     -  handle a relationship (RegTAP 1.1)
      -->
   <xsl:template match="relationship">
     <xsl:variable name="type" select="relationshipType"/>
@@ -803,7 +803,7 @@ declare @rrtableseq smallint;
         related_name
       ) VALUES (
         @rrivoid, </xsl:text>
-      <xsl:call-template name="mkstrval">
+      <xsl:call-template name="convertrelationshiptype">
         <xsl:with-param name="valnodes" select="$type"/>
       </xsl:call-template>
       <xsl:text>, </xsl:text>
@@ -823,10 +823,10 @@ declare @rrtableseq smallint;
   </xsl:template>
 
   <!--
-     -  handle a date
+     -  handle a date (RegTAP 1.1)
      -->
   <xsl:template match="date">
-    <xsl:param name="role">
+    <xsl:param name="resrole">
       <xsl:choose>
         <xsl:when test="normalize-space(@role)!=''">
           <xsl:value-of select="@role"/>
@@ -846,8 +846,8 @@ declare @rrtableseq smallint;
         <xsl:with-param name="valnodes" select="."/>
       </xsl:call-template>
       <xsl:text>, </xsl:text>
-      <xsl:call-template name="mkstrval">
-        <xsl:with-param name="valnodes" select="$role"/>
+      <xsl:call-template name="convertdaterole">
+        <xsl:with-param name="valnodes" select="$resrole"/>
       </xsl:call-template>
       <xsl:text>
       );
@@ -2109,6 +2109,64 @@ INSERT INTO </xsl:text>
       <xsl:with-param name="valnodes" select="$valnodes"/>
     </xsl:call-template>
   </xsl:template>
+  
+  <!--
+     -  create / convert date roles to RegTAP 1.1 vocabulary
+     -->
+  <xsl:template name="convertdaterole">
+    <xsl:param name="valnodes"/>
+    
+    <xsl:choose>
+      <xsl:when test="string-length(string($valnodes))=0">
+        <xsl:text>NULL</xsl:text>
+      </xsl:when>
+      <xsl:when test="normalize-space($valnodes) = 'representative'">
+          <xsl:text>'Collected'</xsl:text>
+      </xsl:when>
+      <xsl:when test="normalize-space($valnodes) = 'creation'">
+          <xsl:text>'Created'</xsl:text>
+      </xsl:when>
+     <xsl:when test="normalize-space($valnodes) = 'update'">
+          <xsl:text>'Updated'</xsl:text>
+      </xsl:when>     
+      <xsl:otherwise>
+        <xsl:text>'</xsl:text>
+        <xsl:call-template name="sanitize">
+          <xsl:with-param select="normalize-space($valnodes)" name="text"/>
+        </xsl:call-template>
+        <xsl:text>'</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
+    <!--
+     -  create / convert relationship types to RegTAP 1.1 vocabulary
+     -->
+  <xsl:template name="convertrelationshiptype">
+    <xsl:param name="valnodes" select="'related-to'"/>
+    <xsl:choose>
+      <xsl:when test="normalize-space($valnodes) = 'mirror-of'">
+          <xsl:text>'IsIdenticalTo'</xsl:text>
+      </xsl:when>
+      <xsl:when test="normalize-space($valnodes) = 'service-for'">
+          <xsl:text>'IsServiceFor'</xsl:text>
+      </xsl:when>
+     <xsl:when test="normalize-space($valnodes) = 'served-by'">
+          <xsl:text>'IsServedBy'</xsl:text>
+      </xsl:when>   
+      <xsl:when test="normalize-space($valnodes) = 'derived-from'">
+          <xsl:text>'IsDerivedFrom'</xsl:text>
+      </xsl:when>   
+      <xsl:otherwise>
+        <xsl:text>'</xsl:text>
+        <xsl:call-template name="sanitize">
+          <xsl:with-param select="normalize-space($valnodes)" name="text"/>
+        </xsl:call-template>
+        <xsl:text>'</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 
   <!--
      -  create a string value 
