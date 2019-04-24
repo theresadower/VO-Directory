@@ -1697,7 +1697,7 @@ declare @rrtableseq smallint;
     <xsl:value-of select="$rr"/>
     <xsl:text>.interface (
       ivoid, cap_index, intf_index, intf_type, intf_role, std_version,
-      url_use, access_url, mirror_url, security_method_id
+      url_use, access_url, mirror_url, authenticated_only
     ) VALUES (
       @rrivoid, @rrcapseq, @rrifseq, </xsl:text>
     <xsl:call-template name="mkstrval">
@@ -1729,13 +1729,13 @@ declare @rrtableseq smallint;
       <xsl:with-param name="asarray" select="true()"/>
     </xsl:call-template>
     <xsl:text>, </xsl:text>
-    <xsl:call-template name="mkstrval">
+    <!--In the Interface table for 1.1, we don't care about the method IDs, only whether or not they exist-->
+    <xsl:call-template name="bitflagexists">
       <xsl:with-param name="valnodes" select="securityMethod/@standardID"/>
     </xsl:call-template>
     <xsl:text>
     );
-</xsl:text>
-
+    </xsl:text>
   </xsl:template>
 
   <!--
@@ -2166,6 +2166,20 @@ INSERT INTO </xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+
+  <xsl:template name="bitflagexists">
+    <xsl:param name="valnodes"/>
+    <xsl:choose>
+      <xsl:when test="string-length(string($valnodes))=0">
+        <xsl:text>0</xsl:text>
+      </xsl:when>
+       <xsl:otherwise>
+        <xsl:text>1</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 
 
   <!--
