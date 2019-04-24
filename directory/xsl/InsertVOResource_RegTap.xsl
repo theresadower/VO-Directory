@@ -1730,12 +1730,25 @@ declare @rrtableseq smallint;
     </xsl:call-template>
     <xsl:text>, </xsl:text>
     <!--In the Interface table for 1.1, we don't care about the method IDs, only whether or not they exist-->
-    <xsl:call-template name="bitflagexists">
-      <xsl:with-param name="valnodes" select="securityMethod/@standardID"/>
+    <xsl:call-template name="bitflagsecuritymethod">
+      <xsl:with-param name="valnodes" select="securityMethod"/>
     </xsl:call-template>
     <xsl:text>
     );
     </xsl:text>
+  </xsl:template>
+
+  <!--looking for no nodes, or nodes with empty IDs.-->
+  <xsl:template name="bitflagsecuritymethod">
+    <xsl:param name="valnodes"/>
+    <xsl:choose>
+      <xsl:when test="count($valnodes)=0 or $valnodes[not(string(@standardID))]">
+        <xsl:text>0</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>1</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!--
@@ -2166,20 +2179,6 @@ INSERT INTO </xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-
-
-  <xsl:template name="bitflagexists">
-    <xsl:param name="valnodes"/>
-    <xsl:choose>
-      <xsl:when test="string-length(string($valnodes))=0">
-        <xsl:text>0</xsl:text>
-      </xsl:when>
-       <xsl:otherwise>
-        <xsl:text>1</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
 
 
   <!--
